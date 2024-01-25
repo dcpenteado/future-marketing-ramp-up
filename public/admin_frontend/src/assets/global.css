@@ -137,3 +137,11 @@
 .font-ubuntu {
   font-family: 'Ubuntu', sans-serif !important;
 }
+
+.w-full {
+  width: 100%;
+}
+
+html {
+  overflow: auto;
+}

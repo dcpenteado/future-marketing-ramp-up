@@ -18,58 +18,136 @@
                         <v-img cover height="100%" max-height="580" src="/login-image.png"></v-img>
                     </v-col>
         
-                    <v-col class="d-flex align-center justify-center" cols="12" sm="6">
-                        <v-form @submit.prevent="login" >
-                            
-                            <v-card tile flat>
-                                <v-card-title class="primary--text font-weight-bold font-ubuntu">  
-                                    Bem-vindo de volta!
-                                </v-card-title>
-                                
-                                <v-card-subtitle class="stardust--text font-weight-bold font-ubuntu"> 
-                                    Faça seu login abaixo.
-                                </v-card-subtitle>
-        
-                                <v-card-text>
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="email"
-                                                label="Email"
-                                                outlined
-                                                hide-details="auto"
-                                            />
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="password"
-                                                type="password"
-                                                label="Senha"
-                                                outlined
-                                                hide-details="auto"
-                                            />
-        
-                                            <div class="mt-4 d-flex">
-                                                <a href="#" class="stardust--text font-weight-bold font-ubuntu ml-auto text-decoration-none text-caption">
+                    <v-col class="d-flex align-center justify-center px-xl-4" cols="12" sm="6">
+                        <v-slide-x-reverse-transition leave-absolute>
+                            <v-form v-if="mode === 'forgot_password'" class="w-full" @submit.prevent="resetPassword">
+                                <v-card tile flat>
+                                    <v-card-title class="primary--text font-weight-bold font-ubuntu">  
+                                        Esqueceu sua senha?
+                                    </v-card-title>
+                                    
+                                    <v-card-subtitle class="stardust--text font-weight-bold font-ubuntu"> 
+                                        Redefina sua senha abaixo.
+                                    </v-card-subtitle>
+            
+                                    <v-card-text>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <div class="w-full d-flex justify-center">
+                                                    <v-icon color="primary" style="font-size: 105px;" >mdi-email-fast-outline</v-icon>
+                                                </div>
+    
+                                                <v-alert 
+                                                    color="#E0A585"
+                                                    text
+                                                    class="font-ubuntu text-center mb-0 text-body-2"
+                                                >
+                                                    Instruções para redefinir sua senha serão enviadas para o seu email.
+                                                </v-alert>
+                                            </v-col>
+    
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="email"
+                                                    label="Email"
+                                                    outlined
+                                                    hide-details="auto"
+                                                />
+                                            </v-col>
+    
+                                            <v-col cols="12">
+                                                <v-btn
+                                                    depressed
+                                                    large
+                                                    color="primary"
+                                                    width="100%"
+                                                    type="submit"
+                                                >
+                                                    Enviar
+                                                </v-btn>
+                                            </v-col>
+    
+                                            <v-col cols="12" class="d-flex justify-center">
+                                                <div>
+                                                    Espere, eu lembro minha senha! <a class="font-ubuntu text-none" @click="mode = 'login'">Voltar</a>
+                                                </div>
+                                            </v-col>
+    
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-form>
+
+                        </v-slide-x-reverse-transition>
+
+                        <v-slide-x-transition leave-absolute>
+
+                            <v-form v-if="mode !== 'forgot_password' " @submit.prevent="login" >                            
+                                <v-card tile flat>
+                                    <v-card-title class="primary--text font-weight-bold font-ubuntu">  
+                                        Bem-vindo de volta!
+                                    </v-card-title>
+                                    
+                                    <v-card-subtitle class="stardust--text font-weight-bold font-ubuntu"> 
+                                        Faça seu login abaixo.
+                                    </v-card-subtitle>
+            
+                                    <v-card-text>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="email"
+                                                    label="Email"
+                                                    outlined
+                                                    hide-details="auto"
+                                                />
+                                            </v-col>
+                                            
+                                            <v-col cols="12">
+                                                <v-text-field
+                                                    v-model="password"
+                                                    :type="showPassword ? 'text' : 'password'"
+                                                    label="Senha"
+                                                    outlined
+                                                    hide-details="auto"
+                                                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                                    @click:append="showPassword = !showPassword"
+                                                />
+                                            </v-col>
+    
+                                            <v-col cols="12" class="d-flex align-center">
+                                                <v-checkbox
+                                                    v-model="remember"
+                                                    label="Lembrar-me"
+                                                    hide-details
+                                                    class="mt-0"
+                                                ></v-checkbox>
+                                                <v-btn
+                                                    small
+                                                    text
+                                                    class="ml-auto font-ubuntu text-none"
+                                                    color="stardust"
+                                                    @click="mode = 'forgot_password'"
+                                                >
                                                     Esqueceu sua senha?
-                                                </a>
-                                            </div>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-btn
-                                                depressed
-                                                large
-                                                color="primary"
-                                                width="100%"
-                                                type="submit"
-                                            >
-                                                Entrar
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-form>
+                                                </v-btn>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <v-btn
+                                                    depressed
+                                                    large
+                                                    color="primary"
+                                                    width="100%"
+                                                    type="submit"
+                                                >
+                                                    Entrar
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-form>
+                        </v-slide-x-transition>                        
                     </v-col>
                 </v-row>
             </v-card>
@@ -85,9 +163,14 @@ export default {
     name: "LoginView",
     data() {
         return {
+            // mode
+            mode: "login",
+
+            // Form
             email: "",
             password: "",
             remember: true,
+            showPassword: false,
         };
     },
     methods: {
@@ -96,6 +179,19 @@ export default {
 
             if (resp && resp.login_ok) {
                 this.$router.push("/");
+                return;
+            }
+
+            if (resp && resp.error && resp.error.message) {
+                emitToastr('error', resp.error.message)
+                return;
+            }
+        },
+        async resetPassword(){
+            const resp = await Api.recoveryPassword(this.email);
+
+            if (resp && resp.reset_ok) {
+                emitToastr('success', 'Email enviado com sucesso!')
                 return;
             }
 
