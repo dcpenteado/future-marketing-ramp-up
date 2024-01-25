@@ -133,3 +133,7 @@
   .v-list-item {
     padding: 0px 10px !important;
   }
+
+.font-ubuntu {
+  font-family: 'Ubuntu', sans-serif !important;
+}
