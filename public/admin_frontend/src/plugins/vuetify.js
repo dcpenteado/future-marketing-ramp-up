@@ -10,9 +10,14 @@ export default new Vuetify({
                 // vuetify colors
                 primary: '#7069A1',
 
-                // custom colors
+                // design colors
                 galaxy: '#7069A1',
-                stardust: '#0F151C'
+                stardust: '#0F151C',
+                moon: '#B7B5CF',                
+
+                // others
+                mercury: '#495057'               
+                
             }
         }
     }

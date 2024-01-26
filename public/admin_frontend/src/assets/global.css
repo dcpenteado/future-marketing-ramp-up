@@ -18,7 +18,7 @@
     animation: fadeIn 1s;
     max-width: 1200px;
     margin-bottom: 60px;
-    background-color: #EAEAEA;
+    /* background-color: #EAEAEA; */
   }
   
   .page-title {
@@ -140,6 +140,14 @@
 
 .w-full {
   width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 html {
