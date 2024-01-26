@@ -149,6 +149,10 @@
 
         <v-divider />
 
+        <app-subheader />
+
+        <v-divider />
+
         <v-container fluid>
           <router-view fluid />
         </v-container>
@@ -162,6 +166,9 @@ import Api from "@/lib/Api";
 
 export default {
   name: "App",
+  components: {
+    AppSubheader: () => import("@/components/AppSubheader.vue"),
+  },
 
   data: () => ({
     drawer: false,

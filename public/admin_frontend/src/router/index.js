@@ -29,6 +29,7 @@ const routes = [
     component: Perfil,
     meta: {
       layout: "menu",
+      title: "Meu Perfil",
     },
   },
 ];

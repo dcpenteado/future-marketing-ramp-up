@@ -1,6 +1,6 @@
 <template>
     <div class="menu-page">
-        <h1>Dashboard</h1>
+        
     </div>
 </template>
   
