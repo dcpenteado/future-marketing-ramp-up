@@ -11,6 +11,8 @@ const sharp = require("sharp");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 const utils = require("../core/utils");
+const bcrypt = require("bcryptjs");
+
 
 let router = express.Router();
 
@@ -90,6 +92,53 @@ router.post("/upload-profile-picture", auth, upload.single("image"), async (req,
     } else {
       return res.status(400).send({ error: true, message: "Imagem não reconhecida." });
     }
+  } catch (err) {
+    return res.status(400).send({ error: true, message: err.message });
+  }
+});
+
+
+router.post("/change-user-password", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+
+    const { old_password, password } = req.body;
+
+    if (!old_password || !password) return res.status(200).send({ error: true, message: "Senha necessária!" });
+
+    const resp = await DBController.authUser(req_user.email, old_password);
+
+    if (resp.error && resp.type === "password_error") {
+      return res.status(200).send({ error: true, message: "Senha antiga incorreta. Tente novamente." });
+    } else {
+      if (resp.user) {
+        let user = resp.user;
+        user.password = await bcrypt.hash(password, 10);
+        const new_user = await DBController.updateUser(user);
+        return res.send({ error: false, message: new_user });
+      } else {
+        return res.status(200).send({ error: true, message: "Erro ao alterar a senha. Verifique os dados e tente novamente." });
+      }
+    }
+  } catch (err) {
+    return res.status(400).send({ error: true, message: err.message });
+  }
+});
+
+router.post("/update-user", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+    if (!req_user?._id) return res.send({ error: true, message: "É necessário estar logado." });
+
+    let { user } = req.body;
+
+    if (!user || !user._id) return res.send({ error: true, message: "É necessário enviar dados do usuário." });
+
+    if (!req_user.admin && req_user._id != user._id) return res.send({ error: true, message: "Permissões insuficientes." });
+
+    const resp = await DBController.updateUser(user);
+    return res.send({ error: false, message: resp });
+
   } catch (err) {
     return res.status(400).send({ error: true, message: err.message });
   }

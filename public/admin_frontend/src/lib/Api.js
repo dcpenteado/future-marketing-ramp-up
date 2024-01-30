@@ -60,8 +60,8 @@ class Api {
     return resp;
   };
 
-  changePassword = async (email, password, recovery_token) => {
-    const resp = await this.authPost("/change-password", { email, password, recovery_token }, {});
+  changeUserPassword = async (password, old_password) => {
+    const resp = await this.authPost("/change-user-password", { password, old_password }, {});
     return resp;
   };
 
