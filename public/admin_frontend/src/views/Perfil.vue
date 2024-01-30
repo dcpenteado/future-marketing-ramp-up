@@ -8,7 +8,7 @@
                             <v-row>
                                 <v-col cols="12" sm="4" md="3" lg="2" class="d-flex justify-center">
                                     <v-avatar size="160">
-                                        <v-img :src="image.preview" v-if="image.preview" />
+                                        <v-img :src="user.profile_picture" v-if="user.profile_picture" />
                                         <div v-else class="w-full h-full primary d-flex justify-center">
                                             <v-icon color="white" style="font-size:120px" >mdi-account</v-icon>
                                         </div>
@@ -30,7 +30,7 @@
 
                         <v-col cols="12" md="6">
                             <v-text-field
-                                v-model="form.name"
+                                v-model="user.name"
                                 label="Nome"
                                 required
                                 outlined
@@ -40,7 +40,7 @@
                         
                         <v-col cols="12" md="6"> 
                             <v-text-field
-                                v-model="form.email"
+                                v-model="user.email"
                                 label="E-mail"
                                 required
                                 outlined
@@ -50,7 +50,7 @@
                         
                         <v-col cols="12" class="d-flex">
                             <v-spacer />
-                            <v-btn color="error" class="mr-2" @click="load">Cancel</v-btn>
+                            <v-btn color="error" class="mr-2" @click="load">Cancelar</v-btn>
                             <v-btn color="primary" type="submit">Salvar</v-btn>
                         </v-col>
                     </v-row> 
@@ -70,9 +70,10 @@ export default {
 
     data() {
         return {
-            form: {
+            user: {
                 name: '',
                 email: '',
+                profile_picture: ''
             },
             image: {
                 file: null,
@@ -84,20 +85,26 @@ export default {
         this.load()
     },
     methods: {
-        load(){
-            const user = Api.getUser()
-
-            this.form.name = user.name
-            this.form.email = user.email
+        async load(){
+            const user = await Api.getRemoteUser();
+            this.user = user;
         },
-        pickFile(){
+        
+        async pickFile(){
             const input = document.createElement('input')
 
             input.type = 'file'
             input.accept = 'image/jpeg, image/png'
 
-            input.onchange = (e) => {
+            input.onchange = async (e) => {
                 const file = e.target.files[0]
+
+                const resp = await Api.uploadProfilePicture(file);
+                if (!resp.error && resp.message) {
+                    emitToastr('success', 'Imagem de perfil atualizada');
+                    this.user.profile_picture = resp.message;
+                    this
+                }
 
                 this.setImage(file)
             }
@@ -106,7 +113,7 @@ export default {
         },
         removeImage(){
             this.image.file = null
-            this.image.preview = null
+            this.user.profile_picture = null
         },
         setImage(file){
             const preview = URL.createObjectURL(file)

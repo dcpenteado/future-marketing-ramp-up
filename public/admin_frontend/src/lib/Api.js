@@ -50,6 +50,11 @@ class Api {
     }
   };
 
+  uploadProfilePicture = async (image) => {
+    const resp = await this.authPost("/upload-profile-picture", { image: image }, { multipart: true, formData: true }); //ESSE TEM ESSAS OPÇÕES PORQUE ESTÁ ENVIANDO UMA IMAGEM AO INVÉS DE UM JSON
+    return resp;
+  };
+
   recoveryPassword = async (email) => {
     const resp = await this.authPost("/send-password-recovery", { email: email }, {});
     return resp;

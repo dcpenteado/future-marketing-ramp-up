@@ -7,6 +7,10 @@ const { v4: uuidv4 } = require("uuid");
 const { auth } = require("../auth");
 const fetch = require("node-fetch");
 const jwt = require("jsonwebtoken");
+const sharp = require("sharp");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+const utils = require("../core/utils");
 
 let router = express.Router();
 
@@ -61,7 +65,34 @@ router.post("/create-user", auth, async (req, res) => {
     if (token.error === true) return res.status(400).send({ error: true, message: "Erro na geração do token" });
 
     return res.send({ new_user, token });
-  } catch (err) {}
+  } catch (err) { }
+});
+
+router.post("/upload-profile-picture", auth, upload.single("image"), async (req, res) => {
+  try {
+    const req_user = req.req_user;
+    if (!req_user?._id) return res.send({ error: true, message: "É necessário estar logado para mudar a imagem de perfil." });
+
+    if (req.file && req.file.buffer) {
+      const original = await sharp(req.file.buffer).resize(800).jpeg({ mozjpeg: true }).toBuffer();
+      const image_id = uuidv4();
+
+      const upload = await utils.uploadToS3(original, 'profile_pictures', `${image_id}.jpg`, 'image/jpeg');
+
+      if (!upload) return res.send({ error: true, message: "Não foi possível fazer o upload. Por favor, tente novamente." });
+      const image_url = `${config.s3_endpoint}profile_pictures/${image_id}.jpg`;
+
+      let user = await DBController.getUserById(req_user._id);
+      user.profile_picture = image_url;
+      await DBController.updateUser(user);
+
+      return res.send({ error: false, message: image_url });
+    } else {
+      return res.status(400).send({ error: true, message: "Imagem não reconhecida." });
+    }
+  } catch (err) {
+    return res.status(400).send({ error: true, message: err.message });
+  }
 });
 
 module.exports = function () {

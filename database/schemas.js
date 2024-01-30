@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   permissions: { type: Array, default: ['DEFAULT'] },
   created: { type: Date, default: Date.now },
   filed: { type: Boolean, default: false },
+  profile_picture: { type: String },
   recovery_token: { type: String },
 
   email: {
