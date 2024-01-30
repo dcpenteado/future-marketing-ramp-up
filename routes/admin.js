@@ -136,6 +136,10 @@ router.post("/update-user", auth, async (req, res) => {
 
     if (!req_user.admin && req_user._id != user._id) return res.send({ error: true, message: "Permissões insuficientes." });
 
+    if (user.password) {
+      user.password = await bcrypt.hash(user.password, 10);
+    }
+
     const resp = await DBController.updateUser(user);
     return res.send({ error: false, message: resp });
 
