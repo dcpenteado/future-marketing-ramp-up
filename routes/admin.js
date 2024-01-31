@@ -205,11 +205,16 @@ router.post("/get-form-responses", auth, async (req, res) => {
 
 router.post("/get-form-response-by-id", auth, async (req, res) => {
   try {
+    const req_user = req.req_user;
     const { id } = req.body;
 
     if (!id) return res.send({ error: true, message: "ID do formulário de respostas é um campo requerido." });
 
-    const resp = await DBController.getFormResponseById(id)
+    const resp = await DBController.getFormResponseById(id);
+    if (!resp) return res.send({ error: true, message: "Formulário de respostas não encontrado." });
+
+    if (!req_user.admin && resp.user._id.toString() != req_user._id.toString()) return res.send({ error: true, message: "Permissões insuficientes." });
+
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
