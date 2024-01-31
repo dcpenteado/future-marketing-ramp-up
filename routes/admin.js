@@ -162,11 +162,11 @@ router.post("/get-forms", auth, async (req, res) => {
 
 router.post("/get-form-by-id", auth, async (req, res) => {
   try {
-    const { form_id } = req.body;
+    const { id } = req.body;
 
-    if (!form_id) return res.send({ error: true, message: "form_id requerido." });
+    if (!id) return res.send({ error: true, message: "ID do formulário é um campo requerido." });
 
-    const resp = await DBController.getFormById(form_id)
+    const resp = await DBController.getFormById(id)
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
@@ -181,9 +181,58 @@ router.post("/create-or-update-form", auth, async (req, res) => {
 
     let { object } = req.body;
 
-    if (!object || !object.name) return res.send({ error: true, message: "O nome do formulário é um campo obrigatório." });
+    if (!object || !object.name) return res.send({ error: true, message: "O nome do formulário é um campo requerido." });
 
     const resp = await DBController.createOrUpdateForm(object);
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+
+router.post("/get-form-responses", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+    if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
+
+    const resp = await DBController.getFormResponses();
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+router.post("/get-form-response-by-id", auth, async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) return res.send({ error: true, message: "ID do formulário de respostas é um campo requerido." });
+
+    const resp = await DBController.getFormResponseById(id)
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+router.post("/create-or-update-form-response", auth, async (req, res) => {
+  try {
+    //CHECK PERMISSION
+    const req_user = req.req_user;
+
+    let { object } = req.body;
+
+    if (!object._id) {
+      if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
+    }
+    else {
+      if (object.user.toString() != req_user._id.toString()) return res.send({ error: true, message: "Permissões insuficientes." });
+    }
+
+    if (!object || !object.user || !object.form) return res.send({ error: true, message: "Usuário e formulário são campos requeridos." });
+
+    const resp = await DBController.createOrUpdateFormResponse(object, req_user._id);
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
