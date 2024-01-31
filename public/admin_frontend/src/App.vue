@@ -27,7 +27,7 @@
           <v-img src="/logo-white.png" cover width="134" class="mx-auto"   />
         </div>
 
-        <v-list dense>
+        <v-list dense expand>
           <v-subheader class="font-ubuntu" >PAINÉIS</v-subheader>
 
           <template v-for="(item, i) in menuItems">
@@ -36,6 +36,7 @@
               :key="i"
               :prepend-icon="item.icon"
               active-class="white--text"
+              :value="true"
             >
               <template v-slot:activator>
                 <v-list-item-title>{{ item.label }}</v-list-item-title>
@@ -131,7 +132,7 @@
                   </v-avatar>
   
                   <div class="mercury--text text-left text-none">
-                    <div class="font-ubuntu font-weight-bold text-subtitle-2" >{{ user.name }}</div>
+                    <div class="font-ubuntu font-weight-bold text-subtitle-2" >{{ user?.name }}</div>
                     <div class="font-ubuntu text-body-2" >Cargo</div>
                   </div>
 
@@ -182,22 +183,67 @@ export default {
         to: "/meu-perfil",
       },
       {
+        label: "Minha plataforma",
+        icon: "mdi-monitor-dashboard",
+        children: [
+          {
+            label: "Usuários",
+            to: "/#usuarios",
+          },
+          {
+            label: "Prompts",
+            to: "/#prompts",
+          },
+          {
+            label: "Formbuilder",
+            to: "/#formbuilder",
+          },
+          {
+            label: "Textos Gerados",
+            to: "/#texts",
+          },
+          {
+            label: "Projetos concluídos",
+            to: "/#projects",
+          },
+          {
+            label: "Sites para publicação",
+            to: "/#sites",
+          },
+        ]
+      },
+      {
+        label: "Dashboards",
+        icon: "mdi-monitor-dashboard",
+        children: [
+          {
+            label: "Clientes",
+            to: "/#clients",
+          },
+          {
+            label: "Status de projetos",
+            to: "/#project-status",
+          },
+          {
+            label: "Painel financeiro clientes",
+            to: "/#financial-panel",
+          },
+        ]
+      },
+      {
         label: "Meu site",
         icon: "mdi-monitor-dashboard",
         children: [
           {
             label: "Minhas respostas",
-            icon: "mdi-minus",
             to: "/#my-questions",
           },
           {
             label: "Meus textos",
-            icon: "mdi-palette",
             to: "/#my-texts",
           },
           {
             label: "Minhas aprovações",
-            icon: "mdi-palette",
             to: "/#my-approvals",
           },
         ],
@@ -212,6 +258,10 @@ export default {
   },
 
   methods: {
+    async load() {
+      
+      
+    },
     logout() {
       Api.logout();
     },
@@ -224,17 +274,24 @@ export default {
       this.user = user;
     }
   },
+  watch: {
+    '$route': {
+      immediate: true,
+      handler: async function () {
+        this.user = Api.getUser();
+
+        if (this.user && this.user._id) {
+          this.user = await Api.getRemoteUser();
+        }
+      },
+    }
+  },
 
   created() {
     this.$root.$refs.global = this;
   },
 
-  async mounted() {
-    this.user = Api.getUser();
-    if (this.user && this.user._id) {
-      this.user = await Api.getRemoteUser();
-    }
-
+  mounted() {
     this.$vuetify.breakpoint.lgAndUp ? (this.drawer = true) : (this.drawer = false);
   },
 };
