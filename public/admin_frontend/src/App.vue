@@ -126,13 +126,14 @@
               <v-btn text v-on="on" height="48" >
                 <div class="d-flex align-center">
                   <v-avatar size="32" class="mr-4 ">
-                    <div class="w-full h-full primary d-flex justify-center">
+                    <v-img v-if="currentUser?.profile_picture" :src="currentUser?.profile_picture" />
+                    <div v-else class="w-full h-full primary d-flex justify-center">
                       <v-icon color="white" >mdi-account</v-icon>
                     </div>
                   </v-avatar>
   
                   <div class="mercury--text text-left text-none">
-                    <div class="font-ubuntu font-weight-bold text-subtitle-2" >{{ user?.name }}</div>
+                    <div class="font-ubuntu font-weight-bold text-subtitle-2" >{{ currentUser?.name }}</div>
                     <div class="font-ubuntu text-body-2" >Cargo</div>
                   </div>
 
@@ -175,12 +176,14 @@ export default {
     drawer: false,
     showLoading: false,
     projectName: "Future Marketing",
-    user: {},
   }),
 
   computed: {
+    currentUser() {
+      return this.$store.state.currentUser
+    },
     isAdmin() {
-      return this.user?.admin;
+      return this.currentUser?.admin;
     },
     menuItems(){
       const items = []
@@ -274,20 +277,14 @@ export default {
     setLoading(loading) {
       this.showLoading = loading;
     },
-
-    updateUser(user) {
-      this.user = user;
-    }
   },
   watch: {
     '$route': {
       immediate: true,
       handler: async function () {
-        this.user = Api.getUser();
+        if (this.currentUser) return
 
-        if (this.user && this.user._id) {
-          this.user = await Api.getRemoteUser();
-        }
+        this.$store.dispatch('loadCurrentUser')
       },
     }
   },
