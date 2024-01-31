@@ -148,6 +148,48 @@ router.post("/update-user", auth, async (req, res) => {
   }
 });
 
+router.post("/get-forms", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+    if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
+
+    const resp = await DBController.getForms();
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+router.post("/get-form-by-id", auth, async (req, res) => {
+  try {
+    const { form_id } = req.body;
+
+    if (!form_id) return res.send({ error: true, message: "form_id requerido." });
+
+    const resp = await DBController.getFormById(form_id)
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+router.post("/create-or-update-form", auth, async (req, res) => {
+  try {
+    //CHECK PERMISSION
+    const req_user = req.req_user;
+    if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
+
+    let { object } = req.body;
+
+    if (!object || !object.name) return res.send({ error: true, message: "O nome do formulário é um campo obrigatório." });
+
+    const resp = await DBController.createOrUpdateForm(object);
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
 module.exports = function () {
   return router;
 };
