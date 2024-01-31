@@ -32,6 +32,15 @@ const routes = [
       title: "Meu Perfil",
     },
   },
+  {
+    path: "/forms",
+    name: "FormList",
+    component: () => import("../views/FormList.vue"),
+    meta: {
+      layout: "menu",
+      title: "Lista de Formulários",
+    },
+  },
 ];
 
 const router = new VueRouter({

@@ -205,6 +205,10 @@ export default {
                 to: "/#users",
               },
               {
+                label: "Formulários",
+                to: "/forms",
+              },
+              {
                 label: "Prompts",
                 to: "/#prompts",
               },

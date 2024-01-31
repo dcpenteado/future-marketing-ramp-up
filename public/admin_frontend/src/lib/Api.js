@@ -71,6 +71,12 @@ class Api {
     return resp;
   };
 
+  getForms = async () => {
+    const resp = await this.authPost("/get-forms", {}, {});
+    
+    return resp;
+  }
+
   checkErrorsWithStatusCode200 = (data) => {
     if (data.error) {
       emitToastr("error", data.message || "Erro não identificado!", "Erro");
