@@ -138,6 +138,14 @@ export default {
     computed: {
         userImage(){
             return this.image.preview || this.user.profile_picture;
+        },
+        currentUser: {
+            get(){
+                return this.$store.state.currentUser;
+            },
+            set(value){
+                this.$store.commit('setCurrentUser', value);
+            }
         }
     },
     mounted(){
@@ -200,6 +208,10 @@ export default {
                 emitToastr('error', response.message);
                 return;
             }
+
+            this.currentUser.name = this.user.name;
+            this.currentUser.email = this.user.email;
+            this.currentUser.profile_picture = this.user.profile_picture;
 
             setTimeout(() => {
                 this.saving = false;
