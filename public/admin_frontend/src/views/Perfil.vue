@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card outlined>
+        <v-card outlined class="mb-4">
             <v-card-text>
                 <v-form @submit.prevent="save">
                     <v-row>
@@ -57,6 +57,57 @@
                 </v-form>
             </v-card-text>
         </v-card>
+
+        <v-card outlined>
+            <v-card-title>
+                Redefinir senha
+            </v-card-title>
+            <v-card-text>
+                <v-form @submit.prevent="updatePassword">
+                    <v-row>
+                        <v-col cols="12">
+                            <v-text-field
+                                v-model="updatePasswordForm.oldPassword"
+                                label="Senha atual"
+                                outlined
+                                hide-details="auto"
+                                :type="updatePasswordForm.showPassword ? 'text' : 'password'"
+                                :append-icon="updatePasswordForm.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                @click:append="updatePasswordForm.showPassword = !updatePasswordForm.showPassword"
+                            />    
+                        </v-col>
+                        
+                        <v-col cols="12"> 
+                            <v-text-field
+                                v-model="updatePasswordForm.newPassword"
+                                label="Nova senha"
+                                outlined
+                                hide-details="auto"
+                                :type="updatePasswordForm.showPassword ? 'text' : 'password'"
+                                :append-icon="updatePasswordForm.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                @click:append="updatePasswordForm.showPassword = !updatePasswordForm.showPassword"
+                            />    
+                        </v-col>
+                        
+                        <v-col cols="12"> 
+                            <v-text-field
+                                v-model="updatePasswordForm.confirmNewPassword"
+                                label="Confirmar nova senha"
+                                outlined
+                                hide-details="auto"
+                                :type="updatePasswordForm.showPassword ? 'text' : 'password'"
+                                :append-icon="updatePasswordForm.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                @click:append="updatePasswordForm.showPassword = !updatePasswordForm.showPassword"
+                            />    
+                        </v-col>
+                        
+                        <v-col cols="12" class="d-flex justify-end">
+                            <v-btn color="primary" type="submit">Redefinir senha</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-card-text>
+        </v-card>
         
     </div>
 </template>
@@ -78,6 +129,12 @@ export default {
             image: {
                 file: null,
                 preview: null,
+            },
+            updatePasswordForm: {
+                showPassword: false,
+                oldPassword: '',
+                newPassword: '',
+                confirmNewPassword: ''
             }
         };
     },
@@ -123,6 +180,28 @@ export default {
         },
         save(){
             emitToastr('error', 'Não implementado')
+        },
+        async updatePassword(){
+            const { oldPassword, newPassword, confirmNewPassword } = this.updatePasswordForm;
+
+            if (!oldPassword || !newPassword || !confirmNewPassword) {
+                emitToastr('error', 'Preencha todos os campos');
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                emitToastr('error', 'As senhas não conferem');
+                return;
+            }
+
+            const response = await Api.changeUserPassword(newPassword, oldPassword);
+
+            if (response.error) {
+                emitToastr('error', response.message);
+                return;
+            }
+
+            emitToastr('success', 'Senha alterada com sucesso');
         }
     },
 };

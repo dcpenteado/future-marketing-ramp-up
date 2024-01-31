@@ -42,7 +42,15 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {},
+    "overrides": [
+      {
+        "files": ["src/views/*.vue"],
+        "rules": {
+          "vue/multi-word-component-names": "off"
+        }
+      }
+    ]
   },
   "browserslist": [
     "> 1%",

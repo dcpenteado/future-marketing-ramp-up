@@ -37,7 +37,7 @@ export default {
 
             this.$route.path.split('/')
                 .filter(item => item)
-                .map((item, index, array) => this.$router.resolve({ path: `/${array.slice(0, index + 1).join('/')}` }))
+                .map((_, index, array) => this.$router.resolve({ path: `/${array.slice(0, index + 1).join('/')}` }))
                 .map((item) => item.route)
                 .forEach((item) => {                    
                     items.push({
