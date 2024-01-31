@@ -2,6 +2,8 @@ require("./schemas");
 
 const mongoose = require("mongoose");
 const Users = mongoose.model("users");
+const Forms = mongoose.model("forms");
+const FormResponses = mongoose.model("form_responses");
 var ObjectId = mongoose.Types.ObjectId;
 const bcrypt = require("bcryptjs");
 
@@ -100,6 +102,91 @@ const updateUser = async (user) => {
   }
 };
 
+const getForms = async () => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    const resp = await Forms.find({ filed: { $ne: true } });
+    return resp;
+  } catch (err) {
+    return { error: true, type: "general_error" };
+  }
+};
+
+const getFormById = async (id) => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    const resp = await Forms.findOne({ _id: id, filed: { $ne: true } });
+    return resp;
+  } catch (err) {
+    return { error: true, type: "general_error" };
+  }
+};
+
+const createOrUpdateForm = async (object) => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    let resp;
+
+    if (object._id) {
+      resp = Forms.updateOne({ _id: object._id }, object, { upsert: true, setDefaultsOnInsert: true });
+    } else {
+      resp = await Forms.create(object);
+    }
+
+    return resp;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getFormResponses = async () => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    const resp = await FormResponses.find({ filed: { $ne: true } });
+    return resp;
+  } catch (err) {
+    return { error: true, type: "general_error" };
+  }
+};
+
+const getFormResponseById = async (id) => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    const resp = await FormResponses.findOne({ _id: id, filed: { $ne: true } });
+    return resp;
+  } catch (err) {
+    return { error: true, type: "general_error" };
+  }
+};
+
+const createOrUpdateFormResponse = async (object, user_id) => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    let resp;
+
+    if (!object.changes) object.changes = [];
+    object.changes.push({ date: new Date(), user: user_id });
+
+    object.changed = new Date();
+
+    if (object._id) {
+      resp = FormResponses.updateOne({ _id: object._id }, object, { upsert: true, setDefaultsOnInsert: true });
+    } else {
+      resp = await FormResponses.create(object);
+    }
+
+    return resp;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   init,
 
@@ -109,4 +196,12 @@ module.exports = {
   getUserByEmail,
   getUserById,
   updateUser,
+
+  getForms,
+  getFormById,
+  createOrUpdateForm,
+
+  getFormResponses,
+  getFormResponseById,
+  createOrUpdateFormResponse
 };

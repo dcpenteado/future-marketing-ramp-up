@@ -48,12 +48,14 @@ const FormResponseSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: "users",
-    index: true,
+    required: true,
+    index: true
   },
   form: {
     type: Schema.ObjectId,
     ref: "forms",
-    index: true,
+    required: true,
+    index: true
   },
   answers: { type: Array, default: [] },
   created: { type: Date, default: Date.now },
