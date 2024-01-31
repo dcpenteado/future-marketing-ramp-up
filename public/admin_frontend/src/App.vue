@@ -176,92 +176,97 @@ export default {
     showLoading: false,
     projectName: "Future Marketing",
     user: {},
-    menuItems: [
-      {
-        label: "Meu perfil",
-        icon: "mdi-account-circle-outline",
-        to: "/meu-perfil",
-      },
-      {
-        label: "Minha plataforma",
-        icon: "mdi-monitor-dashboard",
-        children: [
-          {
-            label: "Usuários",
-            to: "/#usuarios",
-          },
-          {
-            label: "Prompts",
-            to: "/#prompts",
-          },
-          {
-            label: "Formbuilder",
-            to: "/#formbuilder",
-          },
-          {
-            label: "Textos Gerados",
-            to: "/#texts",
-          },
-          {
-            label: "Projetos concluídos",
-            to: "/#projects",
-          },
-          {
-            label: "Sites para publicação",
-            to: "/#sites",
-          },
-        ]
-      },
-      {
-        label: "Dashboards",
-        icon: "mdi-monitor-dashboard",
-        children: [
-          {
-            label: "Clientes",
-            to: "/#clients",
-          },
-          {
-            label: "Status de projetos",
-            to: "/#project-status",
-          },
-          {
-            label: "Painel financeiro clientes",
-            to: "/#financial-panel",
-          },
-        ]
-      },
-      {
-        label: "Meu site",
-        icon: "mdi-monitor-dashboard",
-        children: [
-          {
-            label: "Minhas respostas",
-            to: "/#my-questions",
-          },
-          {
-            label: "Meus textos",
-            to: "/#my-texts",
-          },
-          {
-            label: "Minhas aprovações",
-            to: "/#my-approvals",
-          },
-        ],
-      }
-    ]
   }),
 
   computed: {
     isAdmin() {
       return this.user?.admin;
     },
+    menuItems(){
+      const items = []
+
+      items.push({
+        label: "Meu perfil",
+        icon: "mdi-account-circle-outline",
+        to: '/meu-perfil'
+      })
+
+      if (this.isAdmin) {
+        items.push(
+          {
+            label: "Minha plataforma",
+            icon: "mdi-monitor-dashboard",
+            children: [
+              {
+                label: "Usuários",
+                to: "/#users",
+              },
+              {
+                label: "Prompts",
+                to: "/#prompts",
+              },
+              {
+                label: "Formbuilder",
+                to: "/#formbuilder",
+              },
+              {
+                label: "Textos Gerados",
+                to: "/#texts",
+              },
+              {
+                label: "Projetos concluídos",
+                to: "/#projects",
+              },
+              {
+                label: "Sites para publicação",
+                to: "/#sites",
+              },
+            ]
+          },
+          {
+            label: "Dashboards",
+            icon: "mdi-monitor-dashboard",
+            children: [
+              {
+                label: "Clientes",
+                to: "/#clients",
+              },
+              {
+                label: "Status de projetos",
+                to: "/#project-status",
+              },
+              {
+                label: "Painel financeiro clientes",
+                to: "/#financial-panel",
+              },
+            ]
+          },
+          {
+            label: "Meu site",
+            icon: "mdi-monitor-dashboard",
+            children: [
+              {
+                label: "Minhas respostas",
+                to: "/#my-questions",
+              },
+              {
+                label: "Meus textos",
+                to: "/#my-texts",
+              },
+              {
+                label: "Minhas aprovações",
+                to: "/#my-approvals",
+              },
+            ],
+          }
+        )
+      }
+
+      return items
+    }
   },
 
   methods: {
-    async load() {
-      
-      
-    },
     logout() {
       Api.logout();
     },
@@ -289,6 +294,7 @@ export default {
 
   created() {
     this.$root.$refs.global = this;
+    document.title = this.projectName;
   },
 
   mounted() {

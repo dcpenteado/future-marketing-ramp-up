@@ -84,8 +84,6 @@
                                 outlined
                                 hide-details="auto"
                                 :type="updatePasswordForm.showPassword ? 'text' : 'password'"
-                                :append-icon="updatePasswordForm.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                @click:append="updatePasswordForm.showPassword = !updatePasswordForm.showPassword"
                             />    
                         </v-col>
                         
@@ -96,8 +94,6 @@
                                 outlined
                                 hide-details="auto"
                                 :type="updatePasswordForm.showPassword ? 'text' : 'password'"
-                                :append-icon="updatePasswordForm.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                @click:append="updatePasswordForm.showPassword = !updatePasswordForm.showPassword"
                             />    
                         </v-col>
                         
@@ -229,7 +225,6 @@ export default {
             const response = await Api.changeUserPassword(newPassword, oldPassword);
 
             if (response.error) {
-                emitToastr('error', response.message);
                 return;
             }
 
