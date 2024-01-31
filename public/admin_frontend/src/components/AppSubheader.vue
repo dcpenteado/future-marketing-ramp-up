@@ -5,12 +5,16 @@
         <v-spacer></v-spacer>
 
         <v-breadcrumbs
-            v-if="breadcrumbsItems.length > 1"
-            :items="breadcrumbsItems"
+            v-if="breadcrumbs.length > 1"
+            :items="breadcrumbs"
             divider=">"
         >
             <template v-slot:item="{ item }">
-                <v-breadcrumbs-item :to="item.to">
+                <v-breadcrumbs-item
+                    :to="item.to"
+                    :disabled="item.disabled"
+                    exact
+                >
                     {{ item.label }}
                 </v-breadcrumbs-item>
             </template>
@@ -30,24 +34,12 @@ export default {
 
             return this.$route.name
         },
-        breadcrumbsItems(){
+        breadcrumbs(){
             const items = [
-                { label: 'Painéis' },            
+                { label: 'Painéis' }
             ]
 
-            this.$route.path.split('/')
-                .filter(item => item)
-                .map((_, index, array) => this.$router.resolve({ path: `/${array.slice(0, index + 1).join('/')}` }))
-                .map((item) => item.route)
-                .filter((item) => item.meta && item.meta.title)
-                .forEach((item) => {       
-                    items.push({
-                        label: item.meta.title || item.name,
-                        to: item.path
-                    })
-                })
-
-            return items            
+            return items.concat( this.$store.state.breadcrumbs)
         }
     }
 }

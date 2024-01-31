@@ -150,6 +150,10 @@ export default {
     },
     mounted(){
         this.load()
+
+        this.$store.commit('setBreadcrumbs', [
+            { label: 'Perfil' },
+        ])
     },
     methods: {
         async load(){

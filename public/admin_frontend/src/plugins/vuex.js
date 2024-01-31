@@ -7,10 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         currentUser: null,
+        breadcrumbs: []
     },
     mutations: {
         setCurrentUser(state, payload) {
             state.currentUser = payload
+        },
+        setBreadcrumbs(state, payload) {
+            state.breadcrumbs = payload
         }
     },
     actions: {

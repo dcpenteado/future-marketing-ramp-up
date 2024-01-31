@@ -41,6 +41,24 @@ const routes = [
       title: "Lista de Formulários",
     },
   },
+  {
+    path: "/forms/:formId",
+    name: "FormSingle",
+    component: () => import("../views/FormSingle.vue"),
+    meta: {
+      layout: "menu",
+      title: "Formulário",
+    },
+  },
+  {
+    path: "/forms/:formId/categories/:categoryId",
+    name: "FormSingleCategory",
+    component: () => import("../views/FormSingleCategory.vue"),
+    meta: {
+      layout: "menu",
+      title: "Formulário category",
+    },
+  },
 ];
 
 const router = new VueRouter({

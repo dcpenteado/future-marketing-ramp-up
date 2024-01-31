@@ -194,6 +194,16 @@ export default {
         to: '/meu-perfil'
       })
 
+      if (!this.isAdmin) {
+        items.push(
+          {
+            label: "On boarding",
+            icon: "mdi-list-box-outline",
+            to: "/forms/1", 
+          }
+        )
+      }
+
       if (this.isAdmin) {
         items.push(
           {
@@ -286,6 +296,8 @@ export default {
     '$route': {
       immediate: true,
       handler: async function () {
+        this.$store.commit('setBreadcrumbs', [])
+        
         if (this.currentUser) return
 
         if (this.$route.meta.layout === 'fullscreen') return
