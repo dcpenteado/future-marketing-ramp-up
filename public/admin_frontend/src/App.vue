@@ -288,6 +288,10 @@ export default {
       handler: async function () {
         if (this.currentUser) return
 
+        if (this.$route.meta.layout === 'fullscreen') return
+
+        if (this.$route.path === '/login') return
+
         this.$store.dispatch('loadCurrentUser')
       },
     }
