@@ -39,7 +39,8 @@ export default {
                 .filter(item => item)
                 .map((_, index, array) => this.$router.resolve({ path: `/${array.slice(0, index + 1).join('/')}` }))
                 .map((item) => item.route)
-                .forEach((item) => {                    
+                .filter((item) => item.meta && item.meta.title)
+                .forEach((item) => {       
                     items.push({
                         label: item.meta.title || item.name,
                         to: item.path
