@@ -72,7 +72,10 @@ class Api {
   };
 
   checkErrorsWithStatusCode200 = (data) => {
-    if (data.error) return emitToastr("error", data.message || "Erro não identificado!", "Erro");
+    if (data.error) {
+      emitToastr("error", data.message || "Erro não identificado!", "Erro");
+    }
+    
     return data;
   };
 
