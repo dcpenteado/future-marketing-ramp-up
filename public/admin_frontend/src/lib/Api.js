@@ -55,6 +55,12 @@ class Api {
     return resp;
   };
 
+  updateUser = async (user) => {
+    const resp = await this.authPost("/update-user", { user }, {});
+
+    return resp;
+  }
+
   recoveryPassword = async (email) => {
     const resp = await this.authPost("/send-password-recovery", { email: email }, {});
     return resp;
