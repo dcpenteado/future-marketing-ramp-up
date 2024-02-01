@@ -164,6 +164,17 @@ const getFormResponseById = async (id) => {
   }
 };
 
+const getFormResponseByUserId = async (user_id) => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    const resp = await FormResponses.findOne({ user: user_id, filed: { $ne: true } }).populate('user').populate('form');
+    return resp;
+  } catch (err) {
+    return { error: true, type: "general_error" };
+  }
+};
+
 const createOrUpdateFormResponse = async (object, user_id) => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
@@ -203,5 +214,6 @@ module.exports = {
 
   getFormResponses,
   getFormResponseById,
+  getFormResponseByUserId,
   createOrUpdateFormResponse
 };
