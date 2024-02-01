@@ -52,15 +52,15 @@ const routes = [
   },
   {
     path: "/forms/:formId/categories/:categoryId",
-    name: "FormSingleCategory",
-    component: () => import("../views/FormSingleCategory.vue"),
+    name: "FormCategory",
+    component: () => import("../views/FormCategory.vue"),
     meta: {
       layout: "menu",
       title: "Formulário",
     },
   },
   {
-    path: ":catchAll(.*)",
+    path: "/:catchAll(.*)",
     name: "NotFound",
     component: () => import("../views/404.vue"),
     meta: {

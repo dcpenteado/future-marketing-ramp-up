@@ -1,37 +1,33 @@
 <template>
-    <v-row> 
-        <v-col cols="12" v-for="(q) in questions" :key="q.id">
-            <v-card outlined>
-                <v-card-title>
-                    {{ q.name }}
-                </v-card-title>
+    <v-card outlined>
+        <v-card-title>
+            {{ question.name }}
+        </v-card-title>
 
-                <v-card-subtitle>
-                    {{ q.description }}
-                </v-card-subtitle>
+        <v-card-subtitle>
+            {{ question.description }}
+        </v-card-subtitle>
 
-                <v-divider />
-                
-                <v-card-text>
-                    
-                </v-card-text>
-            </v-card>        
-        </v-col>
-    </v-row>
+        <v-divider />
+        
+        <v-card-text>
+            <slot />
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>
 export default {
-    name: 'DynamicForm',
+    name: 'DynamicFormField',
     props: {
-        questions: {
-            type: Array,
-            required: true
+        question: {
+            type: Object,
+            required: true,
+            default: () => ({
+                name: 'Nome da pergunta',
+                description: 'Descrição da pergunta'
+            })
         },
-        answers: {
-            type: Array,
-            required: true
-        }
     }
 }
 </script>

@@ -20,6 +20,8 @@ export default new Vuex.Store({
         },
         setPageTitle(state, payload) {
             state.pageTitle = payload
+
+            document.title = payload || 'Future Marketing'
         },
         setPageLoading(state, payload) {
             state.pageLoading = payload
