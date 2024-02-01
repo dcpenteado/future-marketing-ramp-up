@@ -1,16 +1,22 @@
 <template>
-    <div>
+    <div v-if="form">
         <v-card class="mb-4" outlined>
             <v-card-title>
-                Progresso geral ({{ generalProgress }}%)
+                Progresso geral ({{ fullProgress }}%)
             </v-card-title>
             
             <v-card-text>
-                <v-progress-linear :value="generalProgress" height="25" rounded  />
+                <v-progress-linear :value="fullProgress" height="25" rounded  />
             </v-card-text>
         </v-card>
 
-        <v-card outlined>
+        <v-card outlined v-if="!categories.length">
+            <v-card-title>
+                Nenhuma categoria encontrada
+            </v-card-title> 
+        </v-card>
+
+        <v-card outlined v-else>
             <v-card-title>
                 Categorias
             </v-card-title>
@@ -21,15 +27,19 @@
                         <v-card
                             outlined
                             hover
-                            :to="`/forms/${$route.params.formId}/categories/${i}`"
+                            :to="category.to"
                         >
                             <v-card-text class="d-flex align-center">
-                                <div class=" text-subtitle-2">
-                                    {{ category.label }} ({{ category.progress }}%)
+                                <div class=" text-subtitle">
+                                    {{ category.label }}
                                 </div>
                                 
                                 <div class="flex-grow-1 mx-4">
-                                    <v-progress-linear rounded :value="category.progress" height="10"  />
+                                    <v-progress-linear rounded :value="category.progress" height="20">
+                                        <template v-slot:default="{ value }">
+                                            <div class="text-caption">{{ Math.ceil(value) }}%</div>
+                                        </template>
+                                    </v-progress-linear>
                                 </div>
 
                                 <div>
@@ -45,32 +55,91 @@
 </template>
 
 <script>
+import Api from "@/lib/Api";
+
 export default {
     name: 'FormSingle',
     data: () => ({
-        generalProgress: 30,
-        categories: [
-            {
-                label: 'Categoria 1',
-                progress: 15,
-            },
-            {
-                label: 'Categoria 2',
-                progress: 30,
-            },
-            {
-                label: 'Categoria 3',
-                progress: 25,
-            },
-        ],
+        form: null,
+        answers: [],
     }),
-    mounted(){
-        this.$store.commit('setBreadcrumbs', [
-            {
-                label: 'Formulário 1',
-                to: '/forms/1'
+    computed: {
+        pageLoading: {
+            get() {
+                return this.$store.state.pageLoading;
             },
-        ])
+            set(value) {
+                this.$store.commit('setPageLoading', value);
+            }
+        },
+        currentUser: {
+            get() {
+                return this.$store.state.currentUser;
+            },
+            set(value) {
+                this.$store.commit('setCurrentUser', value);
+            }
+        },  
+        categories() {
+            if (!this.form) return []
+            
+            return this.form.categories.map((c) => {
+                const questionLength = c.questions.length
+                const answeredQuestionsLength = this.answers.filter(a => c.questions.some(q => q.id === a.question_id)).length
+
+                const progress = (answeredQuestionsLength / questionLength) * 100
+
+                return {
+                    label: `${c.name} (${answeredQuestionsLength}/${questionLength})`,
+                    progress: progress,
+                    to: `/forms/${this.form._id}/categories/${c.id}`
+                }
+            })
+        },
+        fullProgress(){
+            if (!this.form) return 0
+
+            const categoriesLength = this.categories.length
+            const doneCategoriesLength = this.categories.filter(c => c.progress === 100).length
+
+            return (doneCategoriesLength / categoriesLength) * 100
+        }
+    },
+    methods: {
+        setPageData(){
+            this.$store.commit('setPageTitle', this.form.name);
+
+            this.$store.commit('setBreadcrumbs', [
+                {
+                    label: this.form.name,
+                    to: '/form'
+                },
+            ])
+        },
+        async load() {
+            this.pageLoading = true;
+
+            const response = await Api.getFormResponseByUserId(this.currentUser);
+
+            if (response.error) {
+                this.$router.push('/404');
+                return
+            }
+
+            const { form, answers } = response.message;
+
+            this.form = form;
+            this.answers = answers;
+
+            this.setPageData();
+
+            setTimeout(() => {
+                this.pageLoading = false;
+            }, 800);
+        },
+    },
+    mounted(){
+        this.load()
     }
 };
 </script>

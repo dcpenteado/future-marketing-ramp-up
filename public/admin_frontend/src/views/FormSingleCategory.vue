@@ -10,31 +10,11 @@
             </v-card-text>
         </v-card>
 
-        <v-row>
-            <v-col cols="12" v-if="!questions.length">
-                <v-card class="mb-4" outlined>
-                    <v-card-text class="text-center">
-                        Sem perguntas cadastradas
-                    </v-card-text>
-                </v-card>
-            </v-col>
-
-            <v-col cols="12" v-for="(question, i) in questions" :key="i">
-                <v-card class="mb-4" outlined>
-                    <v-card-title>
-                        {{ question.label }}
-                    </v-card-title>
-                    
-                    <v-card-text>
-                        <v-text-field
-                            outlined
-                            :label="question.label"
-                            v-model="question.answer"
-                        />
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
+        <dynamic-form
+            :questions="questions"
+            :answers="questions"
+        />
+        
     </div>
 </template>
 
@@ -43,8 +23,24 @@ export default {
     name: 'FormSingleCategory',
     data: () => ({
         progress: 30,
-        questions: []
+        answers: [],
+        questions: [
+            {
+                id: "1",
+                name: "question1",
+                description: "Descrição da pergunta 1",
+                type: "text",
+                config: {
+                    rules: [
+                        { name: "required" }
+                    ]                    
+                }
+            }
+        ]
     }),
+    components: {
+        DynamicForm: () => import('@/components/DynamicForm.vue')
+    },
     computed: {
         formId() {
             return this.$route.params.formId

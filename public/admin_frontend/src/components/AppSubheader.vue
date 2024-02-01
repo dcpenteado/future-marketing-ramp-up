@@ -28,6 +28,10 @@ export default {
     name: 'AppSubheader',
     computed: {
         title() {
+            if (this.$store.state.pageTitle) {
+                return this.$store.state.pageTitle
+            }
+
             if (this.$route.meta.title) {
                 return this.$route.meta.title
             }

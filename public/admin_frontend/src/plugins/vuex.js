@@ -7,7 +7,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         currentUser: null,
-        breadcrumbs: []
+        breadcrumbs: [],
+        pageTitle: 'Future Marketing',
+        pageLoading: false
     },
     mutations: {
         setCurrentUser(state, payload) {
@@ -15,6 +17,12 @@ export default new Vuex.Store({
         },
         setBreadcrumbs(state, payload) {
             state.breadcrumbs = payload
+        },
+        setPageTitle(state, payload) {
+            state.pageTitle = payload
+        },
+        setPageLoading(state, payload) {
+            state.pageLoading = payload
         }
     },
     actions: {

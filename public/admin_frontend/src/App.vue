@@ -5,13 +5,6 @@
     </v-main>
 
     <div v-if="$route.meta.layout === 'menu'">
-      <v-progress-linear
-        app
-        indeterminate
-        color="deep-purple lighten-3"
-        class="loading-bar"
-        v-show="showLoading"
-      />
 
       <v-navigation-drawer
         class="drawer"
@@ -151,11 +144,19 @@
 
         <v-divider />
 
-        <app-subheader />
+        <template v-if="pageLoading">
+          <v-progress-linear
+            indeterminate
+            color="deep-purple lighten-3"
+            class="loading-bar"
+          />
+        </template>        
 
-        <v-divider />
+        <app-subheader v-show="!pageLoading" />
 
-        <v-container fluid>
+        <v-divider v-show="!pageLoading" />
+
+        <v-container fluid v-show="!pageLoading">
           <router-view fluid />
         </v-container>
       </v-main>
@@ -174,11 +175,13 @@ export default {
 
   data: () => ({
     drawer: false,
-    showLoading: false,
     projectName: "Future Marketing",
   }),
 
   computed: {
+    pageLoading() {
+      return this.$store.state.pageLoading
+    },
     currentUser() {
       return this.$store.state.currentUser
     },
@@ -197,9 +200,22 @@ export default {
       if (!this.isAdmin) {
         items.push(
           {
-            label: "On boarding",
-            icon: "mdi-list-box-outline",
-            to: "/forms/1", 
+            label: "Meu site",
+            icon: "mdi-monitor-dashboard",
+            children: [
+              {
+                label: "Formulário",
+                to: "/form",
+              },
+              {
+                label: "Meus textos",
+                to: "/#my-texts",
+              },
+              {
+                label: "Minhas aprovações",
+                to: "/#my-approvals",
+              },
+            ],
           }
         )
       }
@@ -287,16 +303,13 @@ export default {
     logout() {
       Api.logout();
     },
-
-    setLoading(loading) {
-      this.showLoading = loading;
-    },
   },
   watch: {
     '$route': {
       immediate: true,
       handler: async function () {
         this.$store.commit('setBreadcrumbs', [])
+        this.$store.commit('setPageTitle', null)
         
         if (this.currentUser) return
 

@@ -42,7 +42,7 @@ const routes = [
     },
   },
   {
-    path: "/forms/:formId",
+    path: "/form",
     name: "FormSingle",
     component: () => import("../views/FormSingle.vue"),
     meta: {
@@ -56,9 +56,18 @@ const routes = [
     component: () => import("../views/FormSingleCategory.vue"),
     meta: {
       layout: "menu",
-      title: "Formulário category",
+      title: "Formulário",
     },
   },
+  {
+    path: ":catchAll(.*)",
+    name: "NotFound",
+    component: () => import("../views/404.vue"),
+    meta: {
+      layout: "menu",
+      title: "Página não encontrada",
+    },
+  }
 ];
 
 const router = new VueRouter({
