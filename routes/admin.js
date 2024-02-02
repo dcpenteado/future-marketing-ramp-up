@@ -246,16 +246,22 @@ router.post("/create-or-update-form-response", auth, async (req, res) => {
 
     let { object } = req.body;
 
-    if (!object._id) {
-      if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
-    }
-    else {
-      if (object.user.toString() != req_user._id.toString()) return res.send({ error: true, message: "Permissões insuficientes." });
+    if (!object || !object.user || !object.form) {
+      return res.send({ error: true, message: "Usuário e formulário são campos requeridos." });
     }
 
-    if (!object || !object.user || !object.form) return res.send({ error: true, message: "Usuário e formulário são campos requeridos." });
+    // only admin can create form responses
+    if (!object._id && !req_user.admin) {
+      return res.send({ error: true, message: "Permissões insuficientes." });
+    }
 
+    // only update if user is the same or if admin
+    if (!req_user.admin && object.user._id.toString() != req_user._id.toString()) {
+      return res.send({ error: true, message: "Permissões insuficientes." });
+    }
+    
     const resp = await DBController.createOrUpdateFormResponse(object, req_user._id);
+    
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
