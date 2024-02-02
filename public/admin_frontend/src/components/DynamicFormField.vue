@@ -1,16 +1,15 @@
 <template>
     <v-card
         outlined
-        :class="errors.length ? 'error--text' : ''"
         :style="{
             'border-color': errors.length ? 'red' : undefined,            
         }"
     >
-        <v-card-title>
+        <v-card-title :class="errors.length ? 'error--text' : ''">
             {{ question.name }}
         </v-card-title>
 
-        <v-card-subtitle>
+        <v-card-subtitle :class="errors.length ? 'error--text' : ''">
             {{ question.description }}
         </v-card-subtitle>
 

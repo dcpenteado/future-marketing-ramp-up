@@ -85,12 +85,15 @@ export default {
             
             return this.form.categories.map((c) => {
                 const questionLength = c.questions.length
-                const answeredQuestionsLength = this.answers.filter(a => c.questions.some(q => q.id === a.question_id)).length
+                const answeredLength = this.answers
+                    .filter(a => c.questions.some(q => q.id === a.question_id))
+                    .filter(a => a.current)
+                    .length
 
-                const progress = (answeredQuestionsLength / questionLength) * 100
+                const progress = Math.min((answeredLength / questionLength) * 100, 100)
 
                 return {
-                    label: `${c.name} (${answeredQuestionsLength}/${questionLength})`,
+                    label: `${c.name} (${answeredLength}/${questionLength})`,
                     progress: progress,
                     to: `/forms/${this.form._id}/categories/${c.id}`
                 }
@@ -99,10 +102,10 @@ export default {
         fullProgress(){
             if (!this.form) return 0
 
-            const categoriesLength = this.categories.length
-            const doneCategoriesLength = this.categories.filter(c => c.progress === 100).length
+            const questionsLength = this.form.categories.reduce((acc, c) => acc + c.questions.length, 0)
+            const answeredLength = this.answers.filter(a => a.current).length
 
-            return (doneCategoriesLength / categoriesLength) * 100
+            return Math.min((answeredLength / questionsLength) * 100, 100)
         }
     },
     methods: {

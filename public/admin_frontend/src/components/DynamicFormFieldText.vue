@@ -4,6 +4,7 @@
             <v-text-field
                 v-model="model"
                 outlined
+                hide-details="auto"
                 :error="!!errors.length"
                 :error-messages="errors"
             />

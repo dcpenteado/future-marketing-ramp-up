@@ -81,6 +81,10 @@ class Api {
     return this.authPost("/get-form-response-by-user-id", { user_id }, {})
   }
 
+  createOrUpdateFormResponse = async (form_response) => {
+    return this.authPost("/create-or-update-form-response", { object: form_response }, {})
+  }
+
   checkErrorsWithStatusCode200 = (data) => {
     if (data.error) {
       emitToastr("error", data.message || "Erro não identificado!", "Erro");

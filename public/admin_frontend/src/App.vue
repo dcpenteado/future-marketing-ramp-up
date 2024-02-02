@@ -157,7 +157,7 @@
         <v-divider v-show="!pageLoading" />
 
         <v-container fluid v-show="!pageLoading">
-          <router-view fluid />
+          <router-view v-if="currentUser" />
         </v-container>
       </v-main>
     </div>
