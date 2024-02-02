@@ -1,6 +1,13 @@
 <template>
-    <DynamicFormField :question="question">
-        <v-text-field outlined dense />
+    <DynamicFormField v-model="model" :question="question">
+        <template v-slot:default="{ errors }">
+            <v-text-field
+                v-model="model"
+                outlined
+                :error="!!errors.length"
+                :error-messages="errors"
+            />
+        </template>
     </DynamicFormField>
 </template>
 
@@ -10,16 +17,26 @@ export default {
     components: {
         DynamicFormField: () => import('@/components/DynamicFormField.vue'),    
     },
+   
     props: {
+        value: {
+            type: String,
+            default: ''
+        },
         question: {
             type: Object,
             required: true
         },
     },
-    methods: {
-        updateAnswer(answer){
-            console.log(answer)
+    computed: {
+        model: {
+            get() {
+                return this.value;
+            },
+            set(value) {
+                this.$emit('input', value);
+            }
         }
-    }
+    },
 }
 </script>
