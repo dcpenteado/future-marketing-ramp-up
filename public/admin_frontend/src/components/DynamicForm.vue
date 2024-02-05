@@ -2,6 +2,13 @@
     <v-row> 
         <v-col cols="12" v-for="(q) in questions" :key="q.id">
             <DynamicFormFieldText
+                v-if="q.type === 'text'"
+                v-model="model[q.id]"
+                :question="q"
+            />
+            
+            <DynamicFormFieldSelect
+                v-else-if="q.type === 'select'"
                 v-model="model[q.id]"
                 :question="q"
             />
@@ -13,7 +20,8 @@
 export default {
     name: 'DynamicForm',
     components: {
-        DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),        
+        DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
+        DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
     },
     props: {
         value: {
