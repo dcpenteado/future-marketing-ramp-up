@@ -53,21 +53,23 @@ router.post("/create-user", auth, async (req, res) => {
   try {
     const req_user = req.req_user;
 
-    const { email, password, name, admin } = req.body;
-    if (!email || !password || !name) return res.send({ error: true, message: "Campos obrigatórios: email, senha, nome" });
+    const { user } = req.body;
+    if (!user.email || !user.password || !user.name) return res.send({ error: true, message: "Campos obrigatórios: email, senha, nome" });
 
-    const existing_user = await DBController.getUserByEmail(email);
+    const existing_user = await DBController.getUserByEmail(user.email);
     if (existing_user) return res.send({ error: true, message: "Esse usuário já está cadastrado. Se tiver dificuldades para lembrar a senha, tente recuperá-la." });
 
     const recovery_token = uuidv4();
 
-    let new_user = await DBController.createUser(email.toLowerCase(), password, name, admin, recovery_token);
+    let new_user = await DBController.createUser(user.email.toLowerCase(), user.password, user.name, user.admin, recovery_token);
     if (new_user.error === true) return res.status(403).send({ error: true, message: "Erro ao criar novo usuário." });
     let token = createUserToken(new_user, false);
     if (token.error === true) return res.status(400).send({ error: true, message: "Erro na geração do token" });
 
     return res.send({ new_user, token });
-  } catch (err) { }
+  } catch (err) {
+    return res.status(400).send({ error: true, message: err.message });
+   }
 });
 
 router.post("/upload-profile-picture", auth, upload.single("image"), async (req, res) => {

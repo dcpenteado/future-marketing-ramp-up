@@ -56,9 +56,11 @@ const createUser = async (email, password, name, admin = false, recovery_token) 
 };
 
 //BUSCA TODOS OS USUÁRIOS DO ADMIN
-const getUsers = async (filter) => {
+const getUsers = async (filter = {}) => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    filter.filed = { $ne: true };
 
     const resp = await Users.find(filter);
     return resp;

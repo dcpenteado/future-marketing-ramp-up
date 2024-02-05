@@ -6,7 +6,6 @@ const UserSchema = new Schema({
   password: { type: String, required: true, select: false },
   name: { type: String },
   admin: { type: Boolean, default: false },
-  customer: { type: Boolean, default: false },
   permissions: { type: Array, default: ['DEFAULT'] },
   created: { type: Date, default: Date.now },
   filed: { type: Boolean, default: false },

@@ -55,6 +55,11 @@ class Api {
     return resp;
   };
 
+  createUser = async (user) => {
+    const resp = await this.authPost("/create-user", { user }, {});
+    return resp;
+  }
+
   updateUser = async (user) => {
     const resp = await this.authPost("/update-user", { user }, {});
     return resp;
@@ -148,7 +153,7 @@ class Api {
           if (err.response.data && err.response.data.logoff === true) this.logout();
         } else {
           if (err.response && err.response.data && err.response.data.error && err.response.data.message) {
-            return emitToastr("error", err.response.data.message);
+            return {error: true, message: err.response.data.message};
           } else if (err.response && err.response.status) emitToastr("error", err.response.statusText + " (status: " + err.response.status + ")", "Erro");
           else emitToastr("error", "Erro genérico de servidor!", "Erro");
           err.response.error = err.response.error || true;
