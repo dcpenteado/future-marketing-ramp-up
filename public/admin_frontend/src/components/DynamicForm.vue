@@ -12,6 +12,12 @@
                 v-model="model[q.id]"
                 :question="q"
             />
+            
+            <DynamicFormFieldListItem
+                v-else-if="q.type === 'list_item'"
+                v-model="model[q.id]"
+                :question="q"
+            />
         </v-col>
     </v-row>
 </template>
@@ -22,6 +28,7 @@ export default {
     components: {
         DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
         DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
+        DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
     },
     props: {
         value: {

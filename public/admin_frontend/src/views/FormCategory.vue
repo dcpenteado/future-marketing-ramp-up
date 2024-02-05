@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { isFieldEmpty } from "@/composables/isFieldEmpty";
 import Api from "@/lib/Api";
 import uuid from 'uuid-random';	
 
@@ -81,7 +82,8 @@ export default {
             const answeredLength = this.questions.length
             
             const totalAnswers = Object.keys(this.dynamicFormData)
-                .filter(k => this.dynamicFormData[k]).length;
+                .filter(k => !isFieldEmpty(this.dynamicFormData[k]))
+                .length;
             
             return Math.min((totalAnswers / answeredLength) * 100, 100)
         }

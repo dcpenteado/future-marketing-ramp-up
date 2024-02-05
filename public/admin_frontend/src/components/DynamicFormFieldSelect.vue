@@ -7,6 +7,8 @@
                 hide-details="auto"
                 item-text="text"
                 item-value="value"
+                clearable
+                :multiple="!!question.config.multiple"
                 :items="question.config.items"
                 :error="!!errors.length"
                 :error-messages="errors"
@@ -23,7 +25,7 @@ export default {
     },   
     props: {
         value: {
-            type: String,
+            type: [String, Array],
             default: ''
         },
         question: {

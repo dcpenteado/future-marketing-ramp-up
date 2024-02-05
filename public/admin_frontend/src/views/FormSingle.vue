@@ -88,6 +88,7 @@ export default {
                 const answeredLength = this.answers
                     .filter(a => c.questions.some(q => q.id === a.question_id))
                     .filter(a => a.current)
+                    .filter(a => !!a.value)
                     .length
 
                 const progress = Math.min((answeredLength / questionLength) * 100, 100)
