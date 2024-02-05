@@ -227,8 +227,12 @@ export default {
             icon: "mdi-monitor-dashboard",
             children: [
               {
-                label: "Usuários",
-                to: "/#users",
+                label: "Clientes",
+                to: "/customers",
+              },
+              {
+                label: "Administradores",
+                to: "/administrators",
               },
               {
                 label: "Formulários",

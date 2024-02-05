@@ -57,7 +57,16 @@ class Api {
 
   updateUser = async (user) => {
     const resp = await this.authPost("/update-user", { user }, {});
+    return resp;
+  }
 
+  getCustomers = async () => {
+    const resp = await this.authPost("/get-customers", {}, {});
+    return resp;
+  }
+
+  getAdministrators = async () => {
+    const resp = await this.authPost("/get-administrators", {}, {});
     return resp;
   }
 

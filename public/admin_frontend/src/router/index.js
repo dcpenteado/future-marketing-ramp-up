@@ -42,6 +42,24 @@ const routes = [
     },
   },
   {
+    path: "/customers",
+    name: "Customers",
+    component: () => import("../views/Customers.vue"),
+    meta: {
+      layout: "menu",
+      title: "Clientes",
+    },
+  },
+  {
+    path: "/administrators",
+    name: "Administrators",
+    component: () => import("../views/Administrators.vue"),
+    meta: {
+      layout: "menu",
+      title: "Administradores",
+    },
+  },
+  {
     path: "/form",
     name: "FormSingle",
     component: () => import("../views/FormSingle.vue"),
