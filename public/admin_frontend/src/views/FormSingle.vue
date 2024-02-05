@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { isFieldEmpty } from "@/composables/isFieldEmpty";
 import Api from "@/lib/Api";
 
 export default {
@@ -85,10 +86,15 @@ export default {
             
             return this.form.categories.map((c) => {
                 const questionLength = c.questions.length
+                
                 const answeredLength = this.answers
                     .filter(a => c.questions.some(q => q.id === a.question_id))
                     .filter(a => a.current)
-                    .filter(a => !!a.value)
+                    .filter(a => {
+                        const question = c.questions.find(q => q.id === a.question_id);
+                        
+                        return !isFieldEmpty(question, a.value);
+                    })
                     .length
 
                 const progress = Math.min((answeredLength / questionLength) * 100, 100)
@@ -103,8 +109,17 @@ export default {
         fullProgress(){
             if (!this.form) return 0
 
+            const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions), [])
+
             const questionsLength = this.form.categories.reduce((acc, c) => acc + c.questions.length, 0)
-            const answeredLength = this.answers.filter(a => a.current).length
+
+            const answeredLength = this.answers.filter(a => a.current)
+                .filter(a => {
+                    const question = questions.find(q => q.id === a.question_id);
+                    
+                    return !isFieldEmpty(question, a.value);
+                })
+                .length;
 
             return Math.round( Math.min((answeredLength / questionsLength) * 100, 100))
         }
@@ -139,7 +154,7 @@ export default {
 
             setTimeout(() => {
                 this.pageLoading = false;
-            }, 800);
+            }, 200);
         },
     },
     mounted(){

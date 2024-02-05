@@ -82,7 +82,12 @@ export default {
             const answeredLength = this.questions.length
             
             const totalAnswers = Object.keys(this.dynamicFormData)
-                .filter(k => !isFieldEmpty(this.dynamicFormData[k]))
+                .filter(k => {
+                    const value = this.dynamicFormData[k];
+                    const question = this.questions.find(q => q.id === k);
+                    
+                    return !isFieldEmpty(question, value);
+                })
                 .length;
             
             return Math.min((totalAnswers / answeredLength) * 100, 100)
@@ -143,7 +148,7 @@ export default {
 
             setTimeout(() => {
                 this.pageLoading = false;
-            }, 800);
+            }, 200);
         },
         async save(){
             this.saving = true;
