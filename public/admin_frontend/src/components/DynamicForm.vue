@@ -30,6 +30,12 @@
                 v-model="model[q.id]"
                 :question="q"
             />
+
+            <DynamicFormFieldCheckbox
+                v-else-if="q.type === 'checkbox'"
+                v-model="model[q.id]"
+                :question="q"
+            />
         </v-col>
     </v-row>
 </template>
@@ -43,6 +49,7 @@ export default {
         DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
         DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
         DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
+        DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
         
     },
     props: {
