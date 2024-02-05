@@ -24,6 +24,12 @@
                 v-model="model[q.id]"
                 :question="q"
             />
+
+            <DynamicFormFieldRadio
+                v-else-if="q.type === 'radio'"
+                v-model="model[q.id]"
+                :question="q"
+            />
         </v-col>
     </v-row>
 </template>
@@ -36,6 +42,8 @@ export default {
         DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
         DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
         DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
+        DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
+        
     },
     props: {
         value: {
