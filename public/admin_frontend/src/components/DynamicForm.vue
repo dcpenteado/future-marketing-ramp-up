@@ -13,6 +13,12 @@
                 :question="q"
             />
             
+            <DynamicFormFieldAutocomplete
+                v-else-if="q.type === 'autocomplete'"
+                v-model="model[q.id]"
+                :question="q"
+            />
+            
             <DynamicFormFieldListItem
                 v-else-if="q.type === 'list_item'"
                 v-model="model[q.id]"
@@ -28,6 +34,7 @@ export default {
     components: {
         DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
         DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
+        DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
         DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
     },
     props: {
