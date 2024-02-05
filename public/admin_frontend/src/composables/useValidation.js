@@ -1,5 +1,15 @@
 const availableValidations = {
     required: (value) => !!value || 'Campo obrigatório',
+    email: (value) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        return emailRegex.test(value) || 'E-mail inválido';
+    },
+    url: (value) => {
+        const urlRegex = /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/ig;
+        
+        return urlRegex.test(value) || 'URL inválida';
+    },
 }
 
 export function useValidation(question) {

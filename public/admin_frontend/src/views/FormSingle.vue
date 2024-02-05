@@ -105,7 +105,7 @@ export default {
             const questionsLength = this.form.categories.reduce((acc, c) => acc + c.questions.length, 0)
             const answeredLength = this.answers.filter(a => a.current).length
 
-            return Math.min((answeredLength / questionsLength) * 100, 100)
+            return Math.round( Math.min((answeredLength / questionsLength) * 100, 100))
         }
     },
     methods: {

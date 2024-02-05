@@ -1,5 +1,5 @@
 <template>
-    <v-form @submit.prevent="save">
+    <v-form @submit.prevent="save" style="padding-bottom: 10rem;">
         <v-card class="mb-4" outlined>         
             <v-card-text>
                 <div class="d-flex align-center mb-2">
