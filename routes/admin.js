@@ -138,6 +138,12 @@ router.post("/update-user", auth, async (req, res) => {
 
     if (!req_user.admin && req_user._id != user._id) return res.send({ error: true, message: "Permissões insuficientes." });
 
+    const existing_user = await DBController.getUserById(user._id);
+    if (!existing_user.filed && user.filed) {
+      //ESTÁ APAGANDO UM USUÁRIO
+      user.email = `${uuidv4()}_${user.email}`;
+    }
+
     if (user.password) {
       user.password = await bcrypt.hash(user.password, 10);
     }
