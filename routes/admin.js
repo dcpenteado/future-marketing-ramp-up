@@ -259,9 +259,35 @@ router.post("/create-or-update-form-response", auth, async (req, res) => {
     if (!req_user.admin && object.user._id.toString() != req_user._id.toString()) {
       return res.send({ error: true, message: "Permissões insuficientes." });
     }
-    
+
     const resp = await DBController.createOrUpdateFormResponse(object, req_user._id);
-    
+
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+router.post("/get-customers", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+
+    if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
+    const resp = await DBController.getUsers({ admin: false });
+
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+router.post("/get-administrators", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+
+    if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
+    const resp = await DBController.getUsers({ admin: true });
+
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
