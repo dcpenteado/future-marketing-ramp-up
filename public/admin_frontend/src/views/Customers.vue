@@ -120,8 +120,6 @@ export default {
 
             this.loadingButton = false;
 
-            console.log(response)
-
             if (response.error) {
                 return emitToastr('error', response.message || "Erro. Tente novamente mais tarde.");
             }
