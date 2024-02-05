@@ -69,7 +69,7 @@ router.post("/create-user", auth, async (req, res) => {
     return res.send({ new_user, token });
   } catch (err) {
     return res.status(400).send({ error: true, message: err.message });
-   }
+  }
 });
 
 router.post("/upload-profile-picture", auth, upload.single("image"), async (req, res) => {
@@ -247,20 +247,49 @@ router.post("/get-form-response-by-user-id", auth, async (req, res) => {
   }
 });
 
+//USADO PARA ASSOCIAR FORMULÁRIOS COM USUÁRIOS, PARA APAGAR (FILED = TRUE) OU PARA ALTERAR ALGO DIFERENTE DAS RESPOSTAS
 router.post("/create-or-update-form-response", auth, async (req, res) => {
+  try {
+    //CHECK PERMISSION
+    const req_user = req.req_user;
+
+    if (!req_user.admin) {
+      return res.send({ error: true, message: "Permissões insuficientes." });
+    }
+
+    let { object } = req.body;
+
+    if (!object) return res.send({ error: true, message: "Campos insuficientes." });
+
+    if (!object.user || !object.form) {
+      return res.send({ error: true, message: "Usuário e formulário são campos requeridos." });
+    }
+
+    delete object.answers;
+    const resp = await DBController.createOrUpdateFormResponse(object, req_user._id);
+
+    return res.send({ error: false, message: resp });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+//USADO PARA INSERIR NOVAS RESPOSTAS
+router.post("/create-form-response-answers", auth, async (req, res) => {
   try {
     //CHECK PERMISSION
     const req_user = req.req_user;
 
     let { object } = req.body;
 
-    if (!object || !object.user || !object.form) {
-      return res.send({ error: true, message: "Usuário e formulário são campos requeridos." });
+    if (!object) return res.send({ error: true, message: "Campos insuficientes." });
+
+    if (!object._id) {
+      return res.send({ error: true, message: "ID do formulário requerido." });
     }
 
-    // only admin can create form responses
-    if (!object._id && !req_user.admin) {
-      return res.send({ error: true, message: "Permissões insuficientes." });
+    if (!object.answers) {
+      return res.send({ error: true, message: "É necessário enviar pelo menos uma resposta." });
     }
 
     // only update if user is the same or if admin
@@ -268,7 +297,45 @@ router.post("/create-or-update-form-response", auth, async (req, res) => {
       return res.send({ error: true, message: "Permissões insuficientes." });
     }
 
-    const resp = await DBController.createOrUpdateFormResponse(object, req_user._id);
+    let existing_form = await DBController.getFormResponseById(object._id);
+    if (!existing_form) return res.send({ error: true, message: "Formulário de respostas não encontrado." });
+
+    if (!existing_form.answers) existing_form.answers = [];
+
+    object.answers.forEach(a => {
+      if (a.category_id && a.question_id) {
+        let answer_index = existing_form.answers.findIndex(i => i.question_id == a.question_id);
+        if (answer_index == -1) {
+          existing_form.answers.push({
+            category_id: a.category_id,
+            question_id: a.question_id,
+            versions: [
+              {
+                value: a.value || "",
+                origin: req_user.admin ? 'editor' : 'user',
+                createdBy: req_user._id,
+                createdAt: new Date()
+              }
+            ]
+          })
+        }
+        else {
+          const last_value = existing_form.answers[answer_index].versions[existing_form.answers[answer_index].versions.length - 1].value;
+
+          //SÓ INCLUI SE EXISTIR DIFERENÇA DO VALUE
+          if (last_value != a.value) {
+            existing_form.answers[answer_index].versions.push({
+              value: a.value || "",
+              origin: req_user.admin ? 'editor' : 'user',
+              createdBy: req_user._id,
+              createdAt: new Date()
+            })
+          }
+        }
+      }
+    });
+
+    const resp = await DBController.createOrUpdateFormResponse(existing_form, req_user._id);
 
     return res.send({ error: false, message: resp });
   } catch (err) {
