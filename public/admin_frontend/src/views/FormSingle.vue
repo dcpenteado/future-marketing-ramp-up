@@ -4,47 +4,47 @@
             <v-card-title>
                 Progresso geral ({{ fullProgress }}%)
             </v-card-title>
-            
+
             <v-card-text>
-                <v-progress-linear :value="fullProgress" height="25" rounded  />
+                <v-progress-linear :value="fullProgress" height="25" rounded />
             </v-card-text>
         </v-card>
 
         <v-card outlined v-if="!categories.length">
             <v-card-title>
                 Nenhuma categoria encontrada
-            </v-card-title> 
+            </v-card-title>
         </v-card>
 
         <v-card outlined v-else>
             <v-card-title>
                 Categorias
             </v-card-title>
-            
+
             <v-card-text>
                 <v-row>
                     <v-col v-for="(category, i) in categories" :key="i" cols="12">
-                        <v-card
-                            outlined
-                            hover
-                            :to="category.to"
-                        >
-                            <v-card-text class="d-flex align-center">
-                                <div class=" text-subtitle">
-                                    {{ category.label }}
-                                </div>
-                                
-                                <div class="flex-grow-1 mx-4">
-                                    <v-progress-linear rounded :value="category.progress" height="20">
-                                        <template v-slot:default="{ value }">
-                                            <div class="text-caption">{{ Math.ceil(value) }}%</div>
-                                        </template>
-                                    </v-progress-linear>
-                                </div>
+                        <v-card outlined hover :to="category.to">
 
-                                <div>
-                                    <v-icon color="mercury" >mdi-chevron-right</v-icon>
-                                </div>
+
+                            <v-card-text>
+                                <v-row no-gutters>
+                                    <v-col cols="12" class="mb-4 mb-md-0" md="2">
+                                        <div class="text-subtitle">
+                                            {{ category.label }}
+                                        </div>
+                                    </v-col>
+
+                                    <v-col class="d-flex align-center">
+                                        <v-progress-linear rounded :value="category.progress" height="20">
+                                            <template v-slot:default="{ value }">
+                                                <div class="text-caption">{{ Math.ceil(value) }}%</div>
+                                            </template>
+                                        </v-progress-linear>
+
+                                        <v-icon color="mercury" class="ml-2">mdi-chevron-right</v-icon>
+                                    </v-col>
+                                </v-row>
                             </v-card-text>
                         </v-card>
                     </v-col>
@@ -80,20 +80,20 @@ export default {
             set(value) {
                 this.$store.commit('setCurrentUser', value);
             }
-        },  
+        },
         categories() {
             if (!this.form) return []
-            
+
             return this.form.categories.map((c) => {
                 const questionLength = c.questions.length
-                
+
                 const answeredLength = this.answers
                     .filter(a => a.category_id === c.id)
                     .filter(a => a.versions.length)
                     .filter(a => {
                         const question = c.questions.find(q => q.id === a.question_id);
                         const version = a.versions.at(-1);
-                        
+
                         return !isFieldEmpty(question, version.value);
                     })
                     .length
@@ -107,7 +107,7 @@ export default {
                 }
             })
         },
-        fullProgress(){
+        fullProgress() {
             if (!this.form) return 0
 
             const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions), [])
@@ -115,17 +115,17 @@ export default {
             const answers = this.answers.filter(a => a.versions.length)
                 .filter(a => {
                     const question = questions.find(q => q.id === a.question_id);
-                    
+
                     const version = a.versions.at(-1);
-                    
+
                     return !isFieldEmpty(question, version.value);
                 })
 
-            return Math.round( Math.min((answers.length / questions.length) * 100, 100))
+            return Math.round(Math.min((answers.length / questions.length) * 100, 100))
         }
     },
     methods: {
-        setPageData(){
+        setPageData() {
             this.$store.commit('setPageTitle', this.form.name);
 
             this.$store.commit('setBreadcrumbs', [
@@ -157,7 +157,7 @@ export default {
             }, 200);
         },
     },
-    mounted(){
+    mounted() {
         this.load()
     }
 };
