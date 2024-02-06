@@ -1,29 +1,22 @@
 <template>
-    <DynamicFormField v-model="model" :question="question">
-        <template v-slot:default="{ errors }">
-            <v-autocomplete
-                v-model="model"
-                outlined
-                hide-details="auto"
-                clearable
-                :item-text="itemText"
-                :item-value="itemValue"
-                :multiple="!!question.config.multiple"
-                :items="items"
-                :error="!!errors.length"
-                :error-messages="errors"
-                :loading="loading"
-            />
-        </template>
-    </DynamicFormField>
+    <v-autocomplete
+        v-model="model"
+        outlined
+        hide-details="auto"
+        clearable
+        :item-text="itemText"
+        :item-value="itemValue"
+        :multiple="!!question.config.multiple"
+        :items="items"
+        :error="!!errors.length"
+        :error-messages="errors"
+        :loading="loading"
+    />
 </template>
 
 <script>
 export default {
     name: 'DynamicFormFieldAutocomplete',
-    components: {
-        DynamicFormField: () => import('@/components/DynamicFormField.vue'),    
-    },   
     props: {
         value: {
             type: [String, Array],
@@ -33,6 +26,10 @@ export default {
             type: Object,
             required: true
         },
+        errors: {
+            type: Array,
+            default: () => []
+        }
     },
     data: () => ({
         loading: false,

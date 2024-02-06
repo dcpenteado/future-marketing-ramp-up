@@ -5,18 +5,66 @@
             'border-color': errors.length ? 'red' : undefined,            
         }"
     >
-        <v-card-title :class="errors.length ? 'error--text' : ''">
-            {{ question.name }}
-        </v-card-title>
 
-        <v-card-subtitle :class="errors.length ? 'error--text' : ''">
-            {{ question.description }}
-        </v-card-subtitle>
+    <div class="d-flex align-center">
+        <div>
+            <v-card-title :class="errors.length ? 'error--text' : ''">
+                {{ question.name }}
+            </v-card-title>
+    
+            <v-card-subtitle :class="errors.length ? 'error--text' : ''">
+                {{ question.description }}
+            </v-card-subtitle>
+        </div>
+
+        <slot name="append-field-header" :question="question" />
+    </div>
 
         <v-divider />
         
         <v-card-text>
-            <slot :errors="errors" />
+            <DynamicFormFieldText
+                v-if="question.type === 'text'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            <DynamicFormFieldSelect
+                v-else-if="question.type === 'select'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            <DynamicFormFieldListItem
+                v-else-if="question.type === 'list_item'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            <DynamicFormFieldAutocomplete
+                v-else-if="question.type === 'autocomplete'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            <DynamicFormFieldRadio
+                v-else-if="question.type === 'radio'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            <DynamicFormFieldCheckbox
+                v-else-if="question.type === 'checkbox'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
         </v-card-text>
     </v-card>
 </template>
@@ -26,6 +74,14 @@ import { useValidation } from '@/composables/useValidation';
 
 export default {
     name: 'DynamicFormField',
+    components: {
+        DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
+        DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
+        DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
+        DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
+        DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
+        DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
+    },
     props: {
         value: {
             type: [String, Number, Object, Array],
@@ -41,12 +97,13 @@ export default {
         },
     },
     inject: ['fieldValidationsFunctions'],
+    provide() {
+        return {
+            errors: this.errors
+        }
+    },
     data: () => ({
         errors: [],
-        rules: [],
-        availableRules: {
-            required: (v) => !!v || 'Campo obrigatório'
-        }
     }),
     computed: {
         model: {
@@ -62,15 +119,6 @@ export default {
         model: 'validate'
     },
     methods: {
-        setRules(){
-            if (!this.question.config?.rules) return;
-
-            for (const ruleConfig of this.question.config.rules) {
-                if (this.availableRules[ruleConfig.name]) {
-                    this.rules.push(this.availableRules[ruleConfig.name]);
-                }
-            }
-        },
         validate(){
             const { validate } = useValidation(this.question);
 
@@ -80,8 +128,6 @@ export default {
         }
     },
     mounted(){
-        this.setRules();
-
         this.fieldValidationsFunctions.push(this.validate);
     }
 }

@@ -1,46 +1,39 @@
-<template>
-    <DynamicFormField v-model="model" :question="question">
-        <template v-slot:default="{ errors }">
-            <v-row>
-                <v-col cols="12" v-if="errors.length">
-                    <v-alert type="error">
-                        {{ errors[0] }}
-                    </v-alert>
-                </v-col>
+<template>    
+    <v-row>
+        <v-col cols="12" v-if="errors.length">
+            <v-alert type="error">
+                {{ errors[0] }}
+            </v-alert>
+        </v-col>
 
-                <v-col
-                    cols="12" v-for="(i) in items" :key="i.id"
-                    class="d-flex align-center"
-                >
-                    <v-text-field
-                        v-model="model[i.id]" outlined hide-details="auto"
-                        @blur="model = model"
-                    />
+        <v-col
+            cols="12" v-for="(i) in items" :key="i.id"
+            class="d-flex align-center"
+        >
+            <v-text-field
+                v-model="model[i.id]" outlined hide-details="auto"
+                @blur="model = model"
+            />
 
-                    <v-btn @click="removeItem(i.id)" class="mx-2" height="56">
-                        <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                </v-col>
+            <v-btn @click="removeItem(i.id)" class="mx-2" height="56">
+                <v-icon>mdi-delete</v-icon>
+            </v-btn>
+        </v-col>
 
-                <v-col
-                    cols="12"
-                    :class="!items.length ? 'text-center' : ''"
-                >
-                    <v-btn color="primary" @click="addItem">
-                        Adicionar item
-                    </v-btn>
-                </v-col>
-            </v-row>
-        </template>
-    </DynamicFormField>
+        <v-col
+            cols="12"
+            :class="!items.length ? 'text-center' : ''"
+        >
+            <v-btn color="primary" @click="addItem">
+                Adicionar item
+            </v-btn>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
 export default {
     name: 'DynamicFormFieldListItem',
-    components: {
-        DynamicFormField: () => import('@/components/DynamicFormField.vue'),    
-    },   
     props: {
         value: {
             type: [String, Array],
@@ -50,6 +43,10 @@ export default {
             type: Object,
             required: true
         },
+        errors: {
+            type: Array,
+            default: () => []
+        }
     },
     computed: {
         model: {

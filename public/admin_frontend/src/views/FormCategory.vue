@@ -35,7 +35,7 @@
             ref="dynamicForm"
             v-model="dynamicFormData"
             :questions="questions"
-            :answers="questions"
+            :answers="answers"
         />
         
     </v-form>
@@ -44,7 +44,7 @@
 <script>
 import { isFieldEmpty } from "@/composables/isFieldEmpty";
 import Api from "@/lib/Api";
-import uuid from 'uuid-random';	
+// import uuid from 'uuid-random';	
 
 export default {
     name: 'FormCategory',
@@ -109,12 +109,18 @@ export default {
         },
         setDynamicFormData(){             
             this.questions.forEach(q => {
-                const answer = this.answers
-                    .filter(a => a.current)
-                    .find(a => a.question_id === q.id);
+                let value = '';
+
+                const answer = this.answers.find(a => a.question_id === q.id);
+
+                if (answer && answer.versions.length) {
+                    const lastVersion = answer.versions.at(-1)
+                    
+                    value = lastVersion.value;
+                }
 
                 if (answer) {
-                    this.$set(this.dynamicFormData, q.id, answer.value || '');
+                    this.$set(this.dynamicFormData, q.id, value);
                 }
             });
         },
@@ -161,46 +167,17 @@ export default {
                 return;
             }
 
-            const answers = JSON.parse(JSON.stringify(this.answers))
+            const data = JSON.parse(JSON.stringify(this.dynamicFormData));
 
-            Object.keys(this.dynamicFormData).forEach(questionId => {
-                const newAnswer = {
-                    id: uuid(),
-                    question_id: questionId,
-                    value: this.dynamicFormData[questionId],
-                    version: 1,
-                    origin: 'user',
-                    createdBy: this.currentUser._id,
-                    createdAt: new Date(),
-                    current: true
-                }
+            const answers = Object.entries(data).map(([question_id, value]) => ({                
+                category_id: this.category.id,
+                question_id,
+                value                
+            }));
 
-                
-                const oldAnswer = answers
-                    .filter(a => a.current)
-                    .find(a => a.question_id === questionId);
-                
-                // Remove old
-                answers
-                    .filter(a => a.current)
-                    .filter(a => a.question_id === questionId)
-                    .forEach(a => a.current = false);
-
-                if (oldAnswer) {
-                    newAnswer.version = oldAnswer.version + 1;
-                }
-
-                answers.push(newAnswer);
-            });
-
-            const payload = JSON.parse(JSON.stringify(this.formResponse));
-
-            payload.answers = answers;
-
-            const response = await this.$api.createOrUpdateFormResponse(payload);
+            const response = await this.$api.createFormResponseAnswers(this.formResponse._id, answers);
 
             if (response.error) {
-                // this.$toast('error', 'Erro ao salvar');
                 this.saving = false;
                 return;
             }

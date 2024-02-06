@@ -96,7 +96,7 @@ class Api {
   }
 
   createOrUpdateFormResponse = async (form_response) => {
-    return this.authPost("/create-or-update-form-response", { object: form_response }, {})
+    return this.authPost("/create-form-response-answers", { object: form_response }, {})
   }
 
   checkErrorsWithStatusCode200 = (data) => {
@@ -106,6 +106,16 @@ class Api {
     
     return data;
   };
+
+  // create-form-response-answers
+  createFormResponseAnswers = async (form_response_id, answers) => {
+    return this.authPost("/create-form-response-answers", { 
+      object: {
+        _id: form_response_id,
+        answers: answers
+      }
+     }, {});
+  }
 
   get = (url) =>
     axios

@@ -1,28 +1,19 @@
 <template>
-    <DynamicFormField v-model="model" :question="question">
-        <template v-slot:default="{ errors }">
-            
-            <v-checkbox
-                v-model="model"
-                hide-details="auto"
-                :label="question.name"
-                :error="!!errors.length"
-                :error-messages="errors"
-                class="mt-0"
-            >
-        
-            </v-checkbox>
-        </template>
-    </DynamicFormField>
+    <v-checkbox
+        v-model="model"
+        hide-details="auto"
+        :label="question.name"
+        :error="!!errors.length"
+        :error-messages="errors"
+        class="mt-0"
+    >
+
+    </v-checkbox>
 </template>
 
 <script>
 export default {
-    name: 'DynamicFormFieldText',
-    components: {
-        DynamicFormField: () => import('@/components/DynamicFormField.vue'),    
-    },
-   
+    name: 'DynamicFormFieldCheckbox',
     props: {
         value: {
             type: String,
@@ -32,6 +23,10 @@ export default {
             type: Object,
             required: true
         },
+        errors: {
+            type: Array,
+            default: () => []
+        }
     },
     computed: {
         model: {

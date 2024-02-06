@@ -1,34 +1,25 @@
 <template>
-    <DynamicFormField v-model="model" :question="question">
-        <template v-slot:default="{ errors }">
-            
-            <v-radio-group
-                v-model="model"
-                hide-details="auto"
-                :error="!!errors.length"
-                :error-messages="errors"
-                class="mt-0"
-            >
+    <v-radio-group
+        v-model="model"
+        hide-details="auto"
+        :error="!!errors.length"
+        :error-messages="errors"
+        class="mt-0"
+    >
 
-                <v-radio
-                    v-for="(item, index) in items"
-                    :key="index"
-                    :label="item.text"
-                    :value="item.value"
-                ></v-radio>
-        
-            </v-radio-group>
-        </template>
-    </DynamicFormField>
+        <v-radio
+            v-for="(item, index) in items"
+            :key="index"
+            :label="item.text"
+            :value="item.value"
+        ></v-radio>
+
+    </v-radio-group>
 </template>
 
 <script>
 export default {
-    name: 'DynamicFormFieldText',
-    components: {
-        DynamicFormField: () => import('@/components/DynamicFormField.vue'),    
-    },
-   
+    name: 'DynamicFormFieldRadio',
     props: {
         value: {
             type: String,
@@ -38,6 +29,10 @@ export default {
             type: Object,
             required: true
         },
+        errors: {
+            type: Array,
+            default: () => []
+        }
     },
     computed: {
         model: {

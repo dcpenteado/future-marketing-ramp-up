@@ -88,12 +88,13 @@ export default {
                 const questionLength = c.questions.length
                 
                 const answeredLength = this.answers
-                    .filter(a => c.questions.some(q => q.id === a.question_id))
-                    .filter(a => a.current)
+                    .filter(a => a.category_id === c.id)
+                    .filter(a => a.versions.length)
                     .filter(a => {
                         const question = c.questions.find(q => q.id === a.question_id);
+                        const version = a.versions.at(-1);
                         
-                        return !isFieldEmpty(question, a.value);
+                        return !isFieldEmpty(question, version.value);
                     })
                     .length
 
@@ -111,17 +112,16 @@ export default {
 
             const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions), [])
 
-            const questionsLength = this.form.categories.reduce((acc, c) => acc + c.questions.length, 0)
-
-            const answeredLength = this.answers.filter(a => a.current)
+            const answers = this.answers.filter(a => a.versions.length)
                 .filter(a => {
                     const question = questions.find(q => q.id === a.question_id);
                     
-                    return !isFieldEmpty(question, a.value);
+                    const version = a.versions.at(-1);
+                    
+                    return !isFieldEmpty(question, version.value);
                 })
-                .length;
 
-            return Math.round( Math.min((answeredLength / questionsLength) * 100, 100))
+            return Math.round( Math.min((answers.length / questions.length) * 100, 100))
         }
     },
     methods: {

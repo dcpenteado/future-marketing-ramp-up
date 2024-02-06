@@ -1,28 +1,21 @@
 <template>
-    <DynamicFormField v-model="model" :question="question">
-        <template v-slot:default="{ errors }">
-            <v-select
-                v-model="model"
-                outlined
-                hide-details="auto"
-                item-text="text"
-                item-value="value"
-                clearable
-                :multiple="!!question.config.multiple"
-                :items="question.config.items"
-                :error="!!errors.length"
-                :error-messages="errors"
-            />
-        </template>
-    </DynamicFormField>
+    <v-select
+        v-model="model"
+        outlined
+        hide-details="auto"
+        item-text="text"
+        item-value="value"
+        clearable
+        :multiple="!!question.config.multiple"
+        :items="question.config.items"
+        :error="!!errors.length"
+        :error-messages="errors"
+    />
 </template>
 
 <script>
 export default {
     name: 'DynamicFormFieldSelect',
-    components: {
-        DynamicFormField: () => import('@/components/DynamicFormField.vue'),    
-    },   
     props: {
         value: {
             type: [String, Array],
@@ -32,6 +25,10 @@ export default {
             type: Object,
             required: true
         },
+        errors: {
+            type: Array,
+            default: () => []
+        }
     },
     computed: {
         model: {

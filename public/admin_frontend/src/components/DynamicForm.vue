@@ -1,42 +1,84 @@
 <template>
     <v-row> 
         <v-col cols="12" v-for="(q) in questions" :key="q.id">
-            <DynamicFormFieldText
-                v-if="q.type === 'text'"
-                v-model="model[q.id]"
-                :question="q"
-            />
+            <DynamicFormField v-model="model[q.id]" :question="q">
+                <template #append-field-header>
+                    <v-spacer></v-spacer>
+
+                    <v-btn
+                        color="primary" outlined class="mr-4"
+                        @click="showAnswerVersions(q.id)"
+                    >
+                        Ver versões
+                    </v-btn>
+                </template>
+            </DynamicFormField>
+
             
-            <DynamicFormFieldSelect
+            <!-- <DynamicFormFieldSelect
                 v-else-if="q.type === 'select'"
                 v-model="model[q.id]"
                 :question="q"
-            />
+            /> -->
             
-            <DynamicFormFieldAutocomplete
+            <!-- <DynamicFormFieldAutocomplete
                 v-else-if="q.type === 'autocomplete'"
                 v-model="model[q.id]"
                 :question="q"
-            />
+            /> -->
             
-            <DynamicFormFieldListItem
+            <!-- <DynamicFormFieldListItem
                 v-else-if="q.type === 'list_item'"
                 v-model="model[q.id]"
                 :question="q"
-            />
+            /> -->
 
-            <DynamicFormFieldRadio
+            <!-- <DynamicFormFieldRadio
                 v-else-if="q.type === 'radio'"
                 v-model="model[q.id]"
                 :question="q"
-            />
+            /> -->
 
-            <DynamicFormFieldCheckbox
+            <!-- <DynamicFormFieldCheckbox
                 v-else-if="q.type === 'checkbox'"
                 v-model="model[q.id]"
                 :question="q"
-            />
+            /> -->
         </v-col>
+
+        <v-navigation-drawer
+            v-model="drawer"
+            right
+            app
+            width="500"
+            temporary
+        >
+
+            <v-card-text v-if="selectedQuestion">
+                <v-row class="overflow-y-auto">
+                    <v-col cols="12" v-for="(a, i) in answerVersions" :key="a.id">
+                        <v-card outlined>
+                            <v-card-title>
+                                Versão {{ i }}
+                            </v-card-title>
+                            <v-card-subtitle>
+                                Origin: {{ a.origin }}
+                            </v-card-subtitle>
+
+                            <v-divider />
+                            
+                            <v-card-text style="pointer-events:none;opacity: .75;">
+                                <DynamicFormFieldText
+                                    :value="a.value"
+                                    :question="selectedQuestion"
+                                />
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+        
+        </v-navigation-drawer>
     </v-row>
 </template>
 
@@ -44,12 +86,13 @@
 export default {
     name: 'DynamicForm',
     components: {
-        DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
-        DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
-        DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
-        DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
-        DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
-        DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
+        DynamicFormField: () => import('@/components/DynamicFormField.vue'),
+        // DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
+        // DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
+        // DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
+        // DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
+        // DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
+        // DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
         
     },
     props: {
@@ -64,10 +107,12 @@ export default {
         answers: {
             type: Array,
             required: true
-        }
+        },
     },
     data: () => ({
-        fieldValidationsFunctions: []
+        fieldValidationsFunctions: [],
+        drawer: false,
+        selectedQuestionId: null
     }),
     provide() {
         return {
@@ -82,6 +127,26 @@ export default {
             set(value) {
                 this.$emit('input', value);
             }
+        },
+        selectedQuestion(){
+            if (!this.selectedQuestionId) return [];
+
+            return this.questions.find(q => q.id === this.selectedQuestionId);
+        },
+        answerVersions(){
+            if (!this.selectedQuestionId) return [];
+
+            return this.answers.filter(a => a.question_id === this.selectedQuestionId);
+        },
+    },
+    watch: {
+        drawer(value) {
+            if (value) {
+                document.querySelector('html').style.overflow = 'hidden';
+                return
+            }
+
+            document.querySelector('html').style.overflow = 'auto';
         }
     },
     methods: {
@@ -91,6 +156,10 @@ export default {
                 .reduce((acc, val) => acc.concat(val), []);
 
             return errors;
+        },
+        showAnswerVersions(questionId){
+            this.selectedQuestionId = questionId;
+            this.drawer = true;
         }
     }
 }
