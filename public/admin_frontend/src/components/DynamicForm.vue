@@ -13,37 +13,6 @@
                     </v-btn>
                 </template>
             </DynamicFormField>
-
-            
-            <!-- <DynamicFormFieldSelect
-                v-else-if="q.type === 'select'"
-                v-model="model[q.id]"
-                :question="q"
-            /> -->
-            
-            <!-- <DynamicFormFieldAutocomplete
-                v-else-if="q.type === 'autocomplete'"
-                v-model="model[q.id]"
-                :question="q"
-            /> -->
-            
-            <!-- <DynamicFormFieldListItem
-                v-else-if="q.type === 'list_item'"
-                v-model="model[q.id]"
-                :question="q"
-            /> -->
-
-            <!-- <DynamicFormFieldRadio
-                v-else-if="q.type === 'radio'"
-                v-model="model[q.id]"
-                :question="q"
-            /> -->
-
-            <!-- <DynamicFormFieldCheckbox
-                v-else-if="q.type === 'checkbox'"
-                v-model="model[q.id]"
-                :question="q"
-            /> -->
         </v-col>
 
         <v-navigation-drawer
@@ -87,12 +56,6 @@ export default {
     name: 'DynamicForm',
     components: {
         DynamicFormField: () => import('@/components/DynamicFormField.vue'),
-        // DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
-        // DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
-        // DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
-        // DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
-        // DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
-        // DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
         
     },
     props: {
