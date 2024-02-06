@@ -151,7 +151,10 @@ export default {
         },
         restoreVersion(value){
 
-            this.model[this.selectedQuestionId] = value;
+            this.model = {
+                ...this.model,
+                [this.selectedQuestionId]: value
+            }
             
             this.drawer = false;
 

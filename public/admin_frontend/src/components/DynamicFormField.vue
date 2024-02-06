@@ -71,6 +71,23 @@
                 :errors="errors"
             />
 
+            <DynamicFormFieldTextarea
+                v-else-if="question.type === 'textarea'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            
+            <v-alert
+                v-else
+                outlined
+                type="error"
+            >
+                Tipo de campo não suportado
+            </v-alert>
+            
+
         </v-card-text>
     </v-card>
 </template>
@@ -87,6 +104,7 @@ export default {
         DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
         DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
         DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
+        DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue'),
     },
     props: {
         value: {
@@ -139,6 +157,13 @@ export default {
     },
     mounted(){
         this.fieldValidationsFunctions.push(this.validate);
+    },
+    destroyed(){
+        const index = this.fieldValidationsFunctions.indexOf(this.validate);
+
+        if (index > -1) {
+            this.fieldValidationsFunctions.splice(index, 1);
+        }
     }
 }
 </script>

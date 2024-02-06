@@ -13,6 +13,16 @@ export function useValidation(question) {
             
             return urlRegex.test(value) || 'URL inválida';
         },
+        minLength: (value, config) => {
+            const minLength = config.value || 0;
+
+            return value.length >= minLength || `Mínimo de ${minLength} caracteres`;
+        },
+        maxLength: (value, config) => {
+            const maxLength = config.value || 0;
+
+            return value.length <= maxLength || `Máximo de ${maxLength} caracteres`;
+        },
     }
 
     const rules = []
@@ -20,7 +30,10 @@ export function useValidation(question) {
     if (question.config?.rules) {
         for (const ruleConfig of question.config.rules) {
             if (availableValidations[ruleConfig.name]) {
-                rules.push(availableValidations[ruleConfig.name]);
+                rules.push({
+                    config: ruleConfig,
+                    validate: availableValidations[ruleConfig.name]
+                });
             }
         }
     }
@@ -30,10 +43,10 @@ export function useValidation(question) {
         const errors = [];
 
         for (const rule of rules) {
-            const error = rule(value);
+            const isValidOrErrorMessage = rule.validate(value, rule.config);
             
-            if (error !== true) {
-                errors.push(error);
+            if (isValidOrErrorMessage !== true) {
+                errors.push(rule.config.message || isValidOrErrorMessage);
             }
         }
 
