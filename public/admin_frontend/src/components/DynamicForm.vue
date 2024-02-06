@@ -2,7 +2,7 @@
     <v-row> 
         <v-col cols="12" v-for="(q) in questions" :key="q.id">
             <DynamicFormField v-model="model[q.id]" :question="q">
-                <template #append-field-header>
+                <template #header-actions>
                     <v-spacer></v-spacer>
 
                     <v-btn
@@ -25,24 +25,34 @@
 
             <v-card-text v-if="selectedQuestion">
                 <v-row class="overflow-y-auto">
-                    <v-col cols="12" v-for="(a, i) in answerVersions" :key="a.id">
-                        <v-card outlined>
-                            <v-card-title>
-                                Versão {{ i }}
-                            </v-card-title>
-                            <v-card-subtitle>
-                                Origin: {{ a.origin }}
-                            </v-card-subtitle>
+                    <v-col cols="12" v-for="a in answerVersions" :key="a.id">
+                        <DynamicFormField
+                            :value="a.value"
+                            :question="selectedQuestion"
+                            disabled
+                        >
 
-                            <v-divider />
-                            
-                            <v-card-text style="pointer-events:none;opacity: .75;">
-                                <DynamicFormFieldText
-                                    :value="a.value"
-                                    :question="selectedQuestion"
-                                />
-                            </v-card-text>
-                        </v-card>
+                            <template #header>
+                                <div class="d-flex align-center">
+                                    <div>
+                                        <v-card-title>
+                                            {{ a.title }} - {{ a.origin }}
+                                        </v-card-title>
+                                        <v-card-subtitle>
+                                            {{ a.date }}
+                                        </v-card-subtitle>
+                                    </div>
+    
+                                    <v-spacer></v-spacer>
+    
+                                    <v-btn color="primary" class="mr-4" @click="restoreVersion(a.value)">
+                                        Restaurar
+                                    </v-btn>
+                                </div>
+
+                            </template>
+                    
+                        </DynamicFormField>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -52,11 +62,13 @@
 </template>
 
 <script>
+
+import { format } from 'date-fns'
+
 export default {
     name: 'DynamicForm',
     components: {
         DynamicFormField: () => import('@/components/DynamicFormField.vue'),
-        
     },
     props: {
         value: {
@@ -99,7 +111,20 @@ export default {
         answerVersions(){
             if (!this.selectedQuestionId) return [];
 
-            return this.answers.filter(a => a.question_id === this.selectedQuestionId);
+            const answer = this.answers.find(a => a.question_id === this.selectedQuestionId);
+
+            if (!answer) return [];
+
+            const versions = answer.versions.map((v, i) => {
+                return {
+                    title: `Versão ${i + 1}`,
+                    value: v.value,
+                    origin: v.origin,
+                    date: format(new Date(v.createdAt), 'dd/MM/yyyy HH:mm')
+                }
+            });
+
+            return versions.reverse();
         },
     },
     watch: {
@@ -123,6 +148,15 @@ export default {
         showAnswerVersions(questionId){
             this.selectedQuestionId = questionId;
             this.drawer = true;
+        },
+        restoreVersion(value){
+
+            this.model[this.selectedQuestionId] = value;
+            
+            this.drawer = false;
+
+            this.selectedQuestionId = null;
+
         }
     }
 }

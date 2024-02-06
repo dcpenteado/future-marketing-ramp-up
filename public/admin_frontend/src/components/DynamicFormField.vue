@@ -5,24 +5,30 @@
             'border-color': errors.length ? 'red' : undefined,            
         }"
     >
-
-    <div class="d-flex align-center">
-        <div>
-            <v-card-title :class="errors.length ? 'error--text' : ''">
-                {{ question.name }}
-            </v-card-title>
-    
-            <v-card-subtitle :class="errors.length ? 'error--text' : ''">
-                {{ question.description }}
-            </v-card-subtitle>
-        </div>
-
-        <slot name="append-field-header" :question="question" />
-    </div>
-
-        <v-divider />
+    <slot name="header">
+        <div class="d-flex align-center">
+            <div>
+                <v-card-title :class="errors.length ? 'error--text' : ''">
+                    {{ question.name }}
+                </v-card-title>
         
-        <v-card-text>
+                <v-card-subtitle :class="errors.length ? 'error--text' : ''">
+                    {{ question.description }}
+                </v-card-subtitle>
+            </div>
+
+            <slot name="header-actions" />
+        </div>        
+    </slot>
+
+    <v-divider />
+        
+        <v-card-text
+            :style="{
+                'pointer-events': disabled ? 'none' : 'auto',
+                'opacity': disabled ? '0.5' : '1'
+            }"
+        >
             <DynamicFormFieldText
                 v-if="question.type === 'text'"
                 v-model="model"
@@ -95,6 +101,10 @@ export default {
                 description: 'Descrição da pergunta'
             })
         },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
     },
     inject: ['fieldValidationsFunctions'],
     provide() {
