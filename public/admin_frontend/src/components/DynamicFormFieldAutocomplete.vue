@@ -11,10 +11,14 @@
         :error="!!errors.length"
         :error-messages="errors"
         :loading="loading"
+        :disabled="!canFill"
     />
 </template>
 
 <script>
+
+import template from 'lodash/template'
+
 export default {
     name: 'DynamicFormFieldAutocomplete',
     props: {
@@ -31,6 +35,7 @@ export default {
             default: () => []
         }
     },
+    inject: ['currentAnswers'],
     data: () => ({
         loading: false,
         fetchItems: []
@@ -45,6 +50,18 @@ export default {
         itemValue(){
             return this.question.config?.itemValue || 'value';
         },
+        isMultiple(){
+            return !!this.question.config.multiple;
+        },
+        canFill(){
+            const dependsOn = this.question.config.dependsOn || [];
+
+            if (dependsOn.length && !dependsOn.every(key => !!this.currentAnswers[key])) {
+                return false;
+            }
+
+            return true
+        },
         model: {
             get() {
                 return this.value;
@@ -54,14 +71,39 @@ export default {
             }
         },
         items(){
-            if(this.mode === 'api'){
-                return this.fetchItems;
+
+            const items = this.mode === 'api' ? this.fetchItems : this.question.config?.items || [];
+
+            if (this.question.config?.filter) {
+                return items.filter(i => this.filterItems(this.question.config.filter, i));
             }
 
-            return this.question.config?.items || [];
+            return items
+        }
+    },
+    watch: {
+        'items': function (  ) {
+            const isInList = this.items.some(item => item[this.itemValue] === this.model);
+
+            console.log('isInList', isInList);
+
+            if (!isInList) {
+                this.clear();
+            }
+        },
+        canFill: {
+            immediate: true,
+            handler(){
+                if (!this.canFill && this.model) {
+                    this.clear();
+                }
+            }
         }
     },
     methods: {
+        clear(){
+            this.model = this.isMultiple ? [] : '';
+        },
         fetchItemsFromApi(){
             const apiUrl = this.question.config?.url;
 
@@ -78,6 +120,25 @@ export default {
                 }).finally(() => {
                     this.loading = false;
                 });
+        },
+        filterItems(config, item){
+
+            const keys = Object.keys(config);
+
+            return keys.every(key => {
+
+                let value = config[key];
+
+                if (value.includes('{{')) {
+                    const compiled = template(value, {
+                        interpolate: /{{([\s\S]+?)}}/g
+                    });
+                    
+                    value = compiled({ currentAnswers: this.currentAnswers })
+                }
+
+                return item[key] === value
+            });
         }
     },
     mounted(){

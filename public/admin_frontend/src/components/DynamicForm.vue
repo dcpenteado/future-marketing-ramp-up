@@ -91,7 +91,8 @@ export default {
     }),
     provide() {
         return {
-            fieldValidationsFunctions: this.fieldValidationsFunctions
+            fieldValidationsFunctions: this.fieldValidationsFunctions,
+            currentAnswers: this.model
         }
     },
     computed: {
