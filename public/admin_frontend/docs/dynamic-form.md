@@ -158,6 +158,54 @@ Similar to the select, just add a questions with type autocomplete inside the qu
 }
 ```
 
+### Filtering
+
+To filter options based on other field you can use the `config.filter` array.
+
+```json
+[
+    {
+        "id": "1",
+        "name": "Field with primary list",
+        "type": "autocomplete",
+        "description": "description",
+        "config": {
+            "items": [
+                { "text": "List 1", "value": "1" },
+                { "text": "List 2", "value": "2" },
+                { "text": "List 3", "value": "4" }
+            ]
+        }
+    },
+    {
+        "id": "2",
+        "name": "Field with secondary list",
+        "type": "autocomplete",
+        "description": "description",
+        "config": {
+            "items": [
+                { "text": "Item 1 (list 1)", "value": "1", "list": "1" },
+                { "text": "Item 2 (list 1)", "value": "2", "list": "1" },
+                { "text": "Item 3 (list 1)", "value": "3", "list": "1" },
+                { "text": "Item 1 (list 2)", "value": "4", "list": "2" },
+                { "text": "Item 2 (list 2)", "value": "5", "list": "2" },
+                { "text": "Item 3 (list 2)", "value": "6", "list": "2" },
+                { "text": "Item 1 (list 3)", "value": "7", "list": "3" },
+                { "text": "Item 2 (list 3)", "value": "8", "list": "3" },
+                { "text": "Item 3 (list 3)", "value": "9", "list": "3" }
+            ],
+            "filter": {
+                "list": "{{ currentAnswers['1'] }}"
+            }
+        }
+    }
+]
+```
+
+In this example, the second field will be filtered based on the value of the first field.
+
+`currentAnswers` is a reactive object that contains the current value of the form.
+
 ## DynamicFieldRadio
 ```json
 {
