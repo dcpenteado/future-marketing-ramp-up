@@ -292,13 +292,17 @@ router.post("/create-form-response-answers", auth, async (req, res) => {
       return res.send({ error: true, message: "É necessário enviar pelo menos uma resposta." });
     }
 
+    let existing_form = await DBController.getFormResponseById(object._id);
+    
+    if (!existing_form) {
+      return res.send({ error: true, message: "Formulário de respostas não encontrado." });
+    }
+
     // only update if user is the same or if admin
-    if (!req_user.admin && object.user._id.toString() != req_user._id.toString()) {
+    if (!req_user.admin && existing_form.user._id.toString() != req_user._id.toString()) {
       return res.send({ error: true, message: "Permissões insuficientes." });
     }
 
-    let existing_form = await DBController.getFormResponseById(object._id);
-    if (!existing_form) return res.send({ error: true, message: "Formulário de respostas não encontrado." });
 
     if (!existing_form.answers) existing_form.answers = [];
 
