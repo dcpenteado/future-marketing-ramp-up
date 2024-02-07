@@ -55,7 +55,8 @@
 </template>
 
 <script>
-import { isFieldEmpty } from "@/composables/isFieldEmpty";
+import { getFormProgress } from "@/composables/getFormProgress";
+
 import Api from "@/lib/Api";
 
 export default {
@@ -85,23 +86,13 @@ export default {
             if (!this.form) return []
 
             return this.form.categories.map((c) => {
-                const questionLength = c.questions.length
 
-                const answeredLength = this.answers
-                    .filter(a => a.category_id === c.id)
-                    .filter(a => a.versions.length)
-                    .filter(a => {
-                        const question = c.questions.find(q => q.id === a.question_id);
-                        const version = a.versions.at(-1);
+                const categoryAnswers = this.answers.filter(a => a.category_id === c.id)
 
-                        return !isFieldEmpty(question, version.value);
-                    })
-                    .length
-
-                const progress = Math.min((answeredLength / questionLength) * 100, 100)
+                const progress = getFormProgress(c.questions, categoryAnswers)
 
                 return {
-                    label: `${c.name} (${answeredLength}/${questionLength})`,
+                    label: `${c.name} (${categoryAnswers.length}/${c.questions.length})`,
                     progress: progress,
                     to: `/forms/${this.form._id}/categories/${c.id}`
                 }
@@ -112,16 +103,7 @@ export default {
 
             const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions), [])
 
-            const answers = this.answers.filter(a => a.versions.length)
-                .filter(a => {
-                    const question = questions.find(q => q.id === a.question_id);
-
-                    const version = a.versions.at(-1);
-
-                    return !isFieldEmpty(question, version.value);
-                })
-
-            return Math.round(Math.min((answers.length / questions.length) * 100, 100))
+            return getFormProgress(questions, this.answers)
         }
     },
     methods: {

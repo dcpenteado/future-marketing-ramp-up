@@ -91,12 +91,18 @@ class Api {
     return resp;
   }
 
+  getFormResponses = async () => {
+    const resp = await this.authPost("/get-form-responses", {}, {});
+    
+    return resp;
+  }
+
   getFormResponseByUserId = async (user_id) => {
     return this.authPost("/get-form-response-by-user-id", { user_id }, {})
   }
 
   createOrUpdateFormResponse = async (form_response) => {
-    return this.authPost("/create-form-response-answers", { object: form_response }, {})
+    return this.authPost("/create-or-update-form-response", { object: form_response }, {})
   }
 
   checkErrorsWithStatusCode200 = (data) => {

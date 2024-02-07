@@ -78,6 +78,14 @@ const routes = [
     },
   },
   {
+    path: "/form-responses",
+    component: () => import("../views/FormResponseList.vue"),
+    meta: {
+      title: "Respostas",
+      layout: "menu",
+    },
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: () => import("../views/404.vue"),

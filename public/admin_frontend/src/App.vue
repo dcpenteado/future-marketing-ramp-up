@@ -239,6 +239,11 @@ export default {
                 to: "/forms",
               },
               {
+                label: "Respostas de formulários",
+                to: "/form-responses",
+              },
+              /*
+              {
                 label: "Prompts",
                 to: "/#prompts",
               },
@@ -258,8 +263,10 @@ export default {
                 label: "Sites para publicação",
                 to: "/#sites",
               },
+              */
             ]
           },
+          /*
           {
             label: "Dashboards",
             icon: "mdi-monitor-dashboard",
@@ -296,6 +303,7 @@ export default {
               },
             ],
           }
+          */
         )
       }
 
