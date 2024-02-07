@@ -148,7 +148,7 @@ const getFormResponses = async () => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
 
-    const resp = await FormResponses.find({ filed: { $ne: true } });
+    const resp = await FormResponses.find({ filed: { $ne: true } }).populate('user').populate('form');
     return resp;
   } catch (err) {
     return { error: true, type: "general_error" };
