@@ -31,27 +31,31 @@
             </v-data-table>
         </v-card>
 
-        <v-bottom-sheet v-model="dialogCreateUpdateObject">
-            <v-sheet class="bottom-modal-container" height="auto">
-                <v-row>
-                    <v-col cols="12" lg="6" md="6" sm="6">
-                        <v-text-field autocomplete="nope" dense v-model="object.name" label="Nome" outlined hide-details="auto"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" lg="6" md="6" sm="6">
-                        <v-text-field autocomplete="nope" dense v-model="object.email" label="E-mail" outlined hide-details="auto"></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12" lg="6" md="6" sm="6">
-                        <v-text-field autocomplete="nope" dense v-model="object.password" label="Senha" outlined hide-details="auto"></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12">
-                        <v-btn color="primary" block @click.native="createOrUpdateObject" :loading="loadingButton">Salvar usuário</v-btn>
-                    </v-col>
-
-                </v-row>
-            </v-sheet>
-        </v-bottom-sheet>
+        <dialog-or-bottom-sheet v-model="dialogCreateUpdateObject" max-width="500">
+            <v-card>
+                <v-card-title>
+                    {{ object._id ? 'Editar' : 'Novo' }}
+                </v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12">
+                            <v-text-field autocomplete="nope" dense v-model="object.name" label="Nome" outlined hide-details="auto"></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-text-field autocomplete="nope" dense v-model="object.email" label="E-mail" outlined hide-details="auto"></v-text-field>
+                        </v-col>
+            
+                        <v-col cols="12">
+                            <v-text-field autocomplete="nope" dense v-model="object.password" label="Senha" outlined hide-details="auto"></v-text-field>
+                        </v-col>
+            
+                        <v-col cols="12">
+                            <v-btn color="primary" block @click.native="createOrUpdateObject" :loading="loadingButton">Salvar usuário</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+            </v-card>
+        </dialog-or-bottom-sheet>
 
         <v-dialog v-model="dialogDeleteObject" max-width="350">
             <v-card>
