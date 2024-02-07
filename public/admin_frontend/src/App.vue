@@ -6,68 +6,7 @@
 
     <div v-if="$route.meta.layout === 'menu'">
 
-      <v-navigation-drawer
-        class="drawer"
-        v-model="drawer"
-        :clipped="$vuetify.breakpoint.lgAndUp"
-        width="270"
-        app
-        dark
-        :color="isAdmin ? '#252438' : 'primary'"
-      >
-
-        <div class="px-4 my-10">
-          <v-img src="/logo-white.png" cover width="134" class="mx-auto"   />
-        </div>
-
-        <v-list dense expand>
-          <v-subheader class="font-ubuntu" >PAINÉIS</v-subheader>
-
-          <template v-for="(item, i) in menuItems">
-            <v-list-group
-              v-if="item.children"
-              :key="i"
-              :prepend-icon="item.icon"
-              active-class="white--text"
-              :value="true"
-            >
-              <template v-slot:activator>
-                <v-list-item-title>{{ item.label }}</v-list-item-title>
-              </template>
-              
-              <v-list-item
-                v-for="(child, ci) in item.children"
-                :key="ci"
-                :to="child.to"
-                class="moon--text"
-              >
-                <v-list-item-icon>
-                  <span class="mx-auto">
-                    -
-                  </span>
-                </v-list-item-icon>
-
-                <v-list-item-title>
-                  {{ child.label }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list-group>
-
-            <v-list-item v-else :key="i" :to="item.to">
-              <v-list-item-icon>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-  
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ item.label }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>          
-          </template>
-        </v-list>
-
-      </v-navigation-drawer>
+      <app-drawer v-model="drawer" />
 
       <v-main>
         <v-app-bar
@@ -171,11 +110,11 @@ export default {
   name: "App",
   components: {
     AppSubheader: () => import("@/components/AppSubheader.vue"),
+    AppDrawer: () => import("@/components/AppDrawer.vue"),
   },
 
   data: () => ({
     drawer: false,
-    formResponse: null,
     projectName: "Future Marketing",
   }),
 
@@ -186,113 +125,13 @@ export default {
     currentUser() {
       return this.$store.state.currentUser
     },
-    isAdmin() {
-      return this.currentUser?.admin;
-    },
-    menuItems(){
-      const items = []
-
-      items.push({
-        label: "Meu perfil",
-        icon: "mdi-account-circle-outline",
-        to: '/meu-perfil'
-      })
-
-      if (!this.isAdmin) {
-        items.push(
-          {
-            label: "Meu site",
-            icon: "mdi-monitor-dashboard",
-            children: [
-              {
-                label: "Formulário",
-                to: {
-                  name: 'FormResponseSingle',
-                  params: {
-                    formResponseId: this.formResponse?._id
-                  }
-                },
-              },
-              {
-                label: "Meus textos",
-                to: "/#my-texts",
-              },
-              {
-                label: "Minhas aprovações",
-                to: "/#my-approvals",
-              },
-            ],
-          }
-        )
-      }
-
-      if (this.isAdmin) {
-        items.push(
-          {
-            label: "Minha plataforma",
-            icon: "mdi-monitor-dashboard",
-            children: [
-              {
-                label: "Clientes",
-                to: "/customers",
-              },
-              {
-                label: "Administradores",
-                to: "/administrators",
-              },
-              {
-                label: "Formulários",
-                to: "/forms",
-              },
-              {
-                label: "Respostas de formulários",
-                to: "/form-responses",
-              },
-            ]
-          },
-        )
-      }
-
-      return items
-    }
   },
   methods: {
-    load(){
-      this.setFormResponse()
-    },
-    async setFormResponse(){
-      if (this.isAdmin) {
-        this.formResponse = null
-        return
-      }
-
-      if (!this.currentUser) return
-
-      if (this.formResponse?.user?.id === this.currentUser._id) return
-
-      const response = await this.$api.getFormResponseByUserId(this.currentUser._id)
-
-      if (response.error) {
-        this.formResponse = null
-        return
-      }
-
-      this.formResponse = response.message
-
-    },
     logout() {
       Api.logout();
     },
   },
   watch: {
-    currentUser: {
-      immediate: true,
-      handler: function (value) {
-        if (value) {
-          this.setFormResponse()
-        }
-      }
-    },
     '$route': {
       immediate: true,
       handler: async function () {
@@ -311,8 +150,6 @@ export default {
   },
 
   created() {
-    this.load()
-
     this.$root.$refs.global = this;
   },
 
