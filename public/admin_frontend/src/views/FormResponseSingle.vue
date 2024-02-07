@@ -1,22 +1,26 @@
 <template>
-    <div v-if="form">
-        <v-card class="mb-4" outlined>
+    <div v-if="form" class="menu-page">
+        <v-card class="mb-4">
             <v-card-title>
                 Progresso geral ({{ fullProgress }}%)
             </v-card-title>
 
             <v-card-text>
-                <v-progress-linear :value="fullProgress" height="25" rounded />
+                <v-progress-linear :value="fullProgress" height="40" rounded>
+                    <template v-slot:default="{ value }">
+                        <div class="text-caption-total">{{ Math.ceil(value) }}%</div>
+                    </template>
+                </v-progress-linear>
             </v-card-text>
         </v-card>
 
-        <v-card outlined v-if="!categories.length">
+        <v-card v-if="!categories.length">
             <v-card-title>
                 Nenhuma categoria encontrada
             </v-card-title>
         </v-card>
 
-        <v-card outlined v-else>
+        <v-card v-else>
             <v-card-title>
                 Categorias
             </v-card-title>
@@ -36,9 +40,9 @@
                                     </v-col>
 
                                     <v-col class="d-flex align-center">
-                                        <v-progress-linear rounded :value="category.progress" height="20">
+                                        <v-progress-linear rounded :value="category.progress" height="30">
                                             <template v-slot:default="{ value }">
-                                                <div class="text-caption">{{ Math.ceil(value) }}%</div>
+                                                <div class="text-caption-category">{{ Math.ceil(value) }}%</div>
                                             </template>
                                         </v-progress-linear>
 
@@ -154,3 +158,15 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.text-caption-category {
+    color: white;
+    font-size: 16px !important;
+}
+
+.text-caption-total {
+    color: white;
+    font-size: 18px;
+}
+</style>

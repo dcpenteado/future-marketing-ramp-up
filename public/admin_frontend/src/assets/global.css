@@ -14,11 +14,14 @@
                                     supported by Chrome, Edge, Opera and Firefox */
   }
   
+  .v-application {
+    background: #2524380f !important;
+  }
+
   .menu-page {
     animation: fadeIn 1s;
     max-width: 1200px;
     margin-bottom: 60px;
-    /* background-color: #EAEAEA; */
   }
   
   .page-title {

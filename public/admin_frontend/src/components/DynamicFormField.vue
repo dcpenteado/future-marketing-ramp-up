@@ -1,6 +1,5 @@
 <template>
     <v-card
-        outlined
         :style="{
             'border-color': errors.length ? 'red' : undefined,            
         }"

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-card outlined class="mb-4">
+    <div class="menu-page">
+        <v-card class="mb-4">
             <v-card-text>
                 <v-form @submit.prevent="save">
                     <v-row>
@@ -58,7 +58,7 @@
             </v-card-text>
         </v-card>
 
-        <v-card outlined>
+        <v-card>
             <v-card-title>
                 Redefinir senha
             </v-card-title>

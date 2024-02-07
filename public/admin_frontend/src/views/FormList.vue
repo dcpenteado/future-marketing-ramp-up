@@ -1,5 +1,5 @@
 <template>
-    <v-card outlined>
+    <v-card class="menu-page">
         <v-data-table
             :headers="headers"
             :items="forms"

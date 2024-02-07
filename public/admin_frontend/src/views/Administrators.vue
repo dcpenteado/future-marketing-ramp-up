@@ -1,10 +1,12 @@
 <template>
-    <div>
-        <div class="d-flex mb-2">
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click.native="newObject">Novo administrador</v-btn>
-        </div>
-        <v-card outlined>
+    <div class="menu-page">
+        <v-card class="mb-4">
+            <v-card-text>
+                <v-btn color="primary" @click.native="newObject">Novo administrador</v-btn>
+            </v-card-text>
+        </v-card>
+
+        <v-card>
             <v-data-table :headers="headers" :items="administrators">
 
                 <template v-slot:[`item.created`]="{ item }">

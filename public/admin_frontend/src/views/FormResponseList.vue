@@ -1,35 +1,33 @@
 <template>
-    <div>
-        
-        <div class="d-flex mb-2">
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="dialog = true">Adicionar novo</v-btn>
-        </div>
-        
-        <v-card outlined>
+    <div class="menu-page">
+
+        <v-card class="mb-4">
+            <v-card-text>
+                <v-btn color="primary" @click="dialog = true">Associar Formulário</v-btn>
+            </v-card-text>
+        </v-card>
+
+        <v-card>
             <v-data-table :headers="headers" :items="items">
 
                 <template #[`item.progress`]="{ item }">
-                    <v-progress-linear :value="getFormResponseProgress(item)" height="15" rounded>
+                    <v-progress-linear :value="getFormResponseProgress(item)" height="20" rounded>
                         <template v-slot:default="{ value }">
-                            <div class="text-caption">{{ Math.ceil(value) }}%</div>
+                            <div class="text-caption-total">{{ Math.ceil(value) }}%</div>
                         </template>
                     </v-progress-linear>
-                </template>                
+                </template>
 
                 <template v-slot:[`item.actions`]="{ item }">
                     <div>
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <router-link
-                                    class="d-block"
-                                    :to="{
-                                        name: 'FormResponseSingle',
-                                        params: {
-                                            formResponseId: item._id
-                                        }
-                                    }"
-                                >
+                                <router-link class="d-block" :to="{
+                                    name: 'FormResponseSingle',
+                                    params: {
+                                        formResponseId: item._id
+                                    }
+                                }">
                                     <v-icon medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
                                         mdi-eye
                                     </v-icon>
@@ -55,29 +53,11 @@
                     <v-card-text>
                         <v-row>
                             <v-col cols="12">
-                                <v-autocomplete
-                                    v-model="data.form"
-                                    label="Formulário"
-                                    outlined
-                                    hide-details
-                                    item-text="name"
-                                    item-value="_id"
-                                    :items="forms.items"
-                                    :loading="forms.loading"
-                                />
+                                <v-autocomplete v-model="data.form" label="Formulário" outlined hide-details item-text="name" item-value="_id" :items="forms.items" :loading="forms.loading" />
                             </v-col>
 
                             <v-col cols="12">
-                                <v-autocomplete
-                                    v-model="data.client"
-                                    label="Cliente"
-                                    outlined
-                                    hide-details
-                                    item-text="name"
-                                    item-value="_id"
-                                    :items="clients.items"
-                                    :loading="clients.loading"
-                                />
+                                <v-autocomplete v-model="data.client" label="Cliente" outlined hide-details item-text="name" item-value="_id" :items="clients.items" :loading="clients.loading" />
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -85,7 +65,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="error" :disabled="saving" @click="dialog = false">Cancelar</v-btn>
-                        <v-btn color="primary" :loading="saving" type="submit">Save</v-btn>
+                        <v-btn color="primary" :loading="saving" type="submit">Associar</v-btn>
                     </v-card-actions>
                 </v-form>
             </v-card>
@@ -132,7 +112,7 @@ export default {
         }
     }),
     methods: {
-        async setItems(){
+        async setItems() {
             const response = await this.$api.getFormResponses()
 
             if (response.error) {
@@ -141,7 +121,7 @@ export default {
 
             this.items = response.message
         },
-        async setClients(){
+        async setClients() {
             this.clients.loading = true
 
             const response = await this.$api.getCustomers()
@@ -152,12 +132,12 @@ export default {
             }
 
             this.clients.items = response.message
-            
+
             setTimeout(() => {
                 this.clients.loading = false
             }, 500)
         },
-        async setForms(){
+        async setForms() {
             this.forms.loading = true
 
             const response = await this.$api.getForms()
@@ -173,7 +153,7 @@ export default {
                 this.forms.loading = false
             }, 500)
         },
-        async submit(){
+        async submit() {
 
             const hasForm = this.items.find(i => i.user._id === this.data.client)
 
@@ -217,7 +197,7 @@ export default {
         }
     },
     watch: {
-        dialog(value){
+        dialog(value) {
             if (value && !this.clients.items.length) {
                 this.setClients()
             }
@@ -233,3 +213,10 @@ export default {
 }
 </script>
 
+<style scoped>
+.text-caption-total {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+</style>

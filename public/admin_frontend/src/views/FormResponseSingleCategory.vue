@@ -1,6 +1,6 @@
 <template>
-    <v-form @submit.prevent="save" style="padding-bottom: 10rem;">
-        <v-card class="mb-4" outlined>         
+    <v-form @submit.prevent="save" style="padding-bottom: 10rem;" class="menu-page">
+        <v-card class="mb-4">         
             <v-card-text>
                 <div class="d-flex align-center mb-2">
                     <div class="title font-weight-bold">
