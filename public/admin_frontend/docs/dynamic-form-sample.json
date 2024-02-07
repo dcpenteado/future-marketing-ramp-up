@@ -1,0 +1,334 @@
+{
+    "name": "Formulário de teste",
+    "description": "Formulário com todas as opções de tipos campos disponíveis",
+    "categories": [
+        {
+            "id": "1",
+            "name": "Textos",
+            "description": "",
+            "questions": [
+                {
+                    "id": "1",
+                    "name": "Normal",
+                    "type": "text",
+                    "description": "Texto normal"
+                },
+                {
+                    "id": "2",
+                    "name": "Obrigatório",
+                    "type": "text",
+                    "description": "Texto com validação",
+                    "config": {
+                        "rules": [
+                            {
+                                "name": "required"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "3",
+                    "name": "Email",
+                    "type": "text",
+                    "description": "Texto com validação",
+                    "config": {
+                        "rules": [
+                            {
+                                "name": "email"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "4",
+                    "name": "URL",
+                    "type": "text",
+                    "description": "Texto com validação",
+                    "config": {
+                        "rules": [
+                            {
+                                "name": "url"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "name": "Selects",
+            "description": "",
+            "questions": [
+                {
+                    "id": "21",
+                    "name": "Normal",
+                    "type": "select",
+                    "description": "Selecionar opções",
+                    "config": {
+                        "items": [
+                            {
+                                "text": "Opcao 1",
+                                "value": "1"
+                            },
+                            {
+                                "text": "Opcao 2",
+                                "value": "2"
+                            },
+                            {
+                                "text": "Opcao 3",
+                                "value": "3"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "22",
+                    "name": "Selecionar multiplos",
+                    "type": "select",
+                    "description": "Selecionar opções",
+                    "config": {
+                        "multiple": true,
+                        "items": [
+                            {
+                                "text": "Opcao 1",
+                                "value": "1"
+                            },
+                            {
+                                "text": "Opcao 2",
+                                "value": "2"
+                            },
+                            {
+                                "text": "Opcao 3",
+                                "value": "3"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3",
+            "name": "List items",
+            "description": "",
+            "questions": [
+                {
+                    "id": "31",
+                    "name": "Normal",
+                    "type": "list_item",
+                    "description": "Adicione varios textos",
+                    "config": {}
+                }
+            ]
+        },
+        {
+            "id": "4",
+            "name": "Autocomplete",
+            "description": "",
+            "questions": [
+                {
+                    "id": "41",
+                    "name": "Normal",
+                    "type": "autocomplete",
+                    "description": "Adicione varios textos",
+                    "config": {
+                        "items": [
+                            {
+                                "text": "Opcao 1",
+                                "value": "1"
+                            },
+                            {
+                                "text": "Opcao 2",
+                                "value": "2"
+                            },
+                            {
+                                "text": "Opcao 3",
+                                "value": "3"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "42",
+                    "name": "API",
+                    "type": "autocomplete",
+                    "description": "Dados de https://servicodados.ibge.gov.br/api/v1/localidades/regioes-imediatas",
+                    "config": {
+                        "mode": "api",
+                        "url": "https://servicodados.ibge.gov.br/api/v1/localidades/regioes-imediatas?view=nivelado",
+                        "itemText": "regiao-imediata-nome",
+                        "itemValue": "regiao-imediata-nome"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "5",
+            "name": "Radio",
+            "description": "",
+            "questions": [
+                {
+                    "id": "51",
+                    "name": "Normal",
+                    "type": "radio",
+                    "description": "Selecionar items",
+                    "config": {
+                        "items": [
+                            {
+                                "text": "Opcao 1",
+                                "value": "1"
+                            },
+                            {
+                                "text": "Opcao 2",
+                                "value": "2"
+                            },
+                            {
+                                "text": "Opcao 3",
+                                "value": "3"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "6",
+            "name": "Checkbox",
+            "description": "",
+            "questions": [
+                {
+                    "id": "61",
+                    "name": "Normal",
+                    "type": "checkbox",
+                    "description": "descricao",
+                    "config": {}
+                }
+            ]
+        },
+        {
+            "id": "7",
+            "name": "Textarea",
+            "description": "",
+            "questions": [
+                {
+                    "id": "71",
+                    "name": "Normal",
+                    "type": "textarea",
+                    "description": "descricao",
+                    "config": {}
+                },
+                {
+                    "id": "72",
+                    "name": "Obrigatório",
+                    "type": "textarea",
+                    "description": "descricao",
+                    "config": {
+                        "rules": [
+                            {
+                                "name": "required",
+                                "message": "Essa textarea é obrigatória"
+                            },
+                            {
+                                "name": "minLength",
+                                "value": 5
+                            },
+                            {
+                                "name": "maxLength",
+                                "value": 10
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "8",
+            "name": "Linked autocompletes",
+            "description": "",
+            "questions": [
+                {
+                    "id": "81",
+                    "name": "Listas primaria",
+                    "type": "autocomplete",
+                    "description": "descricao",
+                    "config": {
+                        "items": [
+                            {
+                                "text": "Lista 1",
+                                "value": "1"
+                            },
+                            {
+                                "text": "Lista 2",
+                                "value": "2"
+                            },
+                            {
+                                "text": "Lista 3",
+                                "value": "4"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "82",
+                    "name": "Lista secundaria",
+                    "type": "autocomplete",
+                    "description": "Esse field tem os items exibidos baseado na seleção acima",
+                    "config": {
+                        "items": [
+                            {
+                                "text": "Item 1 (lista 1)",
+                                "value": "1",
+                                "list": "1"
+                            },
+                            {
+                                "text": "Item 2 (lista 1)",
+                                "value": "2",
+                                "list": "1"
+                            },
+                            {
+                                "text": "Item 3 (lista 1)",
+                                "value": "3",
+                                "list": "1"
+                            },
+                            {
+                                "text": "Item 1 (lista 2)",
+                                "value": "4",
+                                "list": "2"
+                            },
+                            {
+                                "text": "Item 2 (lista 2)",
+                                "value": "5",
+                                "list": "2"
+                            },
+                            {
+                                "text": "Item 3 (lista 2)",
+                                "value": "6",
+                                "list": "2"
+                            },
+                            {
+                                "text": "Item 1 (lista 3)",
+                                "value": "7",
+                                "list": "3"
+                            },
+                            {
+                                "text": "Item 2 (lista 3)",
+                                "value": "8",
+                                "list": "3"
+                            },
+                            {
+                                "text": "Item 3 (lista 3)",
+                                "value": "9",
+                                "list": "3"
+                            }
+                        ],
+                        "filter": {
+                            "list": "{{ currentAnswers['81'] }}"
+                        },
+                        "dependsOn": [
+                            "81"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
