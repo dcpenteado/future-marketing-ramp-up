@@ -59,30 +59,39 @@ const routes = [
       title: "Administradores",
     },
   },
-  {
-    path: "/form",
-    name: "FormSingle",
-    component: () => import("../views/FormSingle.vue"),
-    meta: {
-      layout: "menu",
-      title: "Formulário",
-    },
-  },
-  {
-    path: "/forms/:formId/categories/:categoryId",
-    name: "FormCategory",
-    component: () => import("../views/FormCategory.vue"),
-    meta: {
-      layout: "menu",
-      title: "Formulário",
-    },
-  },
+  // {
+  //   path: "/form",
+  //   name: "FormSingle",
+  //   component: () => import("../views/FormSingle.vue"),
+  //   meta: {
+  //     layout: "menu",
+  //     title: "Formulário",
+  //   },
+  // },
   {
     path: "/form-responses",
     component: () => import("../views/FormResponseList.vue"),
     meta: {
       title: "Respostas",
       layout: "menu",
+    },
+  },
+  {
+    path: "/form-responses/:formResponseId",
+    name: "FormResponseSingle",
+    component: () => import("../views/FormResponseSingle.vue"),
+    meta: {
+      layout: "menu",
+      title: "Formulário",
+    },
+  },
+  {
+    path: "/form-responses/:formResponseId/categories/:categoryId",
+    name: "FormResponseSingleCategory",
+    component: () => import("../views/FormResponseSingleCategory.vue"),
+    meta: {
+      layout: "menu",
+      title: "Formulário",
     },
   },
   {

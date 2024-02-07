@@ -13,7 +13,7 @@
                         color="error"
                         class="mr-2"
                         :disabled="saving"
-                        @click="cancel"
+                        @click="goToForm"
                     >
                         Cancelar
                     </v-btn>
@@ -100,7 +100,12 @@ export default {
             this.$store.commit('setBreadcrumbs', [
                 {
                     label: this.form.name,
-                    to: '/form'
+                    to: {
+                        name: 'FormResponseSingle',
+                        params: {
+                            formResponseId: this.formResponse._id
+                        }            
+                    }
                 },
                 {
                     label: this.category.name,
@@ -124,13 +129,18 @@ export default {
                 }
             });
         },
-        cancel(){
-            this.$router.push('/form')
+        goToForm(){
+            this.$router.push({
+                name: 'FormResponseSingle',
+                params: {
+                    formResponseId: this.formResponse._id
+                }            
+            })
         },
         async load() {
             this.pageLoading = true;
 
-            const response = await Api.getFormResponseByUserId(this.currentUser._id);
+            const response = await Api.getFormResponseById(this.$route.params.formResponseId);
 
             if (response.error) {
                 this.pageLoading = false;
@@ -186,7 +196,7 @@ export default {
 
             this.saving = false;
 
-            this.$router.push('/form')
+            this.goToForm()
         }
     },
     mounted(){

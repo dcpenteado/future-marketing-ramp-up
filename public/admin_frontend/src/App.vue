@@ -175,6 +175,7 @@ export default {
 
   data: () => ({
     drawer: false,
+    formResponse: null,
     projectName: "Future Marketing",
   }),
 
@@ -205,7 +206,12 @@ export default {
             children: [
               {
                 label: "Formulário",
-                to: "/form",
+                to: {
+                  name: 'FormResponseSingle',
+                  params: {
+                    formResponseId: this.formResponse?._id
+                  }
+                },
               },
               {
                 label: "Meus textos",
@@ -242,81 +248,51 @@ export default {
                 label: "Respostas de formulários",
                 to: "/form-responses",
               },
-              /*
-              {
-                label: "Prompts",
-                to: "/#prompts",
-              },
-              {
-                label: "Formbuilder",
-                to: "/#formbuilder",
-              },
-              {
-                label: "Textos Gerados",
-                to: "/#texts",
-              },
-              {
-                label: "Projetos concluídos",
-                to: "/#projects",
-              },
-              {
-                label: "Sites para publicação",
-                to: "/#sites",
-              },
-              */
             ]
           },
-          /*
-          {
-            label: "Dashboards",
-            icon: "mdi-monitor-dashboard",
-            children: [
-              {
-                label: "Clientes",
-                to: "/#clients",
-              },
-              {
-                label: "Status de projetos",
-                to: "/#project-status",
-              },
-              {
-                label: "Painel financeiro clientes",
-                to: "/#financial-panel",
-              },
-            ]
-          },
-          {
-            label: "Meu site",
-            icon: "mdi-monitor-dashboard",
-            children: [
-              {
-                label: "Minhas respostas",
-                to: "/#my-questions",
-              },
-              {
-                label: "Meus textos",
-                to: "/#my-texts",
-              },
-              {
-                label: "Minhas aprovações",
-                to: "/#my-approvals",
-              },
-            ],
-          }
-          */
         )
       }
 
       return items
     }
   },
-
   methods: {
+    load(){
+      this.setFormResponse()
+    },
+    async setFormResponse(){
+      if (this.isAdmin) {
+        this.formResponse = null
+        return
+      }
+
+      if (!this.currentUser) return
+
+      if (this.formResponse?.user?.id === this.currentUser._id) return
+
+      const response = await this.$api.getFormResponseByUserId(this.currentUser._id)
+
+      if (response.error) {
+        this.formResponse = null
+        return
+      }
+
+      this.formResponse = response.message
+
+    },
     logout() {
       Api.logout();
     },
   },
   watch: {
+    currentUser: {
+      immediate: true,
+      handler: function (value) {
+        if (value) {
+          this.setFormResponse()
+        }
+      }
+    },
     '$route': {
       immediate: true,
       handler: async function () {
@@ -335,8 +311,9 @@ export default {
   },
 
   created() {
+    this.load()
+
     this.$root.$refs.global = this;
-    document.title = this.projectName;
   },
 
   mounted() {

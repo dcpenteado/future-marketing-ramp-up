@@ -15,15 +15,21 @@
                             <div class="text-caption">{{ Math.ceil(value) }}%</div>
                         </template>
                     </v-progress-linear>
-                </template>
-
-                
+                </template>                
 
                 <template v-slot:[`item.actions`]="{ item }">
                     <div>
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <router-link  class="d-block" :to="`/forms-response/${item._id}`" >
+                                <router-link
+                                    class="d-block"
+                                    :to="{
+                                        name: 'FormResponseSingle',
+                                        params: {
+                                            formResponseId: item._id
+                                        }
+                                    }"
+                                >
                                     <v-icon medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
                                         mdi-eye
                                     </v-icon>

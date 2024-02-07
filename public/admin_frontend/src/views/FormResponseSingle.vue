@@ -82,6 +82,9 @@ export default {
                 this.$store.commit('setCurrentUser', value);
             }
         },
+        isAdmin() {
+            return this.currentUser?.admin;
+        },
         categories() {
             if (!this.form) return []
 
@@ -94,7 +97,13 @@ export default {
                 return {
                     label: `${c.name} (${categoryAnswers.length}/${c.questions.length})`,
                     progress: progress,
-                    to: `/forms/${this.form._id}/categories/${c.id}`
+                    to: {
+                        name: 'FormResponseSingleCategory',
+                        params: {
+                            formResponseId: this.$route.params.formResponseId,
+                            categoryId: c.id
+                        }
+                    }
                 }
             })
         },
@@ -120,9 +129,10 @@ export default {
         async load() {
             this.pageLoading = true;
 
-            const response = await Api.getFormResponseByUserId(this.currentUser);
+            const response = await Api.getFormResponseById(this.$route.params.formResponseId);
 
             if (response.error) {
+                this.pageLoading = false;
                 this.$router.push('/404');
                 return
             }

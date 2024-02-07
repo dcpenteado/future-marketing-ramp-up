@@ -101,6 +101,10 @@ class Api {
     return this.authPost("/get-form-response-by-user-id", { user_id }, {})
   }
 
+  getFormResponseById = async (form_response_id) => {
+    return this.authPost("/get-form-response-by-id", { id: form_response_id }, {})
+  }
+
   createOrUpdateFormResponse = async (form_response) => {
     return this.authPost("/create-or-update-form-response", { object: form_response }, {})
   }
