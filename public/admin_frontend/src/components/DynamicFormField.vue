@@ -107,7 +107,7 @@ export default {
     },
     props: {
         value: {
-            type: [String, Number, Object, Array],
+            // any type
             default: null
         },
         question: {

@@ -16,8 +16,8 @@ export default {
     name: 'DynamicFormFieldCheckbox',
     props: {
         value: {
-            type: String,
-            default: ''
+            type: Boolean,
+            default: false
         },
         question: {
             type: Object,
