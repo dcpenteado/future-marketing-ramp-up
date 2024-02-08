@@ -237,3 +237,80 @@ In this example, the second field will be filtered based on the value of the fir
     }
 }
 ```
+
+## Custom fields
+
+If none of the above fields meet your needs, you can create a custom field.
+
+To do this, you need to create a new component ex: `DynamicFormFieldMyCustomField` component.
+
+```html
+<template>
+    <div>
+        Custom field
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        question: {
+            type: Object,
+            required: true
+        },
+        model: {
+            type: Object,
+            required: true
+        },
+        errors: {
+            type: Object,
+            required: true
+        }
+    }
+}
+</script>
+```
+
+And add it to the `DynamicFormField` component.
+
+```html
+<template>
+    ...
+    <DynamicFormFieldTextarea
+        v-else-if="question.type === 'textarea'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+
+    <DynamicFormFieldMyCustomField
+        v-else-if="question.type === 'my_custom_component'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+    ...
+</template>
+
+<script>
+export default {
+    ...
+    components: {
+        ...
+        DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue')
+        DynamicFormFieldMyCustomField: () => import('@/components/DynamicFormFieldMyCustomField.vue')
+    }
+    ...
+}
+</script>
+```
+
+```json
+{
+    "id": "1",
+    "name": "My Custom Field",
+    "type": "my_custom_component",
+    "description": "My custom field description"
+}
+```
+
