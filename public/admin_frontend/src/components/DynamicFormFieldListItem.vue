@@ -15,7 +15,7 @@
                 @blur="model = model"
             />
 
-            <v-btn @click="removeItem(i.id)" class="mx-2" height="56" text color="error">
+            <v-btn @click="removeItem(i.id)" class="mx-2" height="56" text color="error" tabindex="-1">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
         </v-col>
