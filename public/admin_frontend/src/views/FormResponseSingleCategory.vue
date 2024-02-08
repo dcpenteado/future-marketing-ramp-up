@@ -1,43 +1,29 @@
 <template>
     <v-form @submit.prevent="save" style="padding-bottom: 10rem;" class="menu-page">
-        <v-card class="mb-4">         
+        <v-card class="progress-container mb-10">
             <v-card-text>
                 <div class="d-flex align-center mb-2">
                     <div class="title font-weight-bold">
                         Progresso atual ({{ progress }}%)
                     </div>
-    
+
                     <v-spacer></v-spacer>
-    
-                    <v-btn
-                        color="error"
-                        class="mr-2"
-                        :disabled="saving"
-                        @click="goToForm"
-                    >
+
+                    <v-btn color="error" class="mr-2" :disabled="saving" @click="goToForm">
                         Cancelar
                     </v-btn>
 
-                    <v-btn
-                        color="primary"
-                        type="submit"
-                        :loading="saving"
-                    >
+                    <v-btn color="primary" type="submit" :loading="saving">
                         Salvar
                     </v-btn>
                 </div>
 
-                <v-progress-linear :value="progress" height="25"  />
+                <v-progress-linear :value="progress" height="25" />
             </v-card-text>
         </v-card>
 
-        <dynamic-form
-            ref="dynamicForm"
-            v-model="dynamicFormData"
-            :questions="questions"
-            :answers="answers"
-        />
-        
+        <dynamic-form ref="dynamicForm" v-model="dynamicFormData" :questions="questions" :answers="answers" />
+
     </v-form>
 </template>
 
@@ -74,7 +60,7 @@ export default {
         categoryId() {
             return this.$route.params.categoryId
         },
-        category(){
+        category() {
             return this.form?.categories?.find(c => c.id === this.categoryId) || null
         },
         questions() {
@@ -83,31 +69,31 @@ export default {
         answers() {
             return this.formResponse?.answers || []
         },
-        form(){
+        form() {
             return this.formResponse?.form || null
-        },        
-        progress(){            
+        },
+        progress() {
             const totalAnswers = Object.keys(this.dynamicFormData)
                 .filter(k => {
                     const value = this.dynamicFormData[k];
                     const question = this.questions.find(q => q.id === k);
-                    
+
                     return !isFieldEmpty(question, value);
                 })
                 .length;
-            
+
             return Math.round(Math.min((totalAnswers / this.questions?.length || 0) * 100, 100))
         }
     },
     watch: {
-        category(value){
+        category(value) {
             if (!value) return;
 
             this.setPageData();
         }
-    },  
+    },
     methods: {
-        setPageData(){
+        setPageData() {
             this.$store.commit('setPageTitle', this.category.name);
             this.$store.commit('setPageSubtitle', this.category.description);
 
@@ -118,7 +104,7 @@ export default {
                         name: 'FormResponseSingle',
                         params: {
                             formResponseId: this.formResponse._id
-                        }            
+                        }
                     }
                 },
                 {
@@ -126,7 +112,7 @@ export default {
                 },
             ])
         },
-        setDynamicFormData(){       
+        setDynamicFormData() {
             this.questions.forEach(q => {
                 let value = '';
 
@@ -134,7 +120,7 @@ export default {
 
                 if (answer && answer.versions.length) {
                     const lastVersion = answer.versions.at(-1)
-                    
+
                     value = lastVersion.value;
                 }
 
@@ -143,12 +129,12 @@ export default {
                 }
             });
         },
-        goToForm(){
+        goToForm() {
             this.$router.push({
                 name: 'FormResponseSingle',
                 params: {
                     formResponseId: this.formResponse._id
-                }            
+                }
             })
         },
         async load() {
@@ -170,7 +156,7 @@ export default {
                 this.pageLoading = false;
             }, 200);
         },
-        async save(){
+        async save() {
             this.saving = true;
 
             const errors = this.$refs.dynamicForm.validate();
@@ -183,10 +169,10 @@ export default {
 
             const data = JSON.parse(JSON.stringify(this.dynamicFormData));
 
-            const answers = Object.entries(data).map(([question_id, value]) => ({                
+            const answers = Object.entries(data).map(([question_id, value]) => ({
                 category_id: this.category.id,
                 question_id,
-                value                
+                value
             }));
 
             const response = await this.$api.createFormResponseAnswers(this.formResponse._id, answers);
@@ -203,8 +189,17 @@ export default {
             this.goToForm()
         }
     },
-    mounted(){
+    mounted() {
         this.load()
     }
 };
 </script>
+
+<style scoped>
+.progress-container {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: auto;
+}
+</style>
