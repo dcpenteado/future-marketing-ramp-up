@@ -6,6 +6,7 @@
         item-text="text"
         item-value="value"
         clearable
+        :placeholder="placeholder"
         :multiple="!!question.config.multiple"
         :items="question.config.items"
         :error="!!errors.length"
@@ -39,6 +40,9 @@ export default {
                 this.$emit('input', value);
             }
         },
+        placeholder() {
+            return this.question.config?.placeholder || 'Selecione um item';
+        }
     },
 }
 </script>

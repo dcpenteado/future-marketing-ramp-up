@@ -12,6 +12,7 @@
         :error-messages="errors"
         :loading="loading"
         :disabled="!canFill"
+        :placeholder="placeholder"
     />
 </template>
 
@@ -49,6 +50,9 @@ export default {
         },
         itemValue(){
             return this.question.config?.itemValue || 'value';
+        },
+        placeholder() {
+            return this.question.config?.placeholder || 'Selecione um item';
         },
         isMultiple(){
             return !!this.question.config.multiple;
