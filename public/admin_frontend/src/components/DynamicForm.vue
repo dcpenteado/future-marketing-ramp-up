@@ -28,6 +28,12 @@
 
             <v-card-text v-if="selectedQuestion">
                 <v-row class="overflow-y-auto">
+                    <v-col cols="12" v-if="!answerVersions.length">
+                        <v-card-title>
+                            Nenhuma versão encontrada
+                        </v-card-title>
+                    </v-col>
+                    
                     <v-col cols="12" v-for="a in answerVersions" :key="a.id">
                         <DynamicFormField
                             :value="a.value"
