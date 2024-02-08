@@ -6,6 +6,7 @@
         :error="!!errors.length"
         :error-messages="errors"
         :placeholder="placeholder"
+        :rows="rows"
     />
 </template>
 
@@ -36,7 +37,10 @@ export default {
             }
         },
         placeholder() {
-            return this.question.placeholder || 'Texto...';
+            return this.question.config?.placeholder || 'Texto...';
+        },
+        rows() {
+            return this.question.config?.rows || 5;
         }
     },
 }
