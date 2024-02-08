@@ -8,8 +8,8 @@
         :error-messages="errors"
         :title="question.name"
         :maxlength="maxlength"
+        :prefix="question.config?.prefix"
         v-bind="question.config?.attrs"
-        @blur="onBlur(model)"
     />
 </template>
 
@@ -68,11 +68,6 @@ export default {
             }
 
             return undefined
-        }
-    },
-    methods: {
-        onBlur(){
-            console.log(this.model, this.mask.masked(this.model))
         }
     }
 }

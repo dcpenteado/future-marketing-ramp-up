@@ -6,7 +6,10 @@
                     <v-spacer></v-spacer>
 
                     <v-btn
-                        color="primary" outlined class="mr-4"
+                        tabindex="-1"
+                        color="primary"
+                        outlined
+                        class="mr-4"
                         @click="showAnswerVersions(q.id)"
                     >
                         Ver versões

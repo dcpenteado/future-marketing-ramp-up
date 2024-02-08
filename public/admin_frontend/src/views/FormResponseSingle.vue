@@ -30,9 +30,8 @@
                     <v-col v-for="(category, i) in categories" :key="i" cols="12">
                         <v-card outlined hover :to="category.to">
 
-
                             <v-card-text>
-                                <v-row no-gutters>
+                                <v-row no-gutters align="center">
                                     <v-col cols="12" class="mb-4 mb-md-0" md="2">
                                         <div class="text-subtitle">
                                             {{ category.label }}

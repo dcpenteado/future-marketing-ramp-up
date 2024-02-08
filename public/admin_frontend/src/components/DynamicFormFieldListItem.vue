@@ -15,7 +15,7 @@
                 @blur="model = model"
             />
 
-            <v-btn @click="removeItem(i.id)" class="mx-2" height="56">
+            <v-btn @click="removeItem(i.id)" class="mx-2" height="56" text color="error">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
         </v-col>
@@ -89,5 +89,10 @@ export default {
             this.model.splice(index, 1)
         }
     },
+    mounted() {
+        if (!Array.isArray(this.model) || !this.model.length) {
+            this.model = this.question.config?.defaultItems || []
+        }
+    }
 }
 </script>

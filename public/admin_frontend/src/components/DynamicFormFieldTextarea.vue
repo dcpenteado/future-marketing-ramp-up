@@ -5,6 +5,7 @@
         hide-details="auto"
         :error="!!errors.length"
         :error-messages="errors"
+        :placeholder="placeholder"
     />
 </template>
 
@@ -33,6 +34,9 @@ export default {
             set(value) {
                 this.$emit('input', value);
             }
+        },
+        placeholder() {
+            return this.question.placeholder || 'Texto...';
         }
     },
 }
