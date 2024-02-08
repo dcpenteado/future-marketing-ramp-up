@@ -9,6 +9,7 @@ export default new Vuex.Store({
         currentUser: null,
         breadcrumbs: [],
         pageTitle: 'Future Marketing',
+        pageSubtitle: '',
         pageLoading: false
     },
     mutations: {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
             state.pageTitle = payload
 
             document.title = payload || 'Future Marketing'
+        },
+        setPageSubtitle(state, payload) {
+            state.pageSubtitle = payload
         },
         setPageLoading(state, payload) {
             state.pageLoading = payload

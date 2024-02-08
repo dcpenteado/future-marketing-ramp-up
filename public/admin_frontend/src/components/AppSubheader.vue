@@ -1,6 +1,10 @@
 <template>
     <v-toolbar  elevation="0">
-        <v-toolbar-title>{{ title }}</v-toolbar-title>
+        <div>
+
+            <v-toolbar-title>{{ title }}</v-toolbar-title>
+            <div style="font-size:.8rem" class="grey--text" v-if="subtitle">{{ subtitle }}</div>
+        </div>
         
         <v-spacer></v-spacer>
 
@@ -37,6 +41,9 @@ export default {
             }
 
             return this.$route.name
+        },
+        subtitle() {
+            return this.$store.state.pageSubtitle
         },
         breadcrumbs(){
             const items = [

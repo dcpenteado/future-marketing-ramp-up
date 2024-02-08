@@ -50,11 +50,7 @@ export default {
     name: 'FormCategory',
     data: () => ({
         formResponse: null,
-        form: null,
-        category: null,
         saving: false,
-        answers: [],
-        questions: [],
         dynamicFormData: {}
     }),
     components: {
@@ -78,9 +74,19 @@ export default {
         categoryId() {
             return this.$route.params.categoryId
         },
-        progress(){
-            const answeredLength = this.questions.length
-            
+        category(){
+            return this.form?.categories?.find(c => c.id === this.categoryId) || null
+        },
+        questions() {
+            return this.category?.questions || []
+        },
+        answers() {
+            return this.formResponse?.answers || []
+        },
+        form(){
+            return this.formResponse?.form || null
+        },        
+        progress(){            
             const totalAnswers = Object.keys(this.dynamicFormData)
                 .filter(k => {
                     const value = this.dynamicFormData[k];
@@ -90,12 +96,20 @@ export default {
                 })
                 .length;
             
-            return Math.min((totalAnswers / answeredLength) * 100, 100)
+            return Math.round(Math.min((totalAnswers / this.questions?.length || 0) * 100, 100))
         }
     },
+    watch: {
+        category(value){
+            if (!value) return;
+
+            this.setPageData();
+        }
+    },  
     methods: {
         setPageData(){
             this.$store.commit('setPageTitle', this.category.name);
+            this.$store.commit('setPageSubtitle', this.category.description);
 
             this.$store.commit('setBreadcrumbs', [
                 {
@@ -112,7 +126,7 @@ export default {
                 },
             ])
         },
-        setDynamicFormData(){             
+        setDynamicFormData(){       
             this.questions.forEach(q => {
                 let value = '';
 
@@ -150,16 +164,6 @@ export default {
 
             this.formResponse = response.message;
 
-            const { form, answers } = response.message;
-            
-            const category = form.categories.find(c => c.id === this.categoryId);
-
-            this.form = form;
-            this.category = category;
-            this.answers = answers;
-            this.questions = category.questions;
-
-            this.setPageData();
             this.setDynamicFormData();
 
             setTimeout(() => {

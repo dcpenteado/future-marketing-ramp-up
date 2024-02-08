@@ -64,7 +64,7 @@ import { getFormProgress } from "@/composables/getFormProgress";
 import Api from "@/lib/Api";
 
 export default {
-    name: 'FormSingle',
+    name: 'FormResponseSingle',
     data: () => ({
         form: null,
         answers: [],
@@ -90,16 +90,16 @@ export default {
             return this.currentUser?.admin;
         },
         categories() {
-            if (!this.form) return []
+            if (!this.form?.categories) return []
 
             return this.form.categories.map((c) => {
 
                 const categoryAnswers = this.answers.filter(a => a.category_id === c.id)
 
-                const progress = getFormProgress(c.questions, categoryAnswers)
+                const progress = getFormProgress(c.questions || [], categoryAnswers)
 
                 return {
-                    label: `${c.name} (${categoryAnswers.length}/${c.questions.length})`,
+                    label: `${c.name} (${categoryAnswers.length}/${c.questions?.length || 0})`,
                     progress: progress,
                     to: {
                         name: 'FormResponseSingleCategory',
@@ -114,7 +114,7 @@ export default {
         fullProgress() {
             if (!this.form) return 0
 
-            const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions), [])
+            const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions) || [], [])
 
             return getFormProgress(questions, this.answers)
         }
@@ -122,6 +122,7 @@ export default {
     methods: {
         setPageData() {
             this.$store.commit('setPageTitle', this.form.name);
+            this.$store.commit('setPageSubtitle', this.form.description);
 
             this.$store.commit('setBreadcrumbs', [
                 {

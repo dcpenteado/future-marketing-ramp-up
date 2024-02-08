@@ -137,6 +137,7 @@ export default {
       handler: async function () {
         this.$store.commit('setBreadcrumbs', [])
         this.$store.commit('setPageTitle', null)
+        this.$store.commit('setPageSubtitle', null)
         
         if (this.currentUser) return
 
