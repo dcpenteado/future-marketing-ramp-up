@@ -5,19 +5,30 @@
         }"
     >
     <slot name="header">
-        <div class="d-flex align-center">
-            <div>
-                <v-card-title :class="errors.length ? 'error--text' : ''">
+        <v-row no-gutters align="center">
+            <v-col cols="12" sm="8" >
+                <v-card-title
+                    style="word-break: break-word;"
+                    :class="errors.length ? 'error--text' : ''"
+                >
                     {{ question.name }}
                 </v-card-title>
         
-                <v-card-subtitle :class="errors.length ? 'error--text' : ''">
+                <v-card-subtitle
+                    style="word-break: break-word;"
+                    :class="errors.length ? 'error--text' : ''"
+                >
                     {{ question.description }}
                 </v-card-subtitle>
-            </div>
+            </v-col>
 
-            <slot name="header-actions" />
-        </div>        
+            <v-col class="d-flex align-center">
+                
+                    <slot name="header-actions" />
+                
+            </v-col>
+
+        </v-row>        
     </slot>
 
     <v-divider />

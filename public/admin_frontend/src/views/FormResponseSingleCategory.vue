@@ -2,23 +2,29 @@
     <v-form @submit.prevent="save" style="padding-bottom: 10rem;" class="menu-page">
         <v-card class="progress-container mb-10">
             <v-card-text>
-                <div class="d-flex align-center mb-2">
-                    <div class="title font-weight-bold">
-                        Progresso atual ({{ progress }}%)
-                    </div>
+                <v-row dense>
+                    <v-col cols="12" sm="6">
+                        <div class="title font-weight-bold">
+                            Progresso atual ({{ progress }}%)
+                        </div>
+                    </v-col>
 
-                    <v-spacer></v-spacer>
+                    <v-col cols="12" sm="6" class="d-flex justify-sm-end">
+                        <v-btn color="error" class="mr-2" :disabled="saving" @click="goToForm">
+                            Cancelar
+                        </v-btn>
+    
+                        <v-btn color="primary" type="submit" :loading="saving">
+                            Salvar
+                        </v-btn>
+                    </v-col>
 
-                    <v-btn color="error" class="mr-2" :disabled="saving" @click="goToForm">
-                        Cancelar
-                    </v-btn>
+                    <v-col cols="12">
+                        <v-progress-linear :value="progress" height="25" />
+                    </v-col>
 
-                    <v-btn color="primary" type="submit" :loading="saving">
-                        Salvar
-                    </v-btn>
-                </div>
+                </v-row>
 
-                <v-progress-linear :value="progress" height="25" />
             </v-card-text>
         </v-card>
 

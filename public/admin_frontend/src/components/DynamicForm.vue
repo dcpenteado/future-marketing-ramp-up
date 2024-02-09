@@ -3,17 +3,23 @@
         <v-col cols="12" v-for="(q) in questions" :key="q.id">
             <DynamicFormField v-model="model[q.id]" :question="q">
                 <template #header-actions>
-                    <v-spacer></v-spacer>
+                    <v-spacer ></v-spacer>
 
-                    <v-btn
-                        tabindex="-1"
-                        color="primary"
-                        outlined
-                        class="mr-4"
-                        @click="showAnswerVersions(q.id)"
-                    >
-                        Ver versões
-                    </v-btn>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                tabindex="-1"
+                                class="mx-4 mb-4 mb-sm-0"
+                                icon
+                                v-on="on"
+                                @click="showAnswerVersions(q.id)"
+                            >
+                                <v-icon>mdi-history</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Ver versões</span>
+
+                    </v-tooltip>
                 </template>
             </DynamicFormField>
         </v-col>
@@ -26,10 +32,29 @@
             temporary
         >
 
+            <template v-slot:prepend>
+                <div class="d-flex pa-4 align-center">
+                    <v-toolbar-title>
+                        Versões
+                    </v-toolbar-title>
+    
+                    <v-spacer></v-spacer>
+    
+                    <v-btn
+                        icon
+                        @click="drawer = false"
+    
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </div>
+                <v-divider></v-divider>
+            </template>
+
             <v-card-text v-if="selectedQuestion">
                 <v-row class="overflow-y-auto">
                     <v-col cols="12" v-if="!answerVersions.length">
-                        <v-card-title>
+                        <v-card-title style="word-break: break-word;">
                             Nenhuma versão encontrada
                         </v-card-title>
                     </v-col>
