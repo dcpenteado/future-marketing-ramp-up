@@ -52,6 +52,7 @@
                                                     label="Email"
                                                     outlined
                                                     hide-details="auto"
+                                                    autocomplete="email"
                                                 />
                                             </v-col>
     
@@ -175,17 +176,14 @@ export default {
     },
     methods: {
         async login() {
-            const resp = await Api.login(this.email, this.password, this.remember);
+            const response = await Api.login(this.email, this.password, this.remember);
 
-            if (resp && resp.login_ok) {
-                this.$router.push("/");
-                return;
+            if (response.error) {
+                this.$toast('error', response.message);
+                return
             }
 
-            if (resp && resp.error && resp.error.message) {
-                emitToastr('error', resp.error.message)
-                return;
-            }
+            this.$router.push("/");
         },
         async resetPassword(){
             const resp = await Api.recoveryPassword(this.email);
