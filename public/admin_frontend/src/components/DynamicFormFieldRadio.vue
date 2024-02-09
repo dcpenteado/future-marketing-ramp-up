@@ -5,6 +5,8 @@
         :error="!!errors.length"
         :error-messages="errors"
         class="mt-0"
+        :row="question.config?.row"
+        :column="question.config?.column"
     >
 
         <v-radio
@@ -22,8 +24,8 @@ export default {
     name: 'DynamicFormFieldRadio',
     props: {
         value: {
-            type: Boolean,
-            default: false
+            type: [String, Number, Boolean],
+            default: null
         },
         question: {
             type: Object,

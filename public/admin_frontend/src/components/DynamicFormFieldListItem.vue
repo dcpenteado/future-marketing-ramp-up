@@ -93,11 +93,6 @@ export default {
 
             this.model.splice(index, 1)
         }
-    },
-    mounted() {
-        if (!Array.isArray(this.model) || !this.model.length) {
-            this.model = this.question.config?.defaultItems || []
-        }
     }
 }
 </script>

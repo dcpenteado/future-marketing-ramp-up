@@ -1,5 +1,6 @@
 <template>
     <v-card
+        v-show="show"
         :style="{
             'border-color': errors.length ? 'red' : undefined,            
         }"
@@ -89,6 +90,14 @@
                 :errors="errors"
             />
 
+            <DynamicFormFieldTestimonials
+                v-else-if="question.type === 'testimonials'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+                :disabled="disabled"
+            />
+
             <v-alert
                 v-else
                 outlined
@@ -105,6 +114,8 @@
 <script>
 import { useValidation } from '@/composables/useValidation';
 
+import template from 'lodash/template'
+
 export default {
     name: 'DynamicFormField',
     components: {
@@ -115,6 +126,7 @@ export default {
         DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
         DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
         DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue'),
+        DynamicFormFieldTestimonials: () => import('@/components/DynamicFormFieldTestimonials.vue'),
     },
     props: {
         value: {
@@ -134,13 +146,14 @@ export default {
             default: false
         }
     },
-    inject: ['fieldValidationsFunctions'],
+    inject: ['currentAnswers', 'fieldValidationsFunctions'],
     provide() {
         return {
             errors: this.errors
         }
     },
     data: () => ({
+        show: true,
         errors: [],
     }),
     computed: {
@@ -154,7 +167,11 @@ export default {
         }
     },
     watch: {
-        model: 'validate'
+        model: 'validate',
+        currentAnswers: {
+            handler: 'checkShow',
+            deep: true
+        }
     },
     methods: {
         validate(){
@@ -163,10 +180,31 @@ export default {
             this.errors = validate(this.model);
 
             return this.errors
+        },
+        checkShow(){
+            const operations = this.question.config?.if;
+
+            if (!operations) {
+                this.show = true;
+                return
+            }
+
+            const results = operations
+                .map(op => template(op, { interpolate: /{{([\s\S]+?)}}/g }))
+                .map(compiled => compiled({ currentAnswers: this.currentAnswers }))
+                .map(r => r === 'true')
+
+            this.show = results.every(Boolean);
+
+            console.log('config', results, results.every(Boolean));
         }
     },
     mounted(){
         this.fieldValidationsFunctions.push(this.validate);
+
+        if (!this.model) {
+            this.model = this.question.config?.default
+        }
     },
     destroyed(){
         const index = this.fieldValidationsFunctions.indexOf(this.validate);
