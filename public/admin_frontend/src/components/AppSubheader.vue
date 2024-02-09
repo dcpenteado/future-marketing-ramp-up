@@ -1,7 +1,10 @@
 <template>
-    <v-toolbar height="auto" elevation="0">
+    <v-toolbar
+        height="auto"
+        elevation="0"
+    >
 
-        <v-row no-gutters align="center">
+        <v-row no-gutters align="center" style="min-height: 4rem;">
 
             <v-col cols="12" md="6">
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
