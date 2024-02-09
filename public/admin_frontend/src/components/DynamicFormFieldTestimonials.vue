@@ -1,19 +1,50 @@
 <template>
-    <div>
-        <v-radio-group v-model="source">    
-            <v-radio value="google_business" label="Importar depoimentos do google meu negócio" />
-    
-            <v-radio value="manual" label="Adicionar depoimentos manualmente" />            
-        </v-radio-group>
+    <v-row dense v-if="model">
+        <v-col v-for="(item, index) in items" :key="item.id" cols="12">
+            <v-row align="center">
+                <v-col cols="3">
+                    <v-text-field
+                        v-model="model[index].name"
+                        label="Nome"
+                        outlined
+                        hide-details
+                    />
+                </v-col>
 
-        <div v-if="source === 'google_business'">
-            <v-alert outlined type="info">
-                Importar depoimentos do google meu negócio
-            </v-alert>
+                <v-col cols="6">
+                    <v-textarea
+                        v-model="model[index].description"
+                        label="Descrição"
+                        outlined
+                        rows="1"
+                        hide-details
+                    />
+                </v-col>
 
-            <v-text-field v-model="googleBusinessId" label="ID do google meu negócio" outlined />
-        </div>
-    </div>
+                <v-col cols="3" class="d-flex justify-end align-center">
+                    <v-rating v-model="model[index].stars" hide-details/>
+
+                    <v-btn
+                        v-if="!disabled"
+                        @click="removeItem(index)"
+                        class="mx-2"
+                        height="56"
+                        text
+                        color="error"
+                        tabindex="-1"
+                    >
+                        <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-col>
+
+        <v-col v-if="!disabled" cols="12" :class="!items.length ? 'text-center' : ''">
+            <v-btn color="primary" @click="addItem">
+                Adicionar depoimento
+            </v-btn>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
@@ -36,10 +67,6 @@ export default {
             default: false
         }
     },
-    data: () => ({
-        source: 'google_business',
-        googleBusinessId: null
-    }),
     computed: {
         model: {
             get() {
@@ -49,6 +76,32 @@ export default {
                 this.$emit('input', value);
             }
         },
+        items() {
+            if (!Array.isArray(this.model)) return []
+
+            return this.model.map((item, index) => ({
+                id: index,
+                name: item.name,
+                description: item.description,
+            }))            
+        },
+    },
+    methods: {
+        addItem() {
+            this.model.push({
+                name: '',
+                description: '',
+                stars: 0
+            })
+        },
+        removeItem(index) {
+            this.model.splice(index, 1)
+        }
+    },
+    mounted() {
+        if (!Array.isArray(this.model) || !this.model) {
+            this.model = []
+        }
     },
 }
 </script>
