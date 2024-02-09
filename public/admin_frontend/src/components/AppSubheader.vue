@@ -1,27 +1,35 @@
 <template>
-    <v-toolbar  elevation="0">
-        <div>
-            <v-toolbar-title>{{ title }}</v-toolbar-title>
-            <div style="font-size:.8rem" class="grey--text" v-if="subtitle">{{ subtitle }}</div>
-        </div>
-        
-        <v-spacer></v-spacer>
+    <v-toolbar height="auto" elevation="0">
 
-        <v-breadcrumbs
-            v-if="breadcrumbs.length > 1"
-            :items="breadcrumbs"
-            divider=">"
-        >
-            <template v-slot:item="{ item }">
-                <v-breadcrumbs-item
-                    :to="item.to"
-                    :disabled="item.disabled"
-                    exact
+        <v-row no-gutters align="center">
+
+            <v-col cols="12" md="6">
+                <v-toolbar-title>{{ title }}</v-toolbar-title>
+                <div style="font-size:.8rem" class="grey--text" v-if="subtitle">{{ subtitle }}</div>
+            </v-col>
+
+            
+            <v-col cols="12" md="6" class="d-flex justify-md-end">
+                <v-breadcrumbs
+                    v-if="breadcrumbs.length > 1"
+                    :items="breadcrumbs"
+                    divider=">"
+                    class="px-0 py-2"
                 >
-                    {{ item.label }}
-                </v-breadcrumbs-item>
-            </template>
-        </v-breadcrumbs>
+                    <template v-slot:item="{ item }">
+                        <v-breadcrumbs-item
+                            :to="item.to"
+                            :disabled="item.disabled"
+                            exact
+                        >
+                            {{ item.label }}
+                        </v-breadcrumbs-item>
+                    </template>
+                </v-breadcrumbs>
+            </v-col>
+
+        </v-row>
+
         
     </v-toolbar>
 </template>

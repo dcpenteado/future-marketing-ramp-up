@@ -124,10 +124,7 @@ export default {
             this.$store.commit('setPageSubtitle', this.form.description);
 
             this.$store.commit('setBreadcrumbs', [
-                {
-                    label: this.form.name,
-                    to: '/form'
-                },
+                { label: this.form.name },
             ])
         },
         async load() {
