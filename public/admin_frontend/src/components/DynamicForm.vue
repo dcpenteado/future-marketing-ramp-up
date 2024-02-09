@@ -54,7 +54,7 @@
             <v-card-text v-if="selectedQuestion">
                 <v-row class="overflow-y-auto">
                     <v-col cols="12" v-if="!answerVersions.length">
-                        <v-card-title style="word-break: break-word;">
+                        <v-card-title class="break-words">
                             Nenhuma versão encontrada
                         </v-card-title>
                     </v-col>

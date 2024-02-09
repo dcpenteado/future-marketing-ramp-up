@@ -156,3 +156,7 @@
 html {
   overflow: auto;
 }
+
+.break-words {
+  word-break: break-word;
+}

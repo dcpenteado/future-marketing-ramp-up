@@ -8,14 +8,14 @@
         <v-row no-gutters align="center">
             <v-col cols="12" sm="8" >
                 <v-card-title
-                    style="word-break: break-word;"
+                    class="break-words"
                     :class="errors.length ? 'error--text' : ''"
                 >
                     {{ question.name }}
                 </v-card-title>
         
                 <v-card-subtitle
-                    style="word-break: break-word;"
+                    class="break-words"
                     :class="errors.length ? 'error--text' : ''"
                 >
                     {{ question.description }}
