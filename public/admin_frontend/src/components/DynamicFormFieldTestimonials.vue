@@ -1,42 +1,48 @@
 <template>
-    <v-row dense v-if="model">
-        <v-col v-for="(item, index) in items" :key="item.id" cols="12">
-            <v-row align="center">
-                <v-col cols="3">
-                    <v-text-field
-                        v-model="model[index].name"
-                        label="Nome"
-                        outlined
-                        hide-details
-                    />
-                </v-col>
+    <v-row v-if="model">
+        <v-col v-for="(item, index) in items" :key="item.id" cols="12" class="mb-4">
+            <v-card outlined>
+                <v-card-title>
+                    Depoimento {{ index + 1 }}
+                </v-card-title>
+                <v-card-text>
+                    <v-row align="center">
+                        <v-col cols="12" >
+                            <v-text-field
+                                v-model="model[index].name"
+                                label="Nome"
+                                outlined
+                                hide-details
+                            />
+                        </v-col>
+        
+                        <v-col cols="12">
+                            <v-textarea
+                                v-model="model[index].description"
+                                label="Descrição"
+                                outlined
+                                rows="1"
+                                hide-details
+                            />
+                        </v-col>
+        
+                        <v-col cols="12">
+                            <v-rating v-model="model[index].stars" hide-details/>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
 
-                <v-col cols="6">
-                    <v-textarea
-                        v-model="model[index].description"
-                        label="Descrição"
-                        outlined
-                        rows="1"
-                        hide-details
-                    />
-                </v-col>
-
-                <v-col cols="3" class="d-flex justify-end align-center">
-                    <v-rating v-model="model[index].stars" hide-details/>
-
+                <v-card-actions>
                     <v-btn
                         v-if="!disabled"
                         @click="removeItem(index)"
-                        class="mx-2"
-                        height="56"
-                        text
                         color="error"
                         tabindex="-1"
                     >
-                        <v-icon>mdi-delete</v-icon>
+                        Remover
                     </v-btn>
-                </v-col>
-            </v-row>
+                </v-card-actions>
+            </v-card>
         </v-col>
 
         <v-col v-if="!disabled" cols="12" :class="!items.length ? 'text-center' : ''">

@@ -51,7 +51,7 @@
                 <v-divider></v-divider>
             </template>
 
-            <v-card-text v-if="selectedQuestion">
+            <v-card-text v-if="selectedQuestion" style="background-color: #2524380f;">
                 <v-row class="overflow-y-auto">
                     <v-col cols="12" v-if="!answerVersions.length">
                         <v-card-title class="break-words">
