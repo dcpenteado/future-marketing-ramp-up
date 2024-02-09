@@ -47,6 +47,7 @@
                 v-model="model"
                 :question="question"
                 :errors="errors"
+                :disabled="disabled"
             />
 
             <DynamicFormFieldAutocomplete
@@ -77,13 +78,12 @@
                 :errors="errors"
             />
 
-            
             <v-alert
                 v-else
                 outlined
                 type="error"
             >
-                Tipo de campo não suportado
+                Tipo de campo inválido
             </v-alert>
             
 

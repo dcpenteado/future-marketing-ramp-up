@@ -15,12 +15,13 @@
                 @blur="model = model"
             />
 
-            <v-btn @click="removeItem(i.id)" class="mx-2" height="56" text color="error" tabindex="-1">
+            <v-btn v-if="!disabled" @click="removeItem(i.id)" class="mx-2" height="56" text color="error" tabindex="-1">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
         </v-col>
 
         <v-col
+            v-if="!disabled"
             cols="12"
             :class="!items.length ? 'text-center' : ''"
         >
@@ -46,6 +47,10 @@ export default {
         errors: {
             type: Array,
             default: () => []
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
