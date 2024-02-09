@@ -22,8 +22,8 @@ export default {
     name: 'DynamicFormFieldRadio',
     props: {
         value: {
-            type: String,
-            default: ''
+            type: Boolean,
+            default: false
         },
         question: {
             type: Object,
