@@ -98,12 +98,19 @@
                 :disabled="disabled"
             />
 
+            <DynamicFormFieldImageSelect
+                v-else-if="question.type === 'image_select'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
             <v-alert
                 v-else
                 outlined
                 type="error"
             >
-                Tipo de campo inválido
+                Tipo de campo inválido {{ question.type }}
             </v-alert>
             
 
@@ -127,6 +134,7 @@ export default {
         DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
         DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue'),
         DynamicFormFieldTestimonials: () => import('@/components/DynamicFormFieldTestimonials.vue'),
+        DynamicFormFieldImageSelect: () => import('@/components/DynamicFormFieldImageSelect.vue'),
     },
     props: {
         value: {

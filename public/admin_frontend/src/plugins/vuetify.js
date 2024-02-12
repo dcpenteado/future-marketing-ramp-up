@@ -10,6 +10,9 @@ export default new Vuetify({
         locales: { ptBr }
     },
     theme: {
+        options: {
+            customProperties: true
+        },
         themes: {
             light: {
                 // vuetify colors
