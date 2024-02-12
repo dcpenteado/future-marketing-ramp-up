@@ -3,7 +3,7 @@
         :color="isAdmin ? '#252438' : 'primary'">
 
         <div class="px-4 my-10">
-            <v-img src="/logo-white.png" cover width="134" class="mx-auto" />
+            <v-img src="/logo-white.svg" cover width="134" class="mx-auto" />
         </div>
 
         <v-list dense expand>
