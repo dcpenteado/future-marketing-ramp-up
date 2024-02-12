@@ -55,6 +55,11 @@ class Api {
     return resp;
   };
 
+  uploadImage = async (image) => {
+    const resp = await this.authPost("/upload-image", { image: image }, { multipart: true, formData: true });
+    return resp;
+  };
+
   createUser = async (user) => {
     const resp = await this.authPost("/create-user", { user }, {});
     return resp;
@@ -87,13 +92,13 @@ class Api {
 
   getForms = async () => {
     const resp = await this.authPost("/get-forms", {}, {});
-    
+
     return resp;
   }
 
   getFormResponses = async () => {
     const resp = await this.authPost("/get-form-responses", {}, {});
-    
+
     return resp;
   }
 
@@ -113,18 +118,18 @@ class Api {
     if (data.error) {
       emitToastr("error", data.message || "Erro não identificado!", "Erro");
     }
-    
+
     return data;
   };
 
   // create-form-response-answers
   createFormResponseAnswers = async (form_response_id, answers) => {
-    return this.authPost("/create-form-response-answers", { 
+    return this.authPost("/create-form-response-answers", {
       object: {
         _id: form_response_id,
         answers: answers
       }
-     }, {});
+    }, {});
   }
 
   get = (url) =>
@@ -173,7 +178,7 @@ class Api {
           if (err.response.data && err.response.data.logoff === true) this.logout();
         } else {
           if (err.response && err.response.data && err.response.data.error && err.response.data.message) {
-            return {error: true, message: err.response.data.message};
+            return { error: true, message: err.response.data.message };
           } else if (err.response && err.response.status) emitToastr("error", err.response.statusText + " (status: " + err.response.status + ")", "Erro");
           else emitToastr("error", "Erro genérico de servidor!", "Erro");
           err.response.error = err.response.error || true;
