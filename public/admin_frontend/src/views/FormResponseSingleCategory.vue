@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { isFieldEmpty } from "@/composables/isFieldEmpty";
+import { getFormProgress } from "@/composables/getFormProgress";
+// import { isFieldEmpty } from "@/composables/isFieldEmpty";
 import Api from "@/lib/Api";
 // import uuid from 'uuid-random';	
 
@@ -43,6 +44,7 @@ export default {
     data: () => ({
         formResponse: null,
         saving: false,
+        progress: 0,
         dynamicFormData: {}
     }),
     components: {
@@ -78,27 +80,37 @@ export default {
         form() {
             return this.formResponse?.form || null
         },
-        progress() {
-            const totalAnswers = Object.keys(this.dynamicFormData)
-                .filter(k => {
-                    const value = this.dynamicFormData[k];
-                    const question = this.questions.find(q => q.id === k);
+        // progress() {
+        //     const tmpAnswers = Object.entries(this.dynamicFormData).map(([question_id, value]) => ({
+        //         category_id: this.category.id,
+        //         question_id,
+        //         versions: [{ value }]
+        //     }));
 
-                    return !isFieldEmpty(question, value);
-                })
-                .length;
-
-            return Math.round(Math.min((totalAnswers / this.questions?.length || 0) * 100, 100))
-        }
+        //     return getFormProgress(this.questions, tmpAnswers)
+        // }
     },
     watch: {
         category(value) {
             if (!value) return;
 
             this.setPageData();
+        },
+        dynamicFormData: {
+            handler: 'setProgress',
+            deep: true
         }
     },
     methods: {
+        setProgress() {
+            const tmpAnswers = Object.entries(this.dynamicFormData).map(([question_id, value]) => ({
+                category_id: this.category.id,
+                question_id,
+                versions: [{ value }]
+            }));
+
+            this.progress = getFormProgress(this.questions, tmpAnswers)
+        },
         setPageData() {
             this.$store.commit('setPageTitle', this.category.name);
             this.$store.commit('setPageSubtitle', this.category.description);

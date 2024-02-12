@@ -213,8 +213,6 @@ export default {
                 .map(r => r === 'true')
 
             this.show = results.every(Boolean);
-
-            console.log('config', results, results.every(Boolean));
         }
     },
     mounted(){
