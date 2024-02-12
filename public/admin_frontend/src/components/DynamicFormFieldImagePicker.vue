@@ -93,19 +93,15 @@ export default {
         async upload(file){
             this.uploading = true;
 
-            // const response = await this.$api.uploadProfilePicture(file);
+            const response = await this.$api.uploadImage(file);
 
-            // if (response.error) {
-            //     this.uploading = false;
-            //     this.$toast('error', response.message);
-            //     return
-            // }
+            if (response.error) {
+                this.uploading = false;
+                this.$toast('error', response.message);
+                return
+            }
 
-            // this.model = response.message;
-
-            console.log(file);
-
-            this.$toast('warning', 'Não implementado');
+            this.model = response.message;
 
             setTimeout(() => {
                 this.uploading = false;
