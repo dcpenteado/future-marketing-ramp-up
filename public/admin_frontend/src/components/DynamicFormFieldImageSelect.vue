@@ -75,6 +75,10 @@ export default {
         errors: {
             type: Array,
             default: () => []
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -99,7 +103,7 @@ export default {
             return this.question.config?.checkboxOutside || false;
         },
         colAttrs(){
-            if (this.question.config?.row){
+            if (this.question.config?.row || this.disabled){
                 return {
                     cols: 12
                 }

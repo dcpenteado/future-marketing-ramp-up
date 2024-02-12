@@ -103,6 +103,15 @@
                 v-model="model"
                 :question="question"
                 :errors="errors"
+                :disabled="disabled"
+            />
+
+            <DynamicFormFieldImagePicker
+                v-else-if="question.type === 'image_picker'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+                :disabled="disabled"
             />
 
             <v-alert
@@ -135,6 +144,7 @@ export default {
         DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue'),
         DynamicFormFieldTestimonials: () => import('@/components/DynamicFormFieldTestimonials.vue'),
         DynamicFormFieldImageSelect: () => import('@/components/DynamicFormFieldImageSelect.vue'),
+        DynamicFormFieldImagePicker: () => import('@/components/DynamicFormFieldImagePicker.vue'),
     },
     props: {
         value: {
