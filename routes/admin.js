@@ -99,6 +99,28 @@ router.post("/upload-profile-picture", auth, upload.single("image"), async (req,
   }
 });
 
+router.post("/upload-image", auth, upload.single("image"), async (req, res) => {
+  try {
+    const req_user = req.req_user;
+    if (!req_user?._id) return res.send({ error: true, message: "É necessário estar logado para enviar uma imagem." });
+
+    if (req.file && req.file.buffer) {
+      const original = await sharp(req.file.buffer).resize(1200).jpeg({ mozjpeg: true }).toBuffer();
+      const image_id = uuidv4();
+
+      const upload = await utils.uploadToS3(original, 'images', `${image_id}.jpg`, 'image/jpeg');
+
+      if (!upload) return res.send({ error: true, message: "Não foi possível fazer o upload. Por favor, tente novamente." });
+      const image_url = `${config.s3_endpoint}images/${image_id}.jpg`;
+
+      return res.send({ error: false, message: image_url });
+    } else {
+      return res.status(400).send({ error: true, message: "Imagem não reconhecida." });
+    }
+  } catch (err) {
+    return res.status(400).send({ error: true, message: err.message });
+  }
+});
 
 router.post("/change-user-password", auth, async (req, res) => {
   try {
@@ -293,7 +315,7 @@ router.post("/create-form-response-answers", auth, async (req, res) => {
     }
 
     let existing_form = await DBController.getFormResponseById(object._id);
-    
+
     if (!existing_form) {
       return res.send({ error: true, message: "Formulário de respostas não encontrado." });
     }
