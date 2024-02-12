@@ -81,6 +81,25 @@ This is an example of the input expected
 
 ```
 
+## Conditional fields
+
+To create a conditional field, you need to add the `config.conditions` array inside the question object.
+
+```json
+{
+    "id": "1",
+    "name": "Normal",
+    "type": "text",
+    "description": "Texto normal",
+    "config": {
+        "if": [
+            "{{ currentAnswers['2'] === '1' }}",
+        ]
+    }
+}
+```
+
+This will make the field visible only if the value of the field with id 2 is equal to 1.
 
 
 ## Validation
