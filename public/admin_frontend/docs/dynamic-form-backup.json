@@ -229,7 +229,7 @@
                         "type": "textarea",
                         "config": {
                             "rows": 25,
-                            "placeholder": "Exemplo números relevantes:\n\n+ de 100 cirurgias realizadas\n+ de \n0 artigos científicos publicados\n+ de 500 pacientes atendidos\n\nExemplo diferencial e o motivo do porquê esse é um diferencial:\n\nAtendimento Humanizado\n\nValorizo a importância de tratar cada paciente como um indivíduo único. Busco compreender suas preocupações e necessidades específicas, oferecendo um atendimento personalizado, acolhedor e compassivo. Meu objetivo é garantir que você se sinta compreendido e apoiado durante todo o processo de tratamento.\n\nAtualização Constante\n\nCom mais de 1500 pacientes atendidos ao longo da minha carreira, mantenho-me em constante atualização. Participo ativamente de eventos acadêmicos nacionais e internacionais visando oferecer tratamentos alinhados às mais recentes descobertas da área.\n\nEscuta Ativa e Abordagem Personalizada\nCada paciente é único. Com uma escuta ativa e um interesse genuíno pelo seu bem-estar, ofereço um atendimento personalizado, respeitoso e profundamente humanizado."
+                            "placeholder": "Exemplo números relevantes:\n\n+ de 100 cirurgias realizadas\n+ de 50 artigos científicos publicados\n+ de 500 pacientes atendidos\n\nExemplo diferencial e o motivo do porquê esse é um diferencial:\n\nAtendimento Humanizado\n\nValorizo a importância de tratar cada paciente como um indivíduo único. Busco compreender suas preocupações e necessidades específicas, oferecendo um atendimento personalizado, acolhedor e compassivo. Meu objetivo é garantir que você se sinta compreendido e apoiado durante todo o processo de tratamento.\n\nAtualização Constante\n\nCom mais de 1500 pacientes atendidos ao longo da minha carreira, mantenho-me em constante atualização. Participo ativamente de eventos acadêmicos nacionais e internacionais visando oferecer tratamentos alinhados às mais recentes descobertas da área.\n\nEscuta Ativa e Abordagem Personalizada\nCada paciente é único. Com uma escuta ativa e um interesse genuíno pelo seu bem-estar, ofereço um atendimento personalizado, respeitoso e profundamente humanizado."
                         }
                     },
                     {
@@ -245,7 +245,7 @@
                     {
                         "id": "testimonials",
                         "name": "Depoimentos de clientes",
-                        "description": "Importe depoimentos do Google Meu Negócio ou digite os manualmente",
+                        "description": "Reproduza depoimentos e avaliações mais relevantes aqui",
                         "type": "testimonials",
                         "config": {}
                     }
