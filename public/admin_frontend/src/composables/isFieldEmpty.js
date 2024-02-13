@@ -1,11 +1,11 @@
 export function isFieldEmpty(question, value) {
 
     if (question.type === 'checkbox') {
-        return false
+        return typeof value === 'undefined'
     }
 
     if (question.type === 'radio') {
-        return false
+        return typeof value === 'undefined'
     }
 
     if (question.type === 'autocomplete') {

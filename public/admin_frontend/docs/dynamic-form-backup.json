@@ -1,8 +1,8 @@
 {
     "object": {
         "_id": "65c3eb2aa06931c4b7307c12",
-        "name": "Formulario de site",
-        "description": "Formulario para criação de site",
+        "name": "Formulário de site",
+        "description": "Formulário para criação de site",
         "categories": [
             {
                 "id": "structural_data",
@@ -175,12 +175,7 @@
                         "id": "accept_health_insurance",
                         "type": "list_item",
                         "name": "Você aceita plano de saúde? Liste quais",
-                        "config": {
-                            "default": [
-                                "Unimed",
-                                "Clinipam"
-                            ]
-                        }
+                        "config": {}
                     },
                     {
                         "id": "accept_telemedicine",
