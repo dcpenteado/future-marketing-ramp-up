@@ -1,6 +1,6 @@
 <template>
     <v-textarea
-        v-model="model"
+        v-model="model.value"
         outlined
         hide-details="auto"
         :error="!!errors.length"
@@ -15,8 +15,10 @@ export default {
     name: 'DynamicFormFieldTextarea',
     props: {
         value: {
-            type: String,
-            default: ''
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,

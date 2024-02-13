@@ -11,7 +11,7 @@
             class="d-flex align-center"
         >
             <v-text-field
-                v-model="model[i.id]" outlined hide-details="auto"
+                v-model="model.value[i.id]" outlined hide-details="auto"
                 @blur="model = model"
             />
 
@@ -37,8 +37,10 @@ export default {
     name: 'DynamicFormFieldListItem',
     props: {
         value: {
-            type: [String, Array],
-            default: null
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,
@@ -59,39 +61,45 @@ export default {
                 return this.value;
             },
             set(value) {
-                if (!Array.isArray(value)) {
-                    this.$emit('input', value)
+                if (!Array.isArray(value.value)) {
+                    this.$emit('input', value.value)
                     return
                 }
 
-                const onlyFilled = value.filter((item) => !!item)
+                const onlyFilled = value.value.filter((item) => !!item)
 
-                this.$emit('input', onlyFilled);
+                this.$emit('input', {
+                    ...value,
+                    value: onlyFilled
+                });
             }
         },
         items() {
-            if (!Array.isArray(this.model)) return []
+            if (!Array.isArray(this.model.value)) return []
 
-            return this.model.map((item, index) => ({
+            return this.model.value.map((item, index) => ({
                 id: index
             }))            
         },
     },
     methods: {
         addItem() {
-            if (!Array.isArray(this.model)) {
-                this.model = ['Item 1']
+            const label = 'Item ' + ((this.model.value?.length ?? 0) + 1)
+            
+            if (!Array.isArray(this.model.value)) {
+                this.model.value = [label]
                 return
             }
+            
 
-            this.model.push('item 1')
+            this.model.value.push(label)
         },
         removeItem(index) {
-            if (!Array.isArray(this.model)) {
+            if (!Array.isArray(this.model.value)) {
                 return
             }
 
-            this.model.splice(index, 1)
+            this.model.value.splice(index, 1)
         }
     }
 }

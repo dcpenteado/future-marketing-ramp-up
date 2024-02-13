@@ -1,7 +1,11 @@
 <template>
     <v-row> 
-        <v-col cols="12" v-for="(q) in questions" :key="q.id">
-            <DynamicFormField v-model="model[q.id]" :question="q">
+        <v-col cols="12" v-for="(answer, i) in model" :key="answer.question_id">
+            <DynamicFormField
+                :value="answer"
+                :question="questions.find(q => q.id === answer.question_id)"
+                @input="model[i] = $event"
+            >
                 <template #header-actions>
                     <v-spacer ></v-spacer>
 
@@ -12,7 +16,7 @@
                                 class="mx-4 mb-4 mb-sm-0"
                                 icon
                                 v-on="on"
-                                @click="showAnswerVersions(q.id)"
+                                @click="showAnswerVersions(answer.question_id)"
                             >
                                 <v-icon>mdi-history</v-icon>
                             </v-btn>
@@ -61,7 +65,7 @@
                     
                     <v-col cols="12" v-for="a in answerVersions" :key="a.id">
                         <DynamicFormField
-                            :value="a.value"
+                            :value="a"
                             :question="selectedQuestion"
                             disabled
                         >
@@ -106,8 +110,9 @@ export default {
     },
     props: {
         value: {
-            type: Object,
-            required: true        
+            type: Array,
+            required: true,
+            default: () => ([])
         },
         questions: {
             type: Array,
@@ -139,7 +144,7 @@ export default {
             }
         },
         selectedQuestion(){
-            if (!this.selectedQuestionId) return [];
+            if (!this.selectedQuestionId) return null;
 
             return this.questions.find(q => q.id === this.selectedQuestionId);
         },
@@ -186,10 +191,19 @@ export default {
         },
         restoreVersion(value){
 
-            this.model = {
-                ...this.model,
-                [this.selectedQuestionId]: value
-            }
+            const item = this.model.find(a => a.question_id === this.selectedQuestionId);
+            const index = this.model.findIndex(a => a.question_id === this.selectedQuestionId);
+
+            this.model = this.model.map((a, i) => {
+                if (i === index) {
+                    return {
+                        ...item,
+                        value
+                    }
+                }
+
+                return a;
+            })
             
             this.drawer = false;
 

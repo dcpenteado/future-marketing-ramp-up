@@ -1,6 +1,6 @@
 <template>
     <v-autocomplete
-        v-model="model"
+        v-model="model.value"
         outlined
         hide-details="auto"
         clearable
@@ -24,8 +24,10 @@ export default {
     name: 'DynamicFormFieldAutocomplete',
     props: {
         value: {
-            type: [String, Array],
-            default: ''
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,
@@ -87,9 +89,7 @@ export default {
     },
     watch: {
         'items': function (  ) {
-            const isInList = this.items.some(item => item[this.itemValue] === this.model);
-
-            console.log('isInList', isInList);
+            const isInList = this.items.some(item => item[this.itemValue] === this.model.value);
 
             if (!isInList) {
                 this.clear();
@@ -98,7 +98,7 @@ export default {
         canFill: {
             immediate: true,
             handler(){
-                if (!this.canFill && this.model) {
+                if (!this.canFill && this.model.value) {
                     this.clear();
                 }
             }
@@ -106,7 +106,7 @@ export default {
     },
     methods: {
         clear(){
-            this.model = this.isMultiple ? [] : '';
+            this.model.value = this.isMultiple ? [] : '';
         },
         fetchItemsFromApi(){
             const apiUrl = this.question.config?.url;

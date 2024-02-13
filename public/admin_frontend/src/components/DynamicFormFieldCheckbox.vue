@@ -1,6 +1,6 @@
 <template>
     <v-checkbox
-        v-model="model"
+        v-model="model.value"
         hide-details="auto"
         :label="question.name"
         :error="!!errors.length"
@@ -16,8 +16,10 @@ export default {
     name: 'DynamicFormFieldCheckbox',
     props: {
         value: {
-            type: Boolean,
-            default: false
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,

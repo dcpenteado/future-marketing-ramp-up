@@ -7,7 +7,7 @@
                 :md="disabled ? 12 : 3"
             >
                 <v-card height="260" :loading="uploading">
-                    <v-img v-if="model" :src="model" height="260" />
+                    <v-img v-if="model.value" :src="model.value" height="260" />
                     <div v-else class="w-full h-full primary d-flex justify-center">
                         <v-icon color="white" style="font-size:100px" >mdi-image</v-icon>
                     </div>
@@ -46,8 +46,8 @@ export default {
     name: 'DynamicFormFieldImagePicker',
     props: {
         value: {
-            type: [String, Number, Boolean],
-            default: null
+            type: Object,
+            default: () => ({ value: null })
         },
         question: {
             type: Object,
@@ -101,14 +101,14 @@ export default {
                 return
             }
 
-            this.model = response.message;
+            this.model.value = response.message;
 
             setTimeout(() => {
                 this.uploading = false;
             }, 800);
         },
         removeImage(){
-            this.model = null;
+            this.model.value = null;
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <v-text-field
-        v-model="model"
+        v-model="model.value"
         outlined
         hide-details="auto"
         :placeholder="placeholder"
@@ -21,8 +21,10 @@ export default {
     name: 'DynamicFormFieldText',
     props: {
         value: {
-            type: String,
-            default: ''
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,

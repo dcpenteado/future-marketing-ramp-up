@@ -1,6 +1,6 @@
 <template>
     <v-select
-        v-model="model"
+        v-model="model.value"
         outlined
         hide-details="auto"
         item-text="text"
@@ -19,8 +19,10 @@ export default {
     name: 'DynamicFormFieldSelect',
     props: {
         value: {
-            type: [String, Array],
-            default: ''
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,

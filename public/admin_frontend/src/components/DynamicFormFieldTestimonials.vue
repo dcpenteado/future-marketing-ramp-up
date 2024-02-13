@@ -1,5 +1,5 @@
 <template>
-    <v-row v-if="model">
+    <v-row v-if="model.value">
         <v-col v-for="(item, index) in items" :key="item.id" cols="12" class="mb-4">
             <v-card outlined>
                 <v-card-title>
@@ -9,7 +9,7 @@
                     <v-row align="center">
                         <v-col cols="12" >
                             <v-text-field
-                                v-model="model[index].name"
+                                v-model="model.value[index].name"
                                 label="Nome"
                                 outlined
                                 hide-details
@@ -18,7 +18,7 @@
         
                         <v-col cols="12">
                             <v-textarea
-                                v-model="model[index].description"
+                                v-model="model.value[index].description"
                                 label="Descrição"
                                 outlined
                                 rows="1"
@@ -27,7 +27,7 @@
                         </v-col>
         
                         <v-col cols="12">
-                            <v-rating v-model="model[index].stars" hide-details/>
+                            <v-rating v-model="model.value[index].stars" hide-details/>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -57,8 +57,8 @@
 export default {
     props: {
         value: {
-            type: [String, Array],
-            default: null
+            type: Object,
+            default: () => ({ value: null })
         },
         question: {
             type: Object,
@@ -83,9 +83,9 @@ export default {
             }
         },
         items() {
-            if (!Array.isArray(this.model)) return []
+            if (!Array.isArray(this.model.value)) return []
 
-            return this.model.map((item, index) => ({
+            return this.model.value.map((item, index) => ({
                 id: index,
                 name: item.name,
                 description: item.description,
@@ -94,19 +94,19 @@ export default {
     },
     methods: {
         addItem() {
-            this.model.push({
+            this.model.value.push({
                 name: '',
                 description: '',
                 stars: 0
             })
         },
         removeItem(index) {
-            this.model.splice(index, 1)
+            this.model.value.splice(index, 1)
         }
     },
     mounted() {
-        if (!Array.isArray(this.model) || !this.model) {
-            this.model = []
+        if (!Array.isArray(this.model.value) || !this.model.value) {
+            this.model.value = []
         }
     },
 }

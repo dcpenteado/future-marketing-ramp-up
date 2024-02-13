@@ -1,5 +1,5 @@
 <template>
-    <v-item-group v-model="model">
+    <v-item-group v-model="model.value">
         <v-row>
             <v-col v-for="(item, index) in items" :key="index" v-bind="colAttrs">
                 
@@ -65,8 +65,8 @@ export default {
     name: 'DynamicFormFieldImageSelect',
     props: {
         value: {
-            type: [String, Number, Boolean],
-            default: null
+            type: Object,
+            default: () => ({ value: null })
         },
         question: {
             type: Object,

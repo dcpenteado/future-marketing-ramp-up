@@ -1,6 +1,6 @@
 <template>
     <v-radio-group
-        v-model="model"
+        v-model="model.value"
         hide-details="auto"
         :error="!!errors.length"
         :error-messages="errors"
@@ -24,8 +24,10 @@ export default {
     name: 'DynamicFormFieldRadio',
     props: {
         value: {
-            type: [String, Number, Boolean],
-            default: null
+            type: Object,
+            default: () => ({
+                value: null
+            })
         },
         question: {
             type: Object,

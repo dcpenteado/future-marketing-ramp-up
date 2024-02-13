@@ -28,7 +28,7 @@
             </v-card-text>
         </v-card>
 
-        <dynamic-form ref="dynamicForm" v-model="dynamicFormData" :questions="questions" :answers="answers" />
+        <dynamic-form ref="dynamicForm" v-model="data" :questions="questions" :answers="answers" />
 
         <dialog-or-bottom-sheet v-model="errorDialog" max-width="500">
             <v-card>
@@ -55,6 +55,7 @@
 
 <script>
 import { getFormProgress } from "@/composables/getFormProgress";
+import { isFieldEmpty } from "@/composables/isFieldEmpty";
 // import { isFieldEmpty } from "@/composables/isFieldEmpty";
 import Api from "@/lib/Api";
 // import uuid from 'uuid-random';	
@@ -66,7 +67,7 @@ export default {
         saving: false,
         errorDialog: false,
         progress: 0,
-        dynamicFormData: {}
+        data: []
     }),
     components: {
         DynamicForm: () => import('@/components/DynamicForm.vue'),
@@ -108,7 +109,7 @@ export default {
 
             this.setPageData();
         },
-        dynamicFormData: {
+        formAnswers: {
             handler: 'setProgress',
             deep: true
         }
@@ -142,9 +143,9 @@ export default {
                 },
             ])
         },
-        setDynamicFormData() {
-            this.questions.forEach(q => {
-                let value = '';
+        setData() {
+            this.data = this.questions.map(q => {
+                let value = undefined;
 
                 const answer = this.answers.find(a => a.question_id === q.id);
 
@@ -154,8 +155,10 @@ export default {
                     value = lastVersion.value;
                 }
 
-                if (answer) {
-                    this.$set(this.dynamicFormData, q.id, value);
+                return {
+                    value,
+                    question_id: q.id,
+                    category_id: this.category.id
                 }
             });
         },
@@ -180,7 +183,7 @@ export default {
 
             this.formResponse = response.message;
 
-            this.setDynamicFormData();
+            this.setData();
 
             setTimeout(() => {
                 this.pageLoading = false;
@@ -199,15 +202,18 @@ export default {
         async save() {
             this.saving = true;
 
-            const data = JSON.parse(JSON.stringify(this.dynamicFormData));
+            const data = JSON.parse(JSON.stringify(this.data)).filter(a => {
 
-            const answers = Object.entries(data).map(([question_id, value]) => ({
-                category_id: this.category.id,
-                question_id,
-                value
-            }));
+                if (a.markedAsEmpty) return true;
 
-            const response = await this.$api.createFormResponseAnswers(this.formResponse._id, answers);
+                const question = this.questions.find(q => q.id === a.question_id);
+
+                if (!question) return false;
+
+                return !isFieldEmpty(question, a.value);
+            })
+
+            const response = await this.$api.createFormResponseAnswers(this.formResponse._id, data);
 
             if (response.error) {
                 this.saving = false;

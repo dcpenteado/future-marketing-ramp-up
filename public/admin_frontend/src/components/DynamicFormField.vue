@@ -36,41 +36,13 @@
         
         <v-card-text
             :style="{
-                'pointer-events': disabled ? 'none' : 'auto',
-                'opacity': disabled ? '0.5' : '1'
+                'pointer-events': !isEditable ? 'none' : 'auto',
+                'opacity': !isEditable ? '0.5' : '1'
             }"
         >
-            <DynamicFormFieldText
-                v-if="question.type === 'text'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldSelect
-                v-else-if="question.type === 'select'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldListItem
-                v-else-if="question.type === 'list_item'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-                :disabled="disabled"
-            />
 
             <DynamicFormFieldAutocomplete
-                v-else-if="question.type === 'autocomplete'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldRadio
-                v-else-if="question.type === 'radio'"
+                v-if="question.type === 'autocomplete'"
                 v-model="model"
                 :question="question"
                 :errors="errors"
@@ -83,8 +55,39 @@
                 :errors="errors"
             />
 
-            <DynamicFormFieldTextarea
-                v-else-if="question.type === 'textarea'"
+            <DynamicFormFieldImagePicker
+                v-else-if="question.type === 'image_picker'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+                :disabled="disabled"
+            /> 
+
+            <DynamicFormFieldImageSelect
+                v-else-if="question.type === 'image_select'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+                :disabled="disabled"
+            />
+
+            <DynamicFormFieldListItem
+                v-else-if="question.type === 'list_item'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+                :disabled="disabled"
+            />
+
+            <DynamicFormFieldRadio
+                v-else-if="question.type === 'radio'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
+            <DynamicFormFieldSelect
+                v-else-if="question.type === 'select'"
                 v-model="model"
                 :question="question"
                 :errors="errors"
@@ -98,20 +101,18 @@
                 :disabled="disabled"
             />
 
-            <DynamicFormFieldImageSelect
-                v-else-if="question.type === 'image_select'"
+            <DynamicFormFieldText
+                v-else-if="question.type === 'text'"
                 v-model="model"
                 :question="question"
                 :errors="errors"
-                :disabled="disabled"
             />
 
-            <DynamicFormFieldImagePicker
-                v-else-if="question.type === 'image_picker'"
+            <DynamicFormFieldTextarea
+                v-else-if="question.type === 'textarea'"
                 v-model="model"
                 :question="question"
                 :errors="errors"
-                :disabled="disabled"
             />
 
             <v-alert
@@ -124,6 +125,18 @@
             
 
         </v-card-text>
+
+        <template v-if="allowMarkAsEmpty">
+
+            <v-divider />
+
+            <v-card-actions >
+    
+                <v-checkbox v-model="model.markedAsEmpty" label="Marcar como vazio" />
+    
+            </v-card-actions>
+        </template>
+
     </v-card>
 </template>
 
@@ -135,28 +148,32 @@ import template from 'lodash/template'
 export default {
     name: 'DynamicFormField',
     components: {
-        DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
-        DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
         DynamicFormFieldAutocomplete: () => import('@/components/DynamicFormFieldAutocomplete.vue'),
+        DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
+        DynamicFormFieldImagePicker: () => import('@/components/DynamicFormFieldImagePicker.vue'),
+        DynamicFormFieldImageSelect: () => import('@/components/DynamicFormFieldImageSelect.vue'),
         DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
         DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
-        DynamicFormFieldCheckbox: () => import('@/components/DynamicFormFieldCheckbox.vue'),
-        DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue'),
+        DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
         DynamicFormFieldTestimonials: () => import('@/components/DynamicFormFieldTestimonials.vue'),
-        DynamicFormFieldImageSelect: () => import('@/components/DynamicFormFieldImageSelect.vue'),
-        DynamicFormFieldImagePicker: () => import('@/components/DynamicFormFieldImagePicker.vue'),
+        DynamicFormFieldText: () => import('@/components/DynamicFormFieldText.vue'),
+        DynamicFormFieldTextarea: () => import('@/components/DynamicFormFieldTextarea.vue'),
     },
     props: {
         value: {
-            // any type
-            default: null
+            type: Object,
+            default: () => ({
+                value: null,
+                markedAsEmpty: false
+            })
         },
         question: {
             type: Object,
             required: true,
             default: () => ({
                 name: 'Nome da pergunta',
-                description: 'Descrição da pergunta'
+                description: 'Descrição da pergunta',
+                config: {}
             })
         },
         disabled: {
@@ -182,20 +199,37 @@ export default {
             set(value) {
                 this.$emit('input', value);
             }
+        },
+        allowMarkAsEmpty(){
+            return this.question.config?.allowMarkAsEmpty
+        },
+        isEditable(){
+            return !this.disabled && !this.model.markedAsEmpty
         }
     },
     watch: {
-        model: 'validate',
+        'model.value': 'validate',
         currentAnswers: {
             handler: 'checkShow',
             deep: true
+        },
+        'model.markedAsEmpty': function (value) {
+            if (value) {
+                this.model.value = null;
+            }
         }
     },
     methods: {
         validate(){
+            if (this.model.markedAsEmpty) {
+                this.errors = [];
+                
+                return this.errors
+            }
+
             const { validate } = useValidation(this.question);
 
-            this.errors = validate(this.model);
+            this.errors = validate(this.model.value);
 
             return this.errors
         },
