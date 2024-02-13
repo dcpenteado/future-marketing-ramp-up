@@ -66,7 +66,9 @@ export default {
     name: 'FormResponseSingle',
     data: () => ({
         form: null,
+        categories: [],
         answers: [],
+        fullProgress: 0
     }),
     computed: {
         pageLoading: {
@@ -88,10 +90,22 @@ export default {
         isAdmin() {
             return this.currentUser?.admin;
         },
-        categories() {
+        
+       
+    },
+    methods: {
+        setPageData() {
+            this.$store.commit('setPageTitle', this.form.name);
+            this.$store.commit('setPageSubtitle', this.form.description);
+
+            this.$store.commit('setBreadcrumbs', [
+                { label: this.form.name },
+            ])
+        },
+        setCategories() {
             if (!this.form?.categories) return []
 
-            return this.form.categories.map((c) => {
+            this.categories = this.form.categories.map((c) => {
 
                 const categoryAnswers = this.answers.filter(a => a.category_id === c.id)
 
@@ -110,22 +124,12 @@ export default {
                 }
             })
         },
-        fullProgress() {
+        setFullProgress() {
             if (!this.form) return 0
 
             const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions) || [], [])
 
-            return getFormProgress(questions, this.answers)
-        }
-    },
-    methods: {
-        setPageData() {
-            this.$store.commit('setPageTitle', this.form.name);
-            this.$store.commit('setPageSubtitle', this.form.description);
-
-            this.$store.commit('setBreadcrumbs', [
-                { label: this.form.name },
-            ])
+            this.fullProgress = getFormProgress(questions, this.answers)
         },
         async load() {
             this.pageLoading = true;
@@ -144,6 +148,8 @@ export default {
             this.answers = answers;
 
             this.setPageData();
+            this.setCategories();
+            this.setFullProgress();
 
             setTimeout(() => {
                 this.pageLoading = false;

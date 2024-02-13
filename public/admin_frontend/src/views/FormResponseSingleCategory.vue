@@ -33,7 +33,7 @@
         <v-dialog v-model="errorDialog" max-width="500">
             <v-card>
                 <v-card-title>
-                    Há error(s) no formulário
+                    Há erros no formulário
                 </v-card-title>
                 <v-card-text>
                     Alguns campos não foram preenchidos corretamente. Deseja salvar mesmo assim?
