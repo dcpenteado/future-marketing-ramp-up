@@ -1,5 +1,5 @@
 <template>
-    <v-form @submit.prevent="save" style="padding-bottom: 10rem;" class="menu-page">
+    <v-form @submit.prevent="submit" style="padding-bottom: 10rem;" class="menu-page">
         <v-card class="progress-container mb-10">
             <v-card-text>
                 <v-row dense>
@@ -30,6 +30,26 @@
 
         <dynamic-form ref="dynamicForm" v-model="dynamicFormData" :questions="questions" :answers="answers" />
 
+        <v-dialog v-model="errorDialog" max-width="500">
+            <v-card>
+                <v-card-title>
+                    Há error(s) no formulário
+                </v-card-title>
+                <v-card-text>
+                    Alguns campos não foram preenchidos corretamente. Deseja salvar mesmo assim?
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="errorDialog = false">
+                        Fechar
+                    </v-btn>
+                    <v-btn color="primary" @click="save">
+                        Salvar mesmo assim
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </v-form>
 </template>
 
@@ -44,6 +64,7 @@ export default {
     data: () => ({
         formResponse: null,
         saving: false,
+        errorDialog: false,
         progress: 0,
         dynamicFormData: {}
     }),
@@ -80,15 +101,6 @@ export default {
         form() {
             return this.formResponse?.form || null
         },
-        // progress() {
-        //     const tmpAnswers = Object.entries(this.dynamicFormData).map(([question_id, value]) => ({
-        //         category_id: this.category.id,
-        //         question_id,
-        //         versions: [{ value }]
-        //     }));
-
-        //     return getFormProgress(this.questions, tmpAnswers)
-        // }
     },
     watch: {
         category(value) {
@@ -174,16 +186,18 @@ export default {
                 this.pageLoading = false;
             }, 200);
         },
-        async save() {
-            this.saving = true;
-
+        submit(){
             const errors = this.$refs.dynamicForm.validate();
 
             if (errors?.length) {
-                this.$toast('error', 'Existem erros no formulário');
-                this.saving = false;
+                this.errorDialog = true;
                 return;
             }
+
+            this.save()
+        },
+        async save() {
+            this.saving = true;
 
             const data = JSON.parse(JSON.stringify(this.dynamicFormData));
 
