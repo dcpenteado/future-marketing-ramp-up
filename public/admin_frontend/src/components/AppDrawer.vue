@@ -2,9 +2,9 @@
     <v-navigation-drawer class="drawer" v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" width="270" app dark
         :color="isAdmin ? '#252438' : 'primary'">
 
-        <div class="px-4 my-10">
+        <router-link to="/" class="d-block px-4 my-10">
             <v-img src="/logo-white.svg" cover width="134" class="mx-auto" />
-        </div>
+        </router-link>
 
         <v-list dense expand>
             <v-subheader class="font-ubuntu">PAINÉIS</v-subheader>
