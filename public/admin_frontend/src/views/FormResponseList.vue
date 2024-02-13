@@ -2,24 +2,33 @@
     <div class="menu-page">
 
         <v-card class="mb-4">
-            <v-card-text>
+            <v-card-text class="d-flex">
+                
                 <v-btn color="primary" @click="dialog = true">Associar Formulário</v-btn>
+
+                <v-text-field v-model="search" class="ml-auto" style="max-width: 30rem;" label="Pesquisar" outlined hide-details dense />
+
+
             </v-card-text>
         </v-card>
 
         <v-card>
-            <v-data-table :headers="headers" :items="items">
+            <v-data-table :headers="headers" :items="filteredItems">
 
                 <template #[`item.progress`]="{ item }">
-                    <v-progress-linear :value="getFormResponseProgress(item)" height="20" rounded>
-                        <template v-slot:default="{ value }">
-                            <div class="text-caption-total">{{ Math.ceil(value) }}%</div>
-                        </template>
-                    </v-progress-linear>
+                    {{ getFormResponseProgress(item) }}%
+                </template>
+
+                <template v-slot:[`item.created`]="{ item }">
+                    {{ new Date(item.created).toLocaleString('pt-BR') }}
+                </template>
+                
+                <template v-slot:[`item.changed`]="{ item }">
+                    {{ new Date(item.changed).toLocaleString('pt-BR') }}
                 </template>
 
                 <template v-slot:[`item.actions`]="{ item }">
-                    <div>
+                    <div class="d-flex">                        
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
                                 <router-link class="d-block" :to="{
@@ -34,6 +43,15 @@
                                 </router-link>
                             </template>
                             <span>Ver</span>
+                        </v-tooltip>
+
+                        <v-tooltip left>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-icon medium class="mr-4" color="error" v-bind="attrs" v-on="on" @click="askToArchiveItem(item)">
+                                    mdi-archive
+                                </v-icon>
+                            </template>
+                            <span>Arquivar</span>
                         </v-tooltip>
                     </div>
                 </template>
@@ -71,6 +89,22 @@
             </v-card>
         </dialog-or-bottom-sheet>
 
+        <dialog-or-bottom-sheet v-model="archive.dialog" max-width="500">
+            <v-card>
+                <v-card-title>
+                    Arquivar
+                </v-card-title>
+                <v-card-text>
+                    Deseja realmente arquivar este formulário?
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="error" :disabled="archive.loading" @click="archive.dialog = false">Cancelar</v-btn>
+                    <v-btn color="primary" :loading="archive.loading" @click="archiveItem(archive.itemId)">Arquivar</v-btn>
+                </v-card-actions>
+            </v-card>
+        </dialog-or-bottom-sheet>
+
     </div>
 </template>
 
@@ -80,17 +114,28 @@ import { getFormProgress } from '@/composables/getFormProgress'
 export default {
     data: () => ({
         dialog: false,
+        search: '',
         items: [],
         headers: [
             {
                 text: 'Cliente',
                 value: 'user.name',
-                width: '30%'
+            },
+            {
+                text: 'Email',
+                value: 'user.email',
             },
             {
                 text: 'Progresso',
                 value: 'progress',
-                width: '60%'
+            },
+            {
+                text: 'Data de criação',
+                value: 'created'
+            },
+            {
+                text: 'Ultima atualização',
+                value: 'changed'
             },
             {
                 text: '',
@@ -109,8 +154,28 @@ export default {
         data: {
             form: null,
             client: null
+        },
+        archive: {
+            loading: false,
+            dialog: false,
+            itemId: null
         }
     }),
+    computed: {
+        filteredItems() {
+            if (!this.search) {
+                return this.items
+            }
+
+            return this.items.filter(i => {
+                const client = i.user.name.toLowerCase()
+                const email = i.user.email.toLowerCase()
+                const search = this.search.toLowerCase()
+
+                return client.includes(search) || email.includes(search)
+            })
+        }
+    },
     methods: {
         async setItems() {
             const response = await this.$api.getFormResponses()
@@ -194,6 +259,36 @@ export default {
             const questions = form.categories.reduce((acc, c) => acc.concat(c.questions), [])
 
             return getFormProgress(questions, answers)
+        },
+        askToArchiveItem(item) {
+            this.archive.itemId = item._id
+            this.archive.dialog = true
+        },
+        async archiveItem(){
+            this.archive.loading = true
+            
+            const item = this.items.find(i => i._id === this.archive.itemId)
+            
+            if (!item) {
+                return
+            }
+            
+            item.filed = true
+            
+            const response = await this.$api.createOrUpdateFormResponse(item)
+            
+            if (response.error) {
+                this.archive.loading = false
+                return
+            }
+
+            this.$toast('success', 'Formulário arquivado com sucesso')
+            this.setItems()
+
+            setTimeout(() => {
+                this.archive.loading = false
+                this.archive.dialog = false
+            }, 500)
         }
     },
     watch: {
@@ -204,6 +299,11 @@ export default {
 
             if (value && !this.forms.items.length) {
                 this.setForms()
+            }
+        },
+        'archive.dialog'(value) {
+            if (!value) {
+                this.archive.itemId = null
             }
         }
     },
