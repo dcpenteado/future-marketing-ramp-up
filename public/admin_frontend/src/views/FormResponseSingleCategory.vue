@@ -30,7 +30,7 @@
 
         <dynamic-form ref="dynamicForm" v-model="dynamicFormData" :questions="questions" :answers="answers" />
 
-        <v-dialog v-model="errorDialog" max-width="500">
+        <dialog-or-bottom-sheet v-model="errorDialog" max-width="500">
             <v-card>
                 <v-card-title>
                     Há erros no formulário
@@ -48,7 +48,7 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
+        </dialog-or-bottom-sheet>
 
     </v-form>
 </template>
