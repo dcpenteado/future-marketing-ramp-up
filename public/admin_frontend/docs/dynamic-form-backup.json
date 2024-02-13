@@ -1,0 +1,552 @@
+{
+    "object": {
+        "_id": "65c3eb2aa06931c4b7307c12",
+        "name": "Formulario de site",
+        "description": "Formulario para criação de site",
+        "categories": [
+            {
+                "id": "structural_data",
+                "name": "Dados estruturais",
+                "description": "Nessa seção, coletamos os dados que preencherão os elementos de contato e comunicação para o paciente.",
+                "questions": [
+                    {
+                        "id": "name",
+                        "type": "text",
+                        "name": "Qual é o seu nome?",
+                        "config": {
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "email",
+                        "type": "text",
+                        "name": "Seu melhor email",
+                        "config": {
+                            "placeholder": "me@email.com",
+                            "rules": [
+                                { "name": "required" },
+                                { "name": "email" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "expertise",
+                        "type": "text",
+                        "name": "Qual é a sua especialidade?",
+                        "config": {
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "contact_email",
+                        "type": "text",
+                        "name": "Qual e-mail de contato deve constar em seu site para agendamento de consulta?",
+                        "config": {
+                            "placeholder": "me@email.com",
+                            "rules": [
+                                { "name": "required" },
+                                { "name": "email" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "address",
+                        "type": "text",
+                        "name": "Qual seu endereço completo de atendimento?",
+                        "config": {
+                            "placeholder": "Endereço completo - Rua, Número, Conjunto, Andar, Sala, Bairro, Cidade",
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "phone",
+                        "type": "textarea",
+                        "name": "Qual o seu telefone de contato fixo?",
+                        "description": "Em caso de atendimento em mais de um local, especificar o telefone que corresponde a cada unidade",
+                        "config": {
+                            "rows": 3,
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "whatsapp",
+                        "type": "text",
+                        "name": "Qual WhatsApp deverá estar em seu site para agendamento de consulta?",
+                        "config": {
+                            "placeholder": "(00) 0 0000-0000",
+                            "mask": "(##) # ####-####",
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "register_number",
+                        "type": "text",
+                        "name": "Qual o seu número de registro?",
+                        "description": "Caso tenha mais de um. adicione todos com a descrição (CRM, RQE, CREFITO, CFM, entre outros)",
+                        "config": {
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "techinical_responsable",
+                        "type": "text",
+                        "name": "Responsável técnico pelo site?",
+                        "description": "Precisamos do Nome completeo e do número de registro (CRM, RQE, etc...)",
+                        "config": {
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "instagram",
+                        "type": "text",
+                        "name": "Qual é o link pra o seu perfil no Instagram?",
+                        "description": "Insira somente o texto depois da barra",
+                        "config": {
+                            "prefix": "@",
+                            "placeholder": "futuremkt",
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "youtube",
+                        "type": "text",
+                        "name": "Qual é o link para o seu canal no youtube?",
+                        "description": "Insira somente o texto depois da barra",
+                        "config": {
+                            "prefix": "@",
+                            "placeholder": "futuremkt",
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "facebook",
+                        "type": "text",
+                        "name": "Qual é o link para o seu perfil no facebook?",
+                        "description": "Insira somente o texto depois da barra",
+                        "config": {
+                            "prefix": "@",
+                            "placeholder": "futuremkt",
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "domain",
+                        "type": "text",
+                        "name": "E qual será o domínio do seu website?",
+                        "description": "Caso você ainda não tenha um domínio comprado, basta acessar o site https://registro.br/ e seguir o passo a passo",
+                        "config": {
+                            "placeholder": "www.SEUNOME.com.br",
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "work_hours",
+                        "type": "text",
+                        "name": "Qual o horário de funcionamento da clínica ou consultório?",
+                        "config": {
+                            "rules": [
+                                { "name": "required" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "accept_health_insurance",
+                        "type": "list_item",
+                        "name": "Você aceita plano de saúde? Liste quais",
+                        "config": {
+                            "default": [
+                                "Unimed",
+                                "Clinipam"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "accept_telemedicine",
+                        "type": "radio",
+                        "name": "Você atende via telemedicina?",
+                        "config": {
+                            "items": [
+                                { "text": "Sim", "value": true },
+                                { "text": "Não", "value": false }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "refund_assistance_exists",
+                        "type": "text",
+                        "name": "Existe auxílio durante o processo de reembolso? Essa política existe?",
+                        "config": {}
+                    }
+                ]
+            },
+            {
+                "id": "personal_data",
+                "name": "Dados pessoais",
+                "description": "Nesta seção, vamos conversar sobre você! Queremos saber mais sobre seus objetvos, sua formação acadêmica e seus diferenciais",
+                "questions": [
+                    {
+                        "id": "typing_style",
+                        "name": "Estilo dos textos",
+                        "description": "Como você gostaria que os textos pessoais do seu site fosse redigidos, em primeira ou terceira pessoa?",
+                        "type": "text"
+                    },
+                    {
+                        "id": "about",
+                        "name": "Sobre você",
+                        "description": "Faça uma breve descrição sobre você e a sua história com a medicina.\nInclua itens como a sua especialidade, formação acadêmica, títulos de especialização, experiências passadas, filosofia de vida, foco da prática médica, etc...",
+                        "type": "textarea",
+                        "config": {
+                            "rows": "10",
+                            "placeholder": "Ex. O Dr. Alexandre Bertoncini é cirurgião do aparelho digestivo e coloproctologista formado pela Faculdade de Medicina da USP, membro titular do Colégio Brasileiro de Cirurgia Digestiva e filiado à Sociedade Brasileira de Coloproctologia.\n\nPossui Doutorado pela Faculdade de Medicina da USP e é pesquisador com foco em oncologia e endometriose intestinal.\n\nEm sua prática médica atua em diversas especialidade da cirurgia do aparelho digestivo e coloproctologia, com destaque especial para a cirurgia minimamente invasiva por laparoscopia (também chamada de cirurgia laparoscópica ou videolaparoscopia), endometriose intestinal e cirurgia oncológica."
+                        }
+                    },
+                    {
+                        "id": "differences",
+                        "name": "Diferenciais",
+                        "description": "Forneça pelo menos três diferenciais ou números relevantes da sua carreira\n\nOlhe para marcos de experiência como nº de pacientes atendidos, números de cirurgias realizadas, etc.",
+                        "type": "textarea",
+                        "config": {
+                            "rows": 25,
+                            "placeholder": "Exemplo números relevantes:\n\n+ de 100 cirurgias realizadas\n+ de \n0 artigos científicos publicados\n+ de 500 pacientes atendidos\n\nExemplo diferencial e o motivo do porquê esse é um diferencial:\n\nAtendimento Humanizado\n\nValorizo a importância de tratar cada paciente como um indivíduo único. Busco compreender suas preocupações e necessidades específicas, oferecendo um atendimento personalizado, acolhedor e compassivo. Meu objetivo é garantir que você se sinta compreendido e apoiado durante todo o processo de tratamento.\n\nAtualização Constante\n\nCom mais de 1500 pacientes atendidos ao longo da minha carreira, mantenho-me em constante atualização. Participo ativamente de eventos acadêmicos nacionais e internacionais visando oferecer tratamentos alinhados às mais recentes descobertas da área.\n\nEscuta Ativa e Abordagem Personalizada\nCada paciente é único. Com uma escuta ativa e um interesse genuíno pelo seu bem-estar, ofereço um atendimento personalizado, respeitoso e profundamente humanizado."
+                        }
+                    },
+                    {
+                        "id": "events_timeline",
+                        "name": "Datas marcantes",
+                        "description": "Descreva em uma linha do tempo as principais datas marcantes em sua trajetória profissional",
+                        "type": "textarea",
+                        "config": {
+                            "rows": 12,
+                            "placeholder": "Ex:\n\n- Graduado em Medicina pela Universidade Federal de Mato Grosso do Sul - 2002;\n\n- Residência Médica em Cirurgia Geral na ABCG Santa Casa - 2004;\n\n- Residência Médica em Cirurgia Torácica no Hospital das Clínicas da Faculdade de Medicina da Universidade de São Paulo (HC FMUSP) - 2007;\n\n- Doutorado em Medicina pela Universidade de São Paulo (USP) (Cirurgia Torácica e Cardiovascular) - 2012;\n\n- Pós-doutorado pela Universidade de São Paulo (USP) - 2019;"
+                        }
+                    },
+                    {
+                        "id": "testimonials",
+                        "name": "Depoimentos de clientes",
+                        "description": "Importe depoimentos do Google Meu Negócio ou digite os manualmente",
+                        "type": "testimonials",
+                        "config": {}
+                    }
+                ]
+            },
+            {
+                "id": "occupation_area",
+                "name": "Area de atuação",
+                "description": "Nessa seção abordaremos uma visão macro das suas principais áreas de atuação dentro da sua especialidade.",
+                "questions": [
+                    {
+                        "id": "occupation_area_length",
+                        "name": "Quantidade de Paginas de atuação",
+                        "description": "As áreas de atuação serão divididas em páginas distintas, para que cada uma delas contenha informações específicas e assim tornar mais fácil para os visitantes do seu website encontrarem as informações sobre o seu atendimento para que agendem uma consulta.",
+                        "type": "radio",
+                        "config": {
+                            "row": true,
+                            "default": 3,
+                            "items": [
+                                { "text": "1", "value": 1 },
+                                { "text": "2", "value": 2 },
+                                { "text": "3", "value": 3 },
+                                { "text": "4", "value": 4 },
+                                { "text": "5", "value": 5 },
+                                { "text": "6", "value": 6 }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_1_category",
+                        "name": "Categoria da Área de Atuação / Especialidade #1",
+                        "description": "Selecione a caregoria da Área de Atuação",
+                        "type": "radio",
+                        "config": {
+                            "default": "Tratamento",
+                            "items": [
+                                { "text": "Tratamento", "value": "Tratamento" },
+                                { "text": "Cirurgia", "value": "Cirurgia" },
+                                { "text": "Procedimento", "value": "Procedimento" },
+                                { "text": "Enfermidade", "value": "Enfermidade" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_1_name",
+                        "name": "Nome da área de Atuação / Especialidade #1",
+                        "description": "Escreva o nome da área de atuação em questão.",
+                        "type": "text",
+                        "config": {}
+                    },
+                    {
+                        "id": "occupation_area_2_category",
+                        "name": "Categoria da Área de Atuação / Especialidade #2",
+                        "description": "Selecione a caregoria da Área de Atuação",
+                        "type": "radio",
+                        "config": {                            
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 2 }}"
+                            ],
+                            "default": "Tratamento",
+                            "items": [
+                                { "text": "Tratamento", "value": "Tratamento" },
+                                { "text": "Cirurgia", "value": "Cirurgia" },
+                                { "text": "Procedimento", "value": "Procedimento" },
+                                { "text": "Enfermidade", "value": "Enfermidade" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_2_name",
+                        "name": "Nome da área de Atuação / Especialidade #2",
+                        "description": "Escreva o nome da área de atuação em questão.",
+                        "type": "text",
+                        "config": {
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 2 }}"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_3_category",
+                        "name": "Categoria da Área de Atuação / Especialidade #3",
+                        "description": "Selecione a caregoria da Área de Atuação",
+                        "type": "radio",
+                        "config": {                            
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 3 }}"
+                            ],
+                            "default": "Tratamento",
+                            "items": [
+                                { "text": "Tratamento", "value": "Tratamento" },
+                                { "text": "Cirurgia", "value": "Cirurgia" },
+                                { "text": "Procedimento", "value": "Procedimento" },
+                                { "text": "Enfermidade", "value": "Enfermidade" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_3_name",
+                        "name": "Nome da área de Atuação / Especialidade #3",
+                        "description": "Escreva o nome da área de atuação em questão.",
+                        "type": "text",
+                        "config": {
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 3 }}"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_4_category",
+                        "name": "Categoria da Área de Atuação / Especialidade #4",
+                        "description": "Selecione a caregoria da Área de Atuação",
+                        "type": "radio",
+                        "config": {                            
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 4 }}"
+                            ],
+                            "default": "Tratamento",
+                            "items": [
+                                { "text": "Tratamento", "value": "Tratamento" },
+                                { "text": "Cirurgia", "value": "Cirurgia" },
+                                { "text": "Procedimento", "value": "Procedimento" },
+                                { "text": "Enfermidade", "value": "Enfermidade" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_4_name",
+                        "name": "Nome da área de Atuação / Especialidade #4",
+                        "description": "Escreva o nome da área de atuação em questão.",
+                        "type": "text",
+                        "config": {
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 4 }}"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_5_category",
+                        "name": "Categoria da Área de Atuação / Especialidade #5",
+                        "description": "Selecione a caregoria da Área de Atuação",
+                        "type": "radio",
+                        "config": {                            
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 5 }}"
+                            ],
+                            "default": "Tratamento",
+                            "items": [
+                                { "text": "Tratamento", "value": "Tratamento" },
+                                { "text": "Cirurgia", "value": "Cirurgia" },
+                                { "text": "Procedimento", "value": "Procedimento" },
+                                { "text": "Enfermidade", "value": "Enfermidade" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_5_name",
+                        "name": "Nome da área de Atuação / Especialidade #5",
+                        "description": "Escreva o nome da área de atuação em questão.",
+                        "type": "text",
+                        "config": {
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 5 }}"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_6_category",
+                        "name": "Categoria da Área de Atuação / Especialidade #6",
+                        "description": "Selecione a caregoria da Área de Atuação",
+                        "type": "radio",
+                        "config": {                            
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 6 }}"
+                            ],
+                            "default": "Tratamento",
+                            "items": [
+                                { "text": "Tratamento", "value": "Tratamento" },
+                                { "text": "Cirurgia", "value": "Cirurgia" },
+                                { "text": "Procedimento", "value": "Procedimento" },
+                                { "text": "Enfermidade", "value": "Enfermidade" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "occupation_area_6_name",
+                        "name": "Nome da área de Atuação / Especialidade #6",
+                        "description": "Escreva o nome da área de atuação em questão.",
+                        "type": "text",
+                        "config": {
+                            "if": [
+                                "{{ currentAnswers['occupation_area_length'] >= 6 }}"
+                            ]
+                        }
+                    }
+                    
+                ]
+            },
+            {
+                "id": "faq",
+                "name": "Dúvidas frequentes",
+                "description": "A página de Dúvidas Frequentes é importante para fornecer respostas rápidas e claras às perguntas mais comuns dos visitantes.",
+                "questions": [
+                    {
+                        "id": "first_consult_requirements",
+                        "name": "O que devo levar para a minha primeira consulta?",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "faq_accept_health_insurance",
+                        "name": "Aceita plano de saúde?",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "faq_accept_telemedicine",
+                        "name": "São realizadas consultas online?",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "faq_work_hours",
+                        "name": "Quais os dias e horários de atendimento?",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "faq_when_look_for",
+                        "name": "Quando devo procurar por um médico dessa especialidade?",
+                        "type": "textarea"
+                    },
+                    {
+                        "id": "faq_there_is_return",
+                        "name": "Há retorno incluso no valor da consulta?",
+                        "type": "textarea"
+                    }
+                ]
+            },
+            {
+                "id": "design",
+                "name": "Design",
+                "description": "Nessa seção, coletamos as suas preferências de estilo e design, além da estrutura visual a partir do qual gostaria que seu website fosse criado.",
+                "questions": [
+                    {
+                        "id": "site_template",
+                        "name": "Site template",
+                        "description": "Selecione uma estrutura ramp-up para servir como base para seu website",
+                        "type": "image_select",
+                        "config": {
+                            "height": 1043,
+                            "width": 500,
+                            "items": [
+                                { "src": "/templates/01.jpg", "value": "1" },
+                                { "src": "/templates/01.jpg", "value": "2" },
+                                { "src": "/templates/01.jpg", "value": "3" },
+                                { "src": "/templates/01.jpg", "value": "4" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "site_typography",
+                        "name": "Tipográfia",
+                        "description": "Selecione uma família tipográfica para o seu website",
+                        "type": "image_select",
+                        "config": {
+                            "row": true,
+                            "height": 44,
+                            "width": 780,
+                            "checkboxOutside": true,
+                            "items": [
+                                { "src": "/typographies/01.png", "value": "1" },
+                                { "src": "/typographies/01.png", "value": "2" },
+                                { "src": "/typographies/01.png", "value": "3" },
+                                { "src": "/typographies/01.png", "value": "4" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "site_colors",
+                        "name": "Colors",
+                        "description": "Selecione uma paleta de cores para o seu website. Caso você já tenha uma identidade visual, desconsidere essa pergunta.",
+                        "type": "image_select",
+                        "config": {
+                            "row": true,
+                            "height": 149,
+                            "width": 898,
+                            "checkboxOutside": true,
+                            "items": [
+                                { "src": "/color-pallete/01.png", "value": "1" },
+                                { "src": "/color-pallete/01.png", "value": "2" },
+                                { "src": "/color-pallete/01.png", "value": "3" },
+                                { "src": "/color-pallete/01.png", "value": "4" }
+                            ]
+                        }
+                    },
+                    {
+                        "id": "site_logo",
+                        "name": "Logotipo",
+                        "description": "Faça o upload do seu logotipo em .png",
+                        "type": "image_picker",
+                        "config": {}
+                    }
+                ]
+            }
+        ]
+    }
+}
