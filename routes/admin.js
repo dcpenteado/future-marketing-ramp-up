@@ -337,9 +337,10 @@ router.post("/create-form-response-answers", auth, async (req, res) => {
             question_id: a.question_id,
             versions: [
               {
-                value: a.value || "",
+                value: a.markedAsEmpty ? "" : (a.value || ""),
                 origin: req_user.admin ? 'editor' : 'user',
                 createdBy: req_user._id,
+                markedAsEmpty: a.markedAsEmpty,
                 createdAt: new Date()
               }
             ]
