@@ -59,6 +59,7 @@
 
 <script>
 import { getFormProgress } from "@/composables/getFormProgress";
+import { getFormRequiredQuestions } from "@/composables/getFormRequiredQuestions";
 
 import Api from "@/lib/Api";
 
@@ -107,12 +108,15 @@ export default {
 
             this.categories = this.form.categories.map((c) => {
 
-                const categoryAnswers = this.answers.filter(a => a.category_id === c.id)
+                const requiredQuestions = getFormRequiredQuestions(c.questions || [], this.answers)
+                const categoryAnswers = this.answers
+                    .filter(a => a.category_id === c.id)
+                    .filter(a => requiredQuestions.some(q => q.id === a.question_id))
 
                 const progress = getFormProgress(c.questions || [], categoryAnswers)
 
                 return {
-                    label: `${c.name} (${categoryAnswers.length}/${c.questions?.length || 0})`,
+                    label: `${c.name} (${categoryAnswers.length}/${requiredQuestions.length || 0})`,
                     progress: progress,
                     to: {
                         name: 'FormResponseSingleCategory',
