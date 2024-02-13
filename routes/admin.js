@@ -339,8 +339,8 @@ router.post("/create-form-response-answers", auth, async (req, res) => {
               {
                 value: a.markedAsEmpty ? "" : (a.value || ""),
                 origin: req_user.admin ? 'editor' : 'user',
-                createdBy: req_user._id,
                 markedAsEmpty: a.markedAsEmpty,
+                createdBy: req_user._id,
                 createdAt: new Date()
               }
             ]
@@ -348,12 +348,14 @@ router.post("/create-form-response-answers", auth, async (req, res) => {
         }
         else {
           const last_value = existing_form.answers[answer_index].versions[existing_form.answers[answer_index].versions.length - 1].value;
+          const isEmpty = existing_form.answers[answer_index].versions[existing_form.answers[answer_index].versions.length - 1].markedAsEmpty;
 
           //SÓ INCLUI SE EXISTIR DIFERENÇA DO VALUE
-          if (last_value != a.value) {
+          if (last_value != a.value || isEmpty != a.markedAsEmpty) {
             existing_form.answers[answer_index].versions.push({
-              value: a.value || "",
+              value: a.markedAsEmpty ? "" : (a.value || ""),
               origin: req_user.admin ? 'editor' : 'user',
+              markedAsEmpty: a.markedAsEmpty,
               createdBy: req_user._id,
               createdAt: new Date()
             })
