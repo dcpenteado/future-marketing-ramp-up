@@ -1,4 +1,5 @@
-export function isFieldEmpty(question, value) {
+export function isFieldEmpty(question, answer) {
+    const { value } = answer;
 
     if (question.type === 'string') {
         return !value || value.trim() === ''

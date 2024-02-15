@@ -229,7 +229,7 @@ export default {
 
             const { validate } = useValidation(this.question);
 
-            this.errors = validate(this.model.value);
+            this.errors = validate(this.model);
 
             return this.errors
         },

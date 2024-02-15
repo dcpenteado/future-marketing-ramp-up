@@ -1,4 +1,4 @@
-import { isFieldEmpty } from "./isFieldEmpty";
+import { isFieldEmpty } from "./isFieldEmpty"
 import template from 'lodash/template'
 
 export function getFormProgress(questions, answers) {
@@ -9,7 +9,7 @@ export function getFormProgress(questions, answers) {
     }), {})
 
     const requiredQuestions = questions.filter(q => {
-        if (!q.config?.if) return true;
+        if (!q.config?.if) return true
 
         const results = q.config.if
                 .map(op => template(op, { interpolate: /{{([\s\S]+?)}}/g }))
@@ -21,13 +21,14 @@ export function getFormProgress(questions, answers) {
 
     const filledAnswers = answers.filter(a => a.versions.length)
         .filter(a => {
-            const question = requiredQuestions.find(q => q.id === a.question_id);
+            const question = requiredQuestions.find(q => q.id === a.question_id)
+            const answer = a.versions.at(-1)
 
-            if (!question) return false;
+            if (answer.markedAsEmpty) return true
 
-            const version = a.versions.at(-1);
+            if (!question || !answer) return false
 
-            return !isFieldEmpty(question, version.value);
+            return !isFieldEmpty(question, answer)
         })
 
     return Math.round(Math.min((filledAnswers.length / requiredQuestions.length) * 100, 100))

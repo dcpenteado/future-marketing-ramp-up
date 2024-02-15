@@ -2,26 +2,26 @@ import { isFieldEmpty } from "./isFieldEmpty";
 
 export function useValidation(question) {
     const availableValidations = {
-        required: (value) => !isFieldEmpty(question, value) || 'Campo obrigatório',
-        email: (value) => {
+        required: (answer) => !isFieldEmpty(question, answer) || 'Campo obrigatório',
+        email: (answer) => {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
-            return emailRegex.test(value) || 'E-mail inválido';
+            return emailRegex.test(answer.value) || 'E-mail inválido';
         },
-        url: (value) => {
+        url: (answer) => {
             const urlRegex = /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/ig;
             
-            return urlRegex.test(value) || 'URL inválida';
+            return urlRegex.test(answer.value) || 'URL inválida';
         },
-        minLength: (value, config) => {
+        minLength: (answer, config) => {
             const minLength = config.value || 0;
 
-            return value.length >= minLength || `Mínimo de ${minLength} caracteres`;
+            return answer.value.length >= minLength || `Mínimo de ${minLength} caracteres`;
         },
-        maxLength: (value, config) => {
+        maxLength: (answer, config) => {
             const maxLength = config.value || 0;
 
-            return value.length <= maxLength || `Máximo de ${maxLength} caracteres`;
+            return answer.value.length <= maxLength || `Máximo de ${maxLength} caracteres`;
         },
     }
 
@@ -39,11 +39,11 @@ export function useValidation(question) {
     }
 
 
-    function validate(value) {
+    function validate(answer) {
         const errors = [];
 
         for (const rule of rules) {
-            const isValidOrErrorMessage = rule.validate(value, rule.config);
+            const isValidOrErrorMessage = rule.validate(answer, rule.config);
             
             if (isValidOrErrorMessage !== true) {
                 errors.push(rule.config.message || isValidOrErrorMessage);

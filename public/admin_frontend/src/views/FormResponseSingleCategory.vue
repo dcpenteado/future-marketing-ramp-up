@@ -109,18 +109,20 @@ export default {
 
             this.setPageData();
         },
-        formAnswers: {
+        data: {
             handler: 'setProgress',
-            deep: true
+            deep: true,
+            immediate: true
         }
     },
     methods: {
         setProgress() {
-            const tmpAnswers = Object.entries(this.dynamicFormData).map(([question_id, value]) => ({
-                category_id: this.category.id,
-                question_id,
-                versions: [{ value }]
-            }));
+            const tmpAnswers = this.data.map(a => {
+                return {
+                    question_id: a.question_id,
+                    versions: [a]
+                }
+            })
 
             this.progress = getFormProgress(this.questions, tmpAnswers)
         },
@@ -146,6 +148,7 @@ export default {
         setData() {
             this.data = this.questions.map(q => {
                 let value = undefined;
+                let markedAsEmpty = false;
 
                 const answer = this.answers.find(a => a.question_id === q.id);
 
@@ -153,10 +156,12 @@ export default {
                     const lastVersion = answer.versions.at(-1)
 
                     value = lastVersion.value;
+                    markedAsEmpty = lastVersion.markedAsEmpty;
                 }
 
                 return {
                     value,
+                    markedAsEmpty,
                     question_id: q.id,
                     category_id: this.category.id
                 }
@@ -210,7 +215,7 @@ export default {
 
                 if (!question) return false;
 
-                return !isFieldEmpty(question, a.value);
+                return !isFieldEmpty(question, a);
             })
 
             const response = await this.$api.createFormResponseAnswers(this.formResponse._id, data);
