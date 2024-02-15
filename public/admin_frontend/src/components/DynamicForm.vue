@@ -4,6 +4,7 @@
             <DynamicFormField
                 :value="answer"
                 :question="questions.find(q => q.id === answer.question_id)"
+                :currentAnswers="currentAnswers"
                 @input="model[i] = $event"
             >
                 <template #header-actions>
@@ -68,6 +69,7 @@
                             :value="a"
                             :question="selectedQuestion"
                             disabled
+                            disable-if-operations
                         >
 
                             <template #header>
@@ -130,8 +132,7 @@ export default {
     }),
     provide() {
         return {
-            fieldValidationsFunctions: this.fieldValidationsFunctions,
-            currentAnswers: this.model
+            fieldValidationsFunctions: this.fieldValidationsFunctions
         }
     },
     computed: {
@@ -147,6 +148,14 @@ export default {
             if (!this.selectedQuestionId) return null;
 
             return this.questions.find(q => q.id === this.selectedQuestionId);
+        },
+        currentAnswers(){
+            return this.model.reduce((acc, val) => {
+                return {
+                    ...acc,
+                    [val.question_id]: val.value
+                }
+            }, {});
         },
         answerVersions(){
             if (!this.selectedQuestionId) return [];
@@ -175,7 +184,7 @@ export default {
             }
 
             document.querySelector('html').style.overflow = 'auto';
-        }
+        },
     },
     methods: {
         validate(){

@@ -79,6 +79,13 @@
                 :disabled="disabled"
             />
 
+            <DynamicFormFieldOccupationForm
+                v-else-if="question.type === 'occupation_form'"
+                v-model="model"
+                :question="question"
+                :errors="errors"
+            />
+
             <DynamicFormFieldRadio
                 v-else-if="question.type === 'radio'"
                 v-model="model"
@@ -153,6 +160,7 @@ export default {
         DynamicFormFieldImagePicker: () => import('@/components/DynamicFormFieldImagePicker.vue'),
         DynamicFormFieldImageSelect: () => import('@/components/DynamicFormFieldImageSelect.vue'),
         DynamicFormFieldListItem: () => import('@/components/DynamicFormFieldListItem.vue'),
+        DynamicFormFieldOccupationForm: () => import('@/components/DynamicFormFieldOccupationForm.vue'),
         DynamicFormFieldRadio: () => import('@/components/DynamicFormFieldRadio.vue'),
         DynamicFormFieldSelect: () => import('@/components/DynamicFormFieldSelect.vue'),
         DynamicFormFieldTestimonials: () => import('@/components/DynamicFormFieldTestimonials.vue'),
@@ -179,9 +187,17 @@ export default {
         disabled: {
             type: Boolean,
             default: false
+        },
+        disableIfOperations: {
+            type: Boolean,
+            default: false
+        },
+        currentAnswers: {
+            type: Object,
+            default: () => ({})
         }
     },
-    inject: ['currentAnswers', 'fieldValidationsFunctions'],
+    inject: ['fieldValidationsFunctions'],
     provide() {
         return {
             errors: this.errors
@@ -211,7 +227,8 @@ export default {
         'model.value': 'validate',
         currentAnswers: {
             handler: 'checkShow',
-            deep: true
+            deep: true,
+            immediate: true
         },
         'model.markedAsEmpty': function (value) {
             if (value) {
@@ -236,10 +253,11 @@ export default {
         checkShow(){
             const operations = this.question.config?.if;
 
-            if (!operations) {
+            if (!operations || this.disableIfOperations) {
                 this.show = true;
                 return
             }
+
 
             const results = operations
                 .map(op => template(op, { interpolate: /{{([\s\S]+?)}}/g }))

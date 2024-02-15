@@ -55,10 +55,7 @@
 
 <script>
 import { getFormProgress } from "@/composables/getFormProgress";
-import { isFieldEmpty } from "@/composables/isFieldEmpty";
-// import { isFieldEmpty } from "@/composables/isFieldEmpty";
 import Api from "@/lib/Api";
-// import uuid from 'uuid-random';	
 
 export default {
     name: 'FormCategory',
@@ -207,16 +204,7 @@ export default {
         async save() {
             this.saving = true;
 
-            const data = JSON.parse(JSON.stringify(this.data)).filter(a => {
-
-                if (a.markedAsEmpty) return true;
-
-                const question = this.questions.find(q => q.id === a.question_id);
-
-                if (!question) return false;
-
-                return !isFieldEmpty(question, a);
-            })
+            const data = JSON.parse(JSON.stringify(this.data))
 
             const response = await this.$api.createFormResponseAnswers(this.formResponse._id, data);
 
