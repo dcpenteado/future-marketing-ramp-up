@@ -10,7 +10,13 @@ export default new Vuex.Store({
         breadcrumbs: [],
         pageTitle: 'Future Marketing',
         pageSubtitle: '',
-        pageLoading: false
+        pageLoading: false,
+        dialog: {
+            show: false,
+            title: '',
+            message: '',
+            resolve: null
+        }
     },
     mutations: {
         setCurrentUser(state, payload) {
@@ -29,13 +35,26 @@ export default new Vuex.Store({
         },
         setPageLoading(state, payload) {
             state.pageLoading = payload
-        }
+        },
+        setDialog(state, payload) {
+            state.dialog = payload
+        },
     },
     actions: {
         async loadCurrentUser({ commit }) {
             const user = await Api.getRemoteUser();
 
             commit('setCurrentUser', user)
+        },
+        async confirmDialog({ commit }, payload) {
+            return new Promise((resolve) => {
+                commit('setDialog', {
+                    show: true,
+                    title: payload?.title || 'Confirmar ação',
+                    message: payload?.message || 'Você tem certeza que deseja realizar esta ação?',
+                    resolve
+                })
+            })
         }
     },
 })

@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <app-confirm-dialog />
+
     <v-main v-if="$route.meta.layout === 'fullscreen'">
       <router-view></router-view>
     </v-main>
@@ -111,6 +113,7 @@ export default {
   components: {
     AppSubheader: () => import("@/components/AppSubheader.vue"),
     AppDrawer: () => import("@/components/AppDrawer.vue"),
+    AppConfirmDialog: () => import("@/components/AppConfirmDialog.vue"),
   },
 
   data: () => ({
