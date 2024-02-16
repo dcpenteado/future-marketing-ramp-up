@@ -37,7 +37,7 @@ export function isFieldEmpty(question, answer) {
         return isOccupationFormEmpty(answer)
     }
 
-    if (['autocomplete', 'select'].includes(question.type) && Array.isArray(value)) {
+    if (['autocomplete', 'select', 'list_item'].includes(question.type) && Array.isArray(value)) {
         return value.length === 0;
     }
 
