@@ -62,6 +62,23 @@ const FormResponseSchema = new Schema({
   filed: { type: Boolean, default: false }
 });
 
+const PromptSchema = new Schema({
+  form: {
+    type: Schema.ObjectId,
+    ref: "forms",
+    required: true
+  },
+  category_id: { type: String, required: true },
+  question_id: { type: String, required: true },
+  prompt: { type: String, required: true },
+  max_tokens: { type: Number, default: 2000, required: true },
+  temperature: { type: Number, default: 0.5, required: true },
+  created: { type: Date, default: Date.now },
+  filed: { type: Boolean, default: false }
+});
+
+
 mongoose.model("users", UserSchema);
 mongoose.model("forms", FormSchema);
 mongoose.model("form_responses", FormResponseSchema);
+mongoose.model("prompts", PromptSchema);
