@@ -122,12 +122,12 @@ export default {
                             to: "/administrators",
                         },
                         {
-                            label: "Formulários",
-                            to: "/forms",
+                            label: "Respostas",
+                            to: "/form-responses",
                         },
                         {
-                            label: "Respostas de formulários",
-                            to: "/form-responses",
+                            label: "Prompts",
+                            to: "/forms",
                         },
                     ]
                 },

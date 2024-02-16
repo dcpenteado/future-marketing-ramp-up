@@ -5,6 +5,26 @@
             :items="forms"
         >
 
+            <template v-slot:[`item.actions`]="{ item }">
+                <v-tooltip left>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            :to="`/forms/${item._id}/prompts`"
+                            v-bind="attrs"
+                            v-on="on"
+                            icon
+                            text
+                        >
+
+                            <v-icon medium>
+                                mdi-console
+                            </v-icon>
+                        </v-btn>                        
+                    </template>
+                    <span>Prompts</span>
+                </v-tooltip>
+            </template>
+
         </v-data-table>
     </v-card>
 </template>
@@ -29,7 +49,7 @@ export default {
                 {
                     text: '',
                     value: 'actions'
-                }
+                },
             ]
         }
     },

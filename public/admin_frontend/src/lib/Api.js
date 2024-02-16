@@ -96,6 +96,12 @@ class Api {
     return resp;
   }
 
+  getFormById = async (form_id) => {
+    const resp = await this.authPost("/get-form-by-id", { id: form_id }, {});
+
+    return resp;
+  }
+
   getFormResponses = async () => {
     const resp = await this.authPost("/get-form-responses", {}, {});
 
@@ -130,6 +136,14 @@ class Api {
         answers: answers
       }
     }, {});
+  }
+
+  getPromptsByFormId = async (form_id) => {
+    return this.authPost("/get-prompts-by-form-id", { form_id }, {});
+  }
+
+  createOrUpdatePrompt = async (object) => {
+    return this.authPost("/create-or-update-prompt", { object }, {});
   }
 
   get = (url) =>

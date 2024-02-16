@@ -33,15 +33,6 @@ const routes = [
     },
   },
   {
-    path: "/forms",
-    name: "FormList",
-    component: () => import("../views/FormList.vue"),
-    meta: {
-      layout: "menu",
-      title: "Lista de Formulários",
-    },
-  },
-  {
     path: "/customers",
     name: "Customers",
     component: () => import("../views/Customers.vue"),
@@ -59,15 +50,24 @@ const routes = [
       title: "Administradores",
     },
   },
-  // {
-  //   path: "/form",
-  //   name: "FormSingle",
-  //   component: () => import("../views/FormSingle.vue"),
-  //   meta: {
-  //     layout: "menu",
-  //     title: "Formulário",
-  //   },
-  // },
+  {
+    path: "/forms",
+    name: "FormList",
+    component: () => import("../views/FormList.vue"),
+    meta: {
+      layout: "menu",
+      title: "Lista de Formulários",
+    },
+  },
+  {
+    path: "/forms/:formId/prompts",
+    name: "FormPromptList",
+    component: () => import("../views/FormPromptList.vue"),
+    meta: {
+      layout: "menu",
+      title: "Lista de Prompts",
+    },
+  },
   {
     path: "/form-responses",
     component: () => import("../views/FormResponseList.vue"),
