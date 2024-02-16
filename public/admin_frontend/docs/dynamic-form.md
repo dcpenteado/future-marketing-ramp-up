@@ -333,3 +333,22 @@ export default {
 }
 ```
 
+## MarkAsEmpty
+
+Some fields may be optional for the user to fill in, but the system needs to know if the user has seen the field or not.
+
+To allow the user do this, you can add the `config.allowMarkAsEmpty` property to the question object.
+
+```json
+{
+    "id": "1",
+    "name": "Normal",
+    "type": "text",
+    "description": "Texto normal",
+    "config": {
+        "allowMarkAsEmpty": true
+    }
+}
+```
+
+This will add a checkbox to the field that allows the user to mark the field as empty.
