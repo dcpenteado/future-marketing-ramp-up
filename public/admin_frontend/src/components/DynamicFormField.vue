@@ -238,7 +238,7 @@ export default {
     },
     methods: {
         validate(){
-            if (this.model.markedAsEmpty) {
+            if (this.model.markedAsEmpty || !this.show) {
                 this.errors = [];
                 
                 return this.errors

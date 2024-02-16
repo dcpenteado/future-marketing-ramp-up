@@ -41,7 +41,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="primary" text @click="errorDialog = false">
-                        Fechar
+                        Continuar editando
                     </v-btn>
                     <v-btn color="primary" @click="save">
                         Salvar mesmo assim
