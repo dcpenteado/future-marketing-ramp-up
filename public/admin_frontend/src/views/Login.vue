@@ -94,7 +94,7 @@
                                     </v-card-subtitle>
             
                                     <v-card-text>
-                                        <v-row>
+                                        <v-row dense>
                                             <v-col cols="12">
                                                 <v-text-field
                                                     v-model="email"
@@ -115,24 +115,27 @@
                                                     @click:append="showPassword = !showPassword"
                                                 />
                                             </v-col>
-    
-                                            <v-col cols="12" class="d-flex align-center">
+
+                                            <v-col cols="12" sm="6">
                                                 <v-checkbox
                                                     v-model="remember"
                                                     label="Lembrar-me"
                                                     hide-details
                                                     class="mt-0"
-                                                ></v-checkbox>
-                                                <v-btn
+                                                />
+                                            </v-col>
+    
+                                            <v-col cols="12" sm="6" class="d-flex align-center justify-sm-end">
+                                                <div
                                                     small
                                                     text
-                                                    class="ml-auto font-ubuntu text-none"
-                                                    color="stardust"
+                                                    class="font-ubuntu text-none gray--text text-caption"
                                                     @click="mode = 'forgot_password'"
                                                 >
                                                     Esqueceu sua senha?
-                                                </v-btn>
+                                                </div>
                                             </v-col>
+
                                             <v-col cols="12">
                                                 <v-btn
                                                     depressed

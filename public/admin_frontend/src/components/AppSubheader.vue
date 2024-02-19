@@ -12,9 +12,8 @@
             </v-col>
 
             
-            <v-col cols="12" md="6" class="d-flex justify-md-end">
-                <v-breadcrumbs
-                    v-if="breadcrumbs.length > 1"
+            <v-col cols="12" md="6" class="d-flex justify-md-end" v-if="breadcrumbs.length > 1">
+                <v-breadcrumbs                    
                     :items="breadcrumbs"
                     divider=">"
                     class="px-0 py-2"

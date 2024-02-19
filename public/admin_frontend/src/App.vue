@@ -59,14 +59,14 @@
             <template #activator="{ on }">
               <v-btn text v-on="on" height="48" >
                 <div class="d-flex align-center">
-                  <v-avatar size="32" class="mr-4 ">
+                  <v-avatar size="32" class="mr-md-4">
                     <v-img v-if="currentUser?.profile_picture" :src="currentUser?.profile_picture" />
                     <div v-else class="w-full h-full primary d-flex justify-center">
                       <v-icon color="white" >mdi-account</v-icon>
                     </div>
                   </v-avatar>
   
-                  <div class="mercury--text text-left text-none">
+                  <div class="mercury--text text-left text-none d-none d-lg-block">
                     <div class="font-ubuntu font-weight-bold text-subtitle-2" >{{ currentUser?.name }}</div>
                     <div class="font-ubuntu text-body-2" >Cargo</div>
                   </div>

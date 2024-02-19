@@ -6,30 +6,30 @@
         }"
     >
     <slot name="header">
-        <v-row no-gutters align="center">
-            <v-col cols="12" sm="8" >
-                <v-card-title
-                    class="break-words"
-                    :class="errors.length ? 'error--text' : ''"
-                >
-                    {{ question.name }}
-                </v-card-title>
-        
-                <v-card-subtitle
-                    class="break-words"
-                    :class="errors.length ? 'error--text' : ''"
-                >
-                    {{ question.description }}
-                </v-card-subtitle>
-            </v-col>
-
-            <v-col class="d-flex align-center">
-                
-                    <slot name="header-actions" />
-                
-            </v-col>
-
-        </v-row>        
+        <div class="pa-4">
+            <v-row align="start">
+                <v-col cols="9">
+                    <v-card-title
+                        class="break-words pa-0 ma-0"
+                        :class="errors.length ? 'error--text' : ''"
+                    >
+                        {{ question.name }}
+                    </v-card-title>
+            
+                    <v-card-subtitle
+                        class="break-words pa-0 ma-0"
+                        :class="errors.length ? 'error--text' : ''"
+                    >
+                        {{ question.description }}
+                    </v-card-subtitle>
+                </v-col>
+    
+                <v-col cols="3">
+                        <slot name="header-actions" />                
+                    
+                </v-col>
+            </v-row>
+        </div>
     </slot>
 
     <v-divider />
@@ -139,7 +139,7 @@
 
             <v-card-actions >
     
-                <v-checkbox v-model="model.markedAsEmpty" label="Marcar como vazio" />
+                <v-checkbox v-model="model.markedAsEmpty" label="Marcar como vazio" :disabled="disabled" />
     
             </v-card-actions>
         </template>

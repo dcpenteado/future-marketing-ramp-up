@@ -3,11 +3,15 @@
 
         <v-card class="mb-4">
             <v-card-text class="d-flex">
+                <v-row dense>
+                    <v-col cols="12" sm="4" lg="3">
+                        <v-btn block color="primary" @click="dialog = true">Associar Formulário</v-btn>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field v-model="search" label="Pesquisar" outlined hide-details dense />
+                    </v-col>
+                </v-row>
                 
-                <v-btn color="primary" @click="dialog = true">Associar Formulário</v-btn>
-
-                <v-text-field v-model="search" class="ml-auto" style="max-width: 30rem;" label="Pesquisar" outlined hide-details dense />
-
 
             </v-card-text>
         </v-card>

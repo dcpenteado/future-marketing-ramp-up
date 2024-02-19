@@ -8,23 +8,24 @@
                 @input="model[i] = $event"
             >
                 <template #header-actions>
-                    <v-spacer ></v-spacer>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                tabindex="-1"
-                                class="mx-4 mb-4 mb-sm-0"
-                                icon
-                                v-on="on"
-                                @click="showAnswerVersions(answer.question_id)"
-                            >
-                                <v-icon>mdi-history</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Ver versões</span>
-
-                    </v-tooltip>
+                    <div class="d-flex">
+                        <v-spacer ></v-spacer>
+    
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn
+                                    tabindex="-1"
+                                    icon
+                                    v-on="on"
+                                    @click="showAnswerVersions(answer.question_id)"
+                                >
+                                    <v-icon>mdi-history</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Ver versões</span>
+    
+                        </v-tooltip>
+                    </div>
                 </template>
             </DynamicFormField>
         </v-col>
@@ -73,21 +74,23 @@
                         >
 
                             <template #header>
-                                <div class="d-flex align-center">
-                                    <div>
-                                        <v-card-title>
-                                            {{ a.title }} - {{ a.origin }}
-                                        </v-card-title>
-                                        <v-card-subtitle>
-                                            {{ a.date }}
-                                        </v-card-subtitle>
-                                    </div>
-    
-                                    <v-spacer></v-spacer>
-    
-                                    <v-btn color="primary" class="mr-4" @click="restoreVersion(a.value)">
-                                        Restaurar
-                                    </v-btn>
+                                <div class="pa-4">
+                                    <v-row dense align="center">
+                                        <v-col cols="12" sm="6">                                            
+                                            <v-card-title class="pa-0 ma-0">
+                                                {{ a.title }} - {{ a.origin }}
+                                            </v-card-title>
+                                            <v-card-subtitle class="pa-0 ma-0">
+                                                {{ a.date }}
+                                            </v-card-subtitle>                                            
+                                        </v-col>
+                                        
+                                        <v-col cols="12" sm="6">
+                                            <v-btn block color="primary" @click="restoreVersion(a.value)">
+                                                Restaurar
+                                            </v-btn>
+                                        </v-col>    
+                                    </v-row>
                                 </div>
 
                             </template>
