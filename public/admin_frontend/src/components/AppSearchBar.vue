@@ -26,7 +26,7 @@
                         v-if="results.length === 0"
                     >
                         <v-list-item-title>
-                            Nenhum resultado encontrado
+                            {{ search ? 'Nenhum resultado encontrado' : 'Digite algo para pesquisar' }}
                         </v-list-item-title>
                     </v-list-item>
                     

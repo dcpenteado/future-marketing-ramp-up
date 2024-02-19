@@ -236,7 +236,7 @@ export default {
 
             if (!category) return []
 
-            const questions = category.questions.filter(q => ['text', 'textarea'].includes(q.type))
+            const questions = category.questions
 
             return questions.map(q => ({
                 text: q.name,
