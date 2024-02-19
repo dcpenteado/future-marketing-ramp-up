@@ -8,6 +8,7 @@ export default new Vuex.Store({
     state: {
         currentUser: null,
         breadcrumbs: [],
+        drawerMenuItems: [],
         pageTitle: 'Future Marketing',
         pageSubtitle: '',
         pageLoading: false,
@@ -16,7 +17,7 @@ export default new Vuex.Store({
             title: '',
             message: '',
             resolve: null
-        }
+        },
     },
     mutations: {
         setCurrentUser(state, payload) {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
         },
         setBreadcrumbs(state, payload) {
             state.breadcrumbs = payload
+        },
+        setDrawerMenuItems(state, payload) {
+            state.drawerMenuItems = payload
         },
         setPageTitle(state, payload) {
             state.pageTitle = payload

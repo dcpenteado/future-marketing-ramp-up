@@ -70,10 +70,15 @@ export default {
         isAdmin() {
             return this.currentUser?.admin;
         },
+        menuItems: {
+            get() {
+                return this.$store.state.drawerMenuItems;
+            },
+            set(value) {
+                this.$store.commit('setDrawerMenuItems', value);
+            }
+        }
     },
-    data: () => ({
-        menuItems: []
-    }),
     methods: {
         async addCustomerMenuItems() {
             const site = {

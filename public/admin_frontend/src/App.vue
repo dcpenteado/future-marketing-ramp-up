@@ -22,20 +22,7 @@
             color="mercury"
           />
 
-          <v-text-field
-            prepend-inner-icon="mdi-magnify"
-            placeholder="Pesquisar"
-            single-line
-            hide-details
-            background-color="#F3F3F9"        
-            solo
-            flat
-            dense
-            persistent-placeholder
-            style="max-width: 230px;"
-          />
-          
-
+          <app-search-bar />
           
           <v-spacer></v-spacer>
 
@@ -113,6 +100,7 @@ export default {
   components: {
     AppSubheader: () => import("@/components/AppSubheader.vue"),
     AppDrawer: () => import("@/components/AppDrawer.vue"),
+    AppSearchBar: () => import("@/components/AppSearchBar.vue"),
     AppConfirmDialog: () => import("@/components/AppConfirmDialog.vue"),
   },
 
