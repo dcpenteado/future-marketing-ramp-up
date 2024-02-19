@@ -236,7 +236,9 @@ export default {
 
             if (!category) return []
 
-            return category.questions.map(q => ({
+            const questions = category.questions.filter(q => ['text', 'textarea'].includes(q.type))
+
+            return questions.map(q => ({
                 text: q.name,
                 value: q.id
             }))
@@ -276,6 +278,14 @@ export default {
             this.pageLoading = false;
         },
         async submit() {
+
+            const exists = this.items.find(i => i.category_id === this.payload.category_id && i.question_id === this.payload.question_id)
+
+            if (exists) {
+                this.$toast('error', 'Já existe um prompt para essa categoria e pergunta')
+                return
+            }
+
             this.saving = true
 
             const response = await this.$api.createOrUpdatePrompt({
