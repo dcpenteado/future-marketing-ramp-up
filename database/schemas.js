@@ -62,23 +62,32 @@ const FormResponseSchema = new Schema({
   filed: { type: Boolean, default: false }
 });
 
-const PromptSchema = new Schema({
+const RampUpElementSchema = new Schema({
   form: {
     type: Schema.ObjectId,
     ref: "forms",
     required: true
   },
-  category_id: { type: String, required: true },
-  question_id: { type: String, required: true },
-  prompt: { type: String, required: true },
-  max_tokens: { type: Number, default: 2000, required: true },
-  temperature: { type: Number, default: 0.5, required: true },
+  content: { type: Object, required: true },
+  type: {
+    type: String, 
+    required: true,
+    enum: {
+      values: ['text', 'prompt'],
+      message: "Os tipos aceitos são text ou prompt",
+    },
+  },
+  id: { type: String, required: true },
+  description: { type: String, required: true },
+  max_tokens: { type: Number, default: 2000 },
+  temperature: { type: Number, default: 0.5 },
   created: { type: Date, default: Date.now },
   filed: { type: Boolean, default: false }
 });
 
+RampUpElementSchema.index({ form: 1, id: 1 }, { unique: true });
 
 mongoose.model("users", UserSchema);
 mongoose.model("forms", FormSchema);
 mongoose.model("form_responses", FormResponseSchema);
-mongoose.model("prompts", PromptSchema);
+mongoose.model("ramp_up_elements", RampUpElementSchema);

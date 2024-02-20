@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Users = mongoose.model("users");
 const Forms = mongoose.model("forms");
 const FormResponses = mongoose.model("form_responses");
-const Prompts = mongoose.model("prompts");
+const RampUpElements = mongoose.model("ramp_up_elements");
 var ObjectId = mongoose.Types.ObjectId;
 const bcrypt = require("bcryptjs");
 
@@ -202,38 +202,38 @@ const createOrUpdateFormResponse = async (object, user_id) => {
 };
 
 
-const getPromptsByFormId = async (form_id) => {
+const getRampUpElementsByFormId = async (form_id) => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
 
-    const resp = await Prompts.find({ form: form_id, filed: { $ne: true } });
+    const resp = await RampUpElements.find({ form: form_id, filed: { $ne: true } });
     return resp;
   } catch (err) {
     return { error: true, type: "general_error" };
   }
 };
 
-const getPromptById = async (id) => {
+const getRampUpElementById = async (id) => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
 
-    const resp = await Prompts.findOne({ _id: id, filed: { $ne: true } });
+    const resp = await RampUpElements.findOne({ _id: id, filed: { $ne: true } });
     return resp;
   } catch (err) {
     return { error: true, type: "general_error" };
   }
 };
 
-const createOrUpdatePrompt = async (object) => {
+const createOrUpdateRampUpElement = async (object) => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
 
     let resp;
 
     if (object._id) {
-      resp = Prompts.updateOne({ _id: object._id }, object, { upsert: true, setDefaultsOnInsert: true });
+      resp = RampUpElements.updateOne({ _id: object._id }, object, { upsert: true, setDefaultsOnInsert: true });
     } else {
-      resp = await Prompts.create(object);
+      resp = await RampUpElements.create(object);
     }
 
     return resp;
@@ -261,7 +261,7 @@ module.exports = {
   getFormResponseByUserId,
   createOrUpdateFormResponse,
 
-  getPromptsByFormId,
-  getPromptById,
-  createOrUpdatePrompt
+  getRampUpElementsByFormId,
+  getRampUpElementById,
+  createOrUpdateRampUpElement
 };

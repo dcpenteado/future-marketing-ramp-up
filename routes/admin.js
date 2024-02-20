@@ -398,7 +398,7 @@ router.post("/get-administrators", auth, async (req, res) => {
   }
 });
 
-router.post("/get-prompts-by-form-id", auth, async (req, res) => {
+router.post("/get-ramp-up-elements-by-form-id", auth, async (req, res) => {
   try {
     const req_user = req.req_user;
     if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
@@ -407,30 +407,30 @@ router.post("/get-prompts-by-form-id", auth, async (req, res) => {
 
     if (!form_id) return res.send({ error: true, message: "ID do formulário é um campo requerido." });
 
-    const resp = await DBController.getPromptsByFormId(form_id);
+    const resp = await DBController.getRampUpElementsByFormId(form_id);
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
   }
 });
 
-router.post("/get-prompt-by-id", auth, async (req, res) => {
+router.post("/get-ramp-up-element-by-id", auth, async (req, res) => {
   try {
 
     const req_user = req.req_user;
     if (!req_user.admin) return res.send({ error: true, message: "Permissões insuficientes." });
 
     const { id } = req.body;
-    if (!id) return res.send({ error: true, message: "ID do prompt é um campo requerido." });
+    if (!id) return res.send({ error: true, message: "ID do elemento Ramp-Up é um campo requerido." });
 
-    const resp = await DBController.getPromptById(id)
+    const resp = await DBController.getRampUpElementById(id)
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
   }
 });
 
-router.post("/create-or-update-prompt", auth, async (req, res) => {
+router.post("/create-or-update-ramp-up-element", auth, async (req, res) => {
   try {
     //CHECK PERMISSION
     const req_user = req.req_user;
@@ -438,12 +438,9 @@ router.post("/create-or-update-prompt", auth, async (req, res) => {
 
     let { object } = req.body;
 
-    if (!object.temperature) object.temperature = 0;
-    if (!object.max_tokens) object.max_tokens = 2000;
+    if (!object || !object.form || !object.content || !object.type || !object.id || !object.description) return res.send({ error: true, message: "Formulário, conteúdo, tipo, id e descrição são campos obrigatórios." });
 
-    if (!object || !object.form || !object.category_id || !object.question_id || !object.prompt) return res.send({ error: true, message: "Formulário, IDs de categoria e questão e prompt são campos obrigatórios." });
-
-    const resp = await DBController.createOrUpdatePrompt(object);
+    const resp = await DBController.createOrUpdateRampUpElement(object);
     return res.send({ error: false, message: resp });
   } catch (err) {
     return res.send({ error: true, message: err.message });
