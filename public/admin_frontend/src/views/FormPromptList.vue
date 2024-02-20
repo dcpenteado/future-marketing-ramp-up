@@ -123,7 +123,7 @@
                             <v-col cols="12">
                                 <v-text-field
                                     v-model="payload.temperature"
-                                    label="Temperature"
+                                    label="Temperatura"
                                     type="number"
                                     outlined
                                     hide-details="auto"
@@ -162,7 +162,7 @@
                             @click="submit"
                             :loading="saving"
                         >
-                            Salve
+                            Salvar
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -198,7 +198,7 @@ export default {
                     value: 'max_tokens'
                 },
                 {
-                    text: 'Temperature',
+                    text: 'Temperatura',
                     value: 'temperature'
                 },
                 {
