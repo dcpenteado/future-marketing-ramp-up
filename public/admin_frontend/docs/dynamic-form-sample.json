@@ -252,7 +252,7 @@
             },
             {
                 "id": "occupation_area",
-                "name": "Area de atuação",
+                "name": "Área de atuação",
                 "description": "Nessa seção abordaremos uma visão macro das suas principais áreas de atuação dentro da sua especialidade.",
                 "questions": [
                     {
@@ -412,7 +412,7 @@
                     },
                     {
                         "id": "site_typography",
-                        "name": "Tipográfia",
+                        "name": "Tipografia",
                         "description": "Selecione uma família tipográfica para o seu website",
                         "type": "image_select",
                         "config": {

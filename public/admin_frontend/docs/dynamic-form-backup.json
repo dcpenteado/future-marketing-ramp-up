@@ -248,7 +248,7 @@
             },
             {
                 "id": "occupation_area",
-                "name": "Area de atuação",
+                "name": "Área de atuação",
                 "description": "Nessa seção abordaremos uma visão macro das suas principais áreas de atuação dentro da sua especialidade.",
                 "questions": [
                     {

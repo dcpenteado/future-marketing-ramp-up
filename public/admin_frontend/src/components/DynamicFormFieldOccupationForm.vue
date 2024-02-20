@@ -20,7 +20,7 @@
         <v-col cols="12">
             <v-text-field
                 v-model="model.value.name"
-                label="Nome da area de atuação"
+                label="Nome da área de atuação"
                 outlined
                 hide-details
                 :error="errors.length && !model.value.name"

@@ -15,7 +15,7 @@
                     Cancelar
                 </v-btn>
                 <v-btn color="primary" @click="agree">
-                    Confirm
+                    Confirmar
                 </v-btn>
             </v-card-actions>
         </v-card>
