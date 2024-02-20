@@ -69,6 +69,15 @@ const routes = [
     },
   },
   {
+    path: "/forms/:formId/elements",
+    name: "FormElementList",
+    component: () => import("../views/FormElementList.vue"),
+    meta: {
+      layout: "menu",
+      title: "Lista de Elementos",
+    },
+  },
+  {
     path: "/form-responses",
     component: () => import("../views/FormResponseList.vue"),
     meta: {

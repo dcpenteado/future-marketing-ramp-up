@@ -8,6 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@tiptap/extension-mention": "^2.2.3",
+    "@tiptap/pm": "^2.2.3",
+    "@tiptap/starter-kit": "^2.2.3",
+    "@tiptap/vue-2": "^2.2.3",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "date-fns": "^3.3.1",

@@ -9,6 +9,24 @@
                 <v-tooltip left>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
+                            :to="`/forms/${item._id}/elements`"
+                            v-bind="attrs"
+                            v-on="on"
+                            icon
+                            text
+                        >
+
+                            <v-icon medium>
+                                mdi-view-list
+                            </v-icon>
+                        </v-btn>                        
+                    </template>
+                    <span>Elementos</span>
+                </v-tooltip>
+
+                <v-tooltip left>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
                             :to="`/forms/${item._id}/prompts`"
                             v-bind="attrs"
                             v-on="on"
