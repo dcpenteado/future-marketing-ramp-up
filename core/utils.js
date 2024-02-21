@@ -31,6 +31,35 @@ const uploadToS3 = async (image_buffer, path, filename, content_type = "image/jp
     }
 }
 
+const getLastResponseValue = (answer) => {
+    if (answer && answer.versions && answer.versions.length > 0) {
+        const last = answer.versions[answer.versions.length - 1];
+        if (last.value && !last.markedAsEmpty) return last.value;
+    }
+
+    return "";
+}
+
+const rampUpElementToText = (ramp_up_content, answers) => {
+    let text = "";
+
+    ramp_up_content.forEach(c => {
+        if (c.type == "text") text += c.text;
+
+        if (c.type == "mention" && c.attrs?.id) {
+            text += getLastResponseValue(answers.find(a => a.question_id == c.attrs.id));
+        }
+    })
+
+    return text;
+}
+
+const processTextWithChatGPT = async (text, temperature, max_tokens) => {
+
+}
+
 module.exports = {
-    uploadToS3
+    uploadToS3,
+    rampUpElementToText,
+    processTextWithChatGPT
 }

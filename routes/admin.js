@@ -447,6 +447,25 @@ router.post("/create-or-update-ramp-up-element", auth, async (req, res) => {
   }
 });
 
+router.post("/teste", async (req, res) => {
+  try {
+    //CHECK PERMISSION
+    const { element_id, form_response_id } = req.body;
+
+    if (!element_id || !form_response_id) return res.send({ error: true, message: "Faltam itens." });
+
+    const form_response = await DBController.getFormResponseById(form_response_id);
+    const ramp_up_element = await DBController.getRampUpElementById(element_id);
+
+    const resp = utils.rampUpElementToText(ramp_up_element.content.content[0].content, form_response.answers);
+
+    return res.send({ error: false, message: { resp } });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+
 module.exports = function () {
   return router;
 };
