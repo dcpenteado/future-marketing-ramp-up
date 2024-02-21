@@ -138,12 +138,12 @@ class Api {
     }, {});
   }
 
-  getPromptsByFormId = async (form_id) => {
-    return this.authPost("/get-prompts-by-form-id", { form_id }, {});
+  getRampUpElementsByFormId = async (form_id) => {
+    return this.authPost("/get-ramp-up-elements-by-form-id", { form_id }, {});
   }
 
-  createOrUpdatePrompt = async (object) => {
-    return this.authPost("/create-or-update-prompt", { object }, {});
+  createOrUpdateRampUpElement = async (ramp_up_element) => {
+    return this.authPost("/create-or-update-ramp-up-element", { object: ramp_up_element }, {});
   }
 
   get = (url) =>

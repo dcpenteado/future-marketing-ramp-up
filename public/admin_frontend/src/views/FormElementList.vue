@@ -65,9 +65,9 @@
 
         <dialog-or-bottom-sheet
             v-model="dialog"
-            max-width="1200"
+            max-width="500"
         >
-            <v-form>
+            <v-form @submit.prevent="submit">
                 <v-card>
                     <v-card-title>
                         {{ payload._id ? 'Editar' : 'Novo' }}
@@ -84,80 +84,70 @@
                             </v-col>
                             
                             <v-col cols="12">
-                                <v-select
-                                    v-model="payload.formResponse"
-                                    label="Form response"
-                                    outlined
-                                    hide-details="auto"
-                                    :items="formResponses"
-                                    item-text="user.name"
-                                    item-value="_id"
-                                />
-                            </v-col>
-                            
-                            <!-- <v-col cols="12">
                                 <v-text-field
-                                    v-model="payload.max_tokens"
-                                    label="Max tokens"
-                                    type="number"
+                                    v-model="payload.description"
+                                    label="Descrição"
                                     outlined
                                     hide-details="auto"
-                                    item-text="text"
-                                    item-value="value"
                                 />
                             </v-col>
                             
                             <v-col cols="12">
-                                <v-text-field
-                                    v-model="payload.temperature"
-                                    label="Temperature"
-                                    type="number"
+                                <v-select
+                                    v-model="payload.type"
+                                    label="Tipo"
                                     outlined
                                     hide-details="auto"
                                     item-text="text"
                                     item-value="value"
-                                    min="0"
-                                    max="1"
-                                    step="0.1"
-                                />
-                            </v-col> -->
+                                    :items="types"
 
-                            <v-col cols="4">
+                                />
+                            </v-col>
+
+                            <template v-if="payload.type === 'prompt'">
+                                <v-col cols="12">
+                                    <v-text-field
+                                        v-model="payload.max_tokens"
+                                        label="Max tokens"
+                                        type="number"
+                                        outlined
+                                        hide-details="auto"
+                                        item-text="text"
+                                        item-value="value"
+                                    />
+                                </v-col>
+                                
+                                <v-col cols="12">
+                                    <v-text-field
+                                        v-model="payload.temperature"
+                                        label="Temperatura"
+                                        type="number"
+                                        outlined
+                                        hide-details="auto"
+                                        item-text="text"
+                                        item-value="value"
+                                        min="0"
+                                        max="1"
+                                        step="0.1"
+                                    />
+                                </v-col>
+                            </template>
+
+                            <v-col cols="12">
                                 <tip-tap-editor
                                     v-if="!tiptap.loading"
-                                    v-model="tiptap.data"
-                                    label="Prompt"
-                                    outlined
-                                    hide-details="auto"
-                                    :disabled="!payload.question_id"
+                                    v-model="payload.content"
                                     :extensions="tiptap.extensions"
-                                />
-                            </v-col>
-
-                            <v-col cols="4">
-                                <v-textarea
-                                    v-model="json"
-                                    readonly 
-                                    label="JSON"
-                                    outlined
-                                    dense
-                                    rows="20"
-                                />
-                            </v-col>
-                            <v-col cols="4">
-                                <v-textarea
-                                    v-model="result"
-                                    readonly 
-                                    label="Resultado"
-                                    outlined
-                                    dense
-                                    rows="20"
+                                    :messages="[
+                                        'Digite @ para usar a referência de uma pergunta.'
+                                    ]"
                                 />
                             </v-col>
                         </v-row>
                     </v-card-text>
 
-                    <!-- <v-card-actions>
+                    <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
                             color="error"
@@ -168,12 +158,12 @@
                         </v-btn>
                         <v-btn
                             color="primary"
-                            @click="submit"
+                            type="submit"
                             :loading="saving"
                         >
                             Salve
                         </v-btn>
-                    </v-card-actions> -->
+                    </v-card-actions>
                 </v-card>
             </v-form>
         </dialog-or-bottom-sheet>
@@ -189,40 +179,42 @@ export default {
     data() {
         return {
             form: null,
-            formResponses: [],
             dialog: false,
+            saving: false,
             items: [],
             tiptap: {
-                data: {
-                    type: 'doc',
-                    content: []
-                },
                 loading: false,
                 extensions: [],
             },
             payload: {
-                id: 'Test',
-                formResponse: null,
+                id: '',
+                description: '',
+                content: null,
                 max_tokens: 1000,
                 temperature: 0.7,
             },
-            saving: false,
-            headers: [
+            types: [
                 {
-                    text: 'Id',
-                    value: 'id'
-                },
-                {
-                    text: 'Max tokens',
-                    value: 'max_tokens'
-                },
-                {
-                    text: 'Temperature',
-                    value: 'temperature'
+                    text: 'Texto',
+                    value: 'text'
                 },
                 {
                     text: 'Prompt',
-                    value: 'prompt',
+                    value: 'prompt'
+                }
+            ],
+            headers: [
+                {
+                    text: 'ID',
+                    value: 'id'
+                },
+                {
+                    text: 'type',
+                    value: 'type'
+                },
+                {
+                    text: 'Descrição',
+                    value: 'description'
                 },
                 {
                     text: '',
@@ -245,60 +237,14 @@ export default {
 
             return this.form.categories.reduce((acc, c) => acc.concat(c.questions), [])
         },
-        json() {
-            return JSON.stringify(this.tiptap.data, null, 4)
-        },
-        result() {
-            const formResponse = this.formResponses.find(fr => fr._id === this.payload.formResponse)
-            
-            if (!formResponse) return
-
-            if (!this.tiptap.data) return
-
-            let text = this.tiptap.data.content.map(c => {
-                if (c.type === 'text') return c.text
-
-                if (c.type === 'mention') return `@${c.attrs.id}`
-
-                if (c.type === 'paragraph' && !c.content?.length) return '\n'
-
-                if (c.type === 'paragraph') {
-                    return c.content.map(c => {
-                        if (c.type === 'text') return c.text
-
-                        if (c.type === 'mention') return `@${c.attrs.id}`
-                    }).join('') + '\n'
-                }
-
-                return ''
-            }).join('')
-
-            this.questions.forEach(q => {
-                const answer = formResponse.answers.find(a => a.question_id === q.id)
-                
-                if (!answer) return
-
-                const version = answer.versions.at(-1)
-
-                if (!version) return
-                
-                text = text.replaceAll(`@${q.id}`, version.value)
-            })
-
-            return text
-        },
     },
     methods: {
-        async setFormResponses() {
-            const response = await this.$api.getFormResponses()
+        async setItems(){
+            const response = await this.$api.getRampUpElementsByFormId(this.$route.params.formId);
 
-            if (response.error) {
-                return
-            }
+            if (response.error) return;
 
-            this.formResponses = response.message
-
-            this.payload.formResponse = this.formResponses[0]?._id
+            this.items = response.message;
         },
         async setForm() {
             const response = await this.$api.getFormById(this.$route.params.formId);
@@ -316,61 +262,77 @@ export default {
                 createMentionExtension(items)
             ]
 
-            this.tiptap.data.content = [
-                {
-                    type: 'paragraph',
-                    content: [
-                        {
-                            type: 'text',
-                            text: 'Resumir o texto a seguir: '
-                        },
-                    ],
-                },
-                {
-                    type: 'paragraph',
-                    content: [
-                        {
-                            type: 'text',
-                            text: 'Meu nome é ',
-                        },
-                        {
-                            type: 'mention',
-                            attrs: {
-                                id: items[0],
-                            },
-                            text: `@${items[0]}`,
-                        },
-
-                        {
-                            type: 'text',
-                            text: 'e meu email é ',
-                        },
-                        {
-                            type: 'mention',
-                            attrs: {
-                                id: items[1],
-                            },
-                            text: `@${items[1]}`,
-                        },
-                    ],
-                }
-            ]
-
-            setTimeout(() => {
-                this.tiptap.loading = false
-            }, 1000)
+            this.tiptap.loading = false
         },
         async load() {
             this.pageLoading = true;
 
-            await this.setForm();
+            await this.setItems();
 
-            await this.setFormResponses();
+            await this.setForm();
 
             this.setTiptap();
 
             this.pageLoading = false;
         },
+        async submit(){
+            this.saving = true;
+
+            const response = await this.$api.createOrUpdateRampUpElement({
+                ...this.payload,
+                form: {
+                    _id: this.$route.params.formId
+                },
+            })
+
+            if (response.error) {
+                this.saving = false;
+                return
+            }
+
+            await this.setItems();
+
+            this.$toast('success', 'Salvo com sucesso!')
+
+            setTimeout(() => {
+                this.dialog = false;
+                this.saving = false;
+            }, 500)
+        },
+        editItem(item) {
+            this.payload = JSON.parse(JSON.stringify(item));
+
+            this.dialog = true
+        },
+        async deleteItem(item) {
+            const value = await this.$store.dispatch('confirmDialog')
+
+            if (!value) return
+
+            const response = await this.$api.createOrUpdateRampUpElement({
+                ...item,
+                filed: true
+            })
+
+            if (response.error) return
+
+            await this.setItems()
+
+            this.$toast('success', 'Elemento apagado com sucesso')
+        }
+    },
+    watch:{
+        dialog(value) {
+            if (!value) {
+                this.payload = {
+                    id: '',
+                    description: '',
+                    content: null,
+                    max_tokens: 1000,
+                    temperature: 0.7,
+                }
+            }
+        }
     },
     created() {
         this.load();

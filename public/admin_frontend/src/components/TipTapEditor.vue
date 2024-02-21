@@ -1,5 +1,7 @@
 <template>  
-  <editor-content :editor="editor" />
+  <v-input :messages="messages" >
+    <editor-content :editor="editor" class="w-full" />
+  </v-input>
 </template>
   
 <script>
@@ -14,6 +16,10 @@ export default {
     value: {
       type: Object,
       default: () => ({}),
+    },
+    messages: {
+      type: Array,
+      default: () => ([]),
     },
     extensions: {
       type: Array,
@@ -61,11 +67,17 @@ export default {
 <style lang="scss">
 .tiptap {
   padding: 1rem;
-  border: 1px solid var(--v-mercury-base);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.38);
   border-radius: 0.4rem;
+  min-height: 10rem;
+  width: 100%;
 
   &:focus {
     outline: none;
+    border-color: var(--v-primary-base);
+    border-width: 2px;
   }
 
 }

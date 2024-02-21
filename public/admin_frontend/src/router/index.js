@@ -60,15 +60,6 @@ const routes = [
     },
   },
   {
-    path: "/forms/:formId/prompts",
-    name: "FormPromptList",
-    component: () => import("../views/FormPromptList.vue"),
-    meta: {
-      layout: "menu",
-      title: "Lista de Prompts",
-    },
-  },
-  {
     path: "/forms/:formId/elements",
     name: "FormElementList",
     component: () => import("../views/FormElementList.vue"),
