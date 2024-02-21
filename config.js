@@ -13,7 +13,8 @@ const config = () => {
         s3_endpoint: 'https://ramp-up-prod.s3.sa-east-1.amazonaws.com/',
         s3_key: 'AKIA2HPG37MOPXABZZ75',
         s3_secret: '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',
-        s3_bucket: 'ramp-up-prod'
+        s3_bucket: 'ramp-up-prod',
+        open_ai_api_key: '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'
       };
 
     default: //TODO: CONFIGURAR TUDO
@@ -29,7 +30,8 @@ const config = () => {
         s3_endpoint: 'https://ramp-up-hml.s3.sa-east-1.amazonaws.com/',
         s3_key: 'AKIA2HPG37MOPXABZZ75',
         s3_secret: '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',
-        s3_bucket: 'ramp-up-hml'
+        s3_bucket: 'ramp-up-hml',
+        open_ai_api_key: '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'
       };
   }
 };

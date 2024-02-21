@@ -449,7 +449,8 @@ router.post("/create-or-update-ramp-up-element", auth, async (req, res) => {
 
 router.post("/teste", async (req, res) => {
   try {
-    //CHECK PERMISSION
+    let final_text = "";
+
     const { element_id, form_response_id } = req.body;
 
     if (!element_id || !form_response_id) return res.send({ error: true, message: "Faltam itens." });
@@ -457,9 +458,12 @@ router.post("/teste", async (req, res) => {
     const form_response = await DBController.getFormResponseById(form_response_id);
     const ramp_up_element = await DBController.getRampUpElementById(element_id);
 
-    const resp = utils.rampUpElementToText(ramp_up_element.content.content[0].content, form_response.answers);
+    const renderedText = utils.rampUpElementToText(ramp_up_element.content.content[0].content, form_response.answers);
+    if (renderedText != "") {
+      final_text = await utils.processTextWithChatGPT(renderedText, ramp_up_element.temperature || 0.5, ramp_up_element.max_tokens || 1000);
+    }
 
-    return res.send({ error: false, message: { resp } });
+    return res.send({ error: false, message: final_text });
   } catch (err) {
     return res.send({ error: true, message: err.message });
   }

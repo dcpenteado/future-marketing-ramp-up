@@ -1,6 +1,11 @@
 'use strict'
 const config = require("../config");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { OpenAI } = require("openai");
+
+const openai = new OpenAI({
+    apiKey: "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",
+});
 
 const uploadToS3 = async (image_buffer, path, filename, content_type = "image/jpeg") => {
     try {
@@ -55,7 +60,14 @@ const rampUpElementToText = (ramp_up_content, answers) => {
 }
 
 const processTextWithChatGPT = async (text, temperature, max_tokens) => {
+    const resp = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [{ role: 'user', content: text }],
+        max_tokens: max_tokens,
+        temperature: temperature,
+    });
 
+    return resp?.choices[0]?.message?.content;
 }
 
 module.exports = {
