@@ -4,7 +4,7 @@
         <v-card class="mb-4">
             <v-card-text class="d-flex">
 
-                <v-btn color="primary" @click="dialog = true" >Novo prompt</v-btn>
+                <v-btn color="primary" @click="dialog = true" >Novo Elemento</v-btn>
 
             </v-card-text>
         </v-card>
@@ -14,12 +14,6 @@
                 :headers="headers"
                 :items="items"
             >
-
-                <template v-slot:[`item.prompt`]="{ item }">
-                    <div class="text-truncate" style="max-width: 150px;" >
-                        {{ item.prompt }}
-                    </div>
-                </template>
 
                 <template v-slot:[`item.actions`]="{ item }">
                     <v-tooltip left>
