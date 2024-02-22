@@ -119,7 +119,7 @@ export default {
     data: () => ({
         dialog: false,
         search: '',
-        items: [],
+        // items: [],
         headers: [
             {
                 text: 'Cliente',
@@ -166,6 +166,9 @@ export default {
         }
     }),
     computed: {
+        items(){
+            return this.$store.state.formResponse.items
+        },
         filteredItems() {
             if (!this.search) {
                 return this.items
@@ -181,14 +184,8 @@ export default {
         }
     },
     methods: {
-        async setItems() {
-            const response = await this.$api.getFormResponses()
-
-            if (response.error) {
-                return
-            }
-
-            this.items = response.message
+        async load() {
+            await this.$store.dispatch('formResponse/load')
         },
         async setClients() {
             this.clients.loading = true
@@ -252,7 +249,7 @@ export default {
             this.data.form = null
             this.data.client = null
 
-            await this.setItems()
+            await this.load()
 
             setTimeout(() => {
                 this.saving = false
@@ -287,7 +284,7 @@ export default {
             }
 
             this.$toast('success', 'Formulário arquivado com sucesso')
-            this.setItems()
+            this.load()
 
             setTimeout(() => {
                 this.archive.loading = false
@@ -312,7 +309,7 @@ export default {
         }
     },
     mounted() {
-        this.setItems()
+        this.load()
     }
 }
 </script>

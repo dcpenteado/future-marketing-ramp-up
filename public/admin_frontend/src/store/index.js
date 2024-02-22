@@ -4,7 +4,20 @@ import Api from '@/lib/Api'
 
 Vue.use(Vuex)
 
+const files = require.context('./modules', false, /\.js$/)
+
+const modules = files.keys().reduce((acc, key) => {
+    const name = key.replace(/(\.\/|\.js)/g, '')
+    const module = files(key).default
+
+    acc[name] = module
+
+    return acc
+}, {})
+
+
 export default new Vuex.Store({
+    modules,
     state: {
         currentUser: null,
         breadcrumbs: [],
