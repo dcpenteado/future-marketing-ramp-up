@@ -1,25 +1,25 @@
 <template>
     <div class="w-full">
+        <v-autocomplete
+            v-model="selected"
+            :search-input.sync="search"
+            prepend-inner-icon="mdi-magnify"
+            placeholder="Pesquisar"
+            single-line
+            hide-details
+            background-color="#F3F3F9"        
+            solo
+            flat
+            dense
+            persistent-placeholder
+            style="max-width: 25rem;"
+            append-icon=""
+            return-object
+            :items="results"
+            :no-data-text="search ? 'Nenhum resultado encontrado' : 'Digite algo para pesquisar'"
+        />            
         
         <v-menu offset-y v-model="menu"> 
-        
-        <template v-slot:activator="{ on }">
-            <v-text-field
-                v-model="search"
-                prepend-inner-icon="mdi-magnify"
-                placeholder="Pesquisar"
-                single-line
-                hide-details
-                background-color="#F3F3F9"        
-                solo
-                flat
-                dense
-                persistent-placeholder
-                style="max-width: 25rem;"
-                v-on="on" 
-            />            
-        </template>
-
             <v-card :loading="loading">
                 <v-list dense>
                     <v-list-item
@@ -53,6 +53,7 @@ export default {
         search: '',
         loading: false,
         results: [],
+        selected: null,
         menu: false,
     }),
     computed: {
@@ -64,14 +65,12 @@ export default {
 
             this.menuItems.forEach(item => {
                 if(item.children){
-                    item.children.forEach(child => {
+                    return item.children.forEach(child => {
                         items.push({
                             text: `${item.label} > ${child.label}`,
                             to: child.to
                         })
                     })
-                    
-                    return
                 }
 
                 items.push({
@@ -85,6 +84,11 @@ export default {
         }
     },
     methods: {
+        setStaticMenuResults(){
+            this.allMenuItems
+                .filter(item => item.text.toLowerCase().includes(this.search.toLowerCase()))
+                .map(item => this.results.push(item))
+        },
         setResults(){
 
             if (!this.search) {
@@ -96,18 +100,18 @@ export default {
             
             this.results = this.allMenuItems.filter(item => item.text.toLowerCase().includes(this.search.toLowerCase()))
 
-            setTimeout(() => {
-                this.loading = false
-            }, 500)
+            setTimeout(() => this.loading = false, 500)
         },
-        select(item){
-            this.menu = false
-            this.search = ''
-            this.$router.push(item.to)
-        }
     },
     watch: {
-        search: 'setResults'
+        search: 'setResults',
+        selected(item){
+            if(item){
+                this.menu = false
+                this.search = ''
+                this.$router.push(item.to)
+            }
+        }
     }
 }
 </script>
