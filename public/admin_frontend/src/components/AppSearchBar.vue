@@ -17,32 +17,11 @@
             return-object
             :items="results"
             :no-data-text="search ? 'Nenhum resultado encontrado' : 'Digite algo para pesquisar'"
-        />            
+            :loading="loading"
+            @focus="load"
+        >
+        </v-autocomplete>
         
-        <v-menu offset-y v-model="menu"> 
-            <v-card :loading="loading">
-                <v-list dense>
-                    <v-list-item
-                        v-if="results.length === 0"
-                    >
-                        <v-list-item-title>
-                            {{ search ? 'Nenhum resultado encontrado' : 'Digite algo para pesquisar' }}
-                        </v-list-item-title>
-                    </v-list-item>
-                    
-                    <v-list-item
-                        v-for="(item, i) in results"
-                        :key="i"
-                        @click="select(item)"
-                    >
-                        <v-list-item-title>
-                            {{ item.text }}
-                        </v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-card>
-    
-        </v-menu>
     </div>
 </template>
 
@@ -52,62 +31,97 @@ export default {
     data: () => ({
         search: '',
         loading: false,
-        results: [],
         selected: null,
-        menu: false,
     }),
     computed: {
-        menuItems(){
-            return this.$store.state.drawerMenuItems
+        currentUser() {
+            return this.$store.state.currentUser
         },
-        allMenuItems(){
+        isAdmin() {
+            return this.currentUser?.admin;
+        },
+        menuItems(){
             const items = []
 
-            this.menuItems.forEach(item => {
-                if(item.children){
-                    return item.children.forEach(child => {
-                        items.push({
-                            text: `${item.label} > ${child.label}`,
-                            to: child.to
-                        })
+            this.$store.state.drawerMenuItems.forEach(item => {
+                if (!item.children) {
+                    return items.push({
+                        text: item.label,
+                        to: item.to
                     })
                 }
 
-                items.push({
-                    text: item.label,
-                    to: item.to
-                })
                 
+                item.children.forEach(child => {
+                    items.push({
+                        text: `${item.label} > ${child.label}`,
+                        to: child.to
+                    })
+                })
             })
 
             return items
+        },
+        formResponses(){
+            const items = []
+
+            this.$store.state.formResponse.items.forEach(item => {
+
+                item.form.categories.forEach(c => {
+                    items.push({
+                        text: `${item.user.name} > ${item.form.name} > ${c.name}`,
+                        to: `/form-responses/${item._id}/categories/${c.id}`
+                    })
+                })
+            })
+
+            return items
+        },
+        results(){
+            if (!this.search) {
+                return []
+            }
+
+            const all = this.menuItems.slice()
+
+            if (this.formResponses.length) {
+                all.push(...this.formResponses)
+            }
+
+            return all
         }
+
     },
     methods: {
-        setStaticMenuResults(){
-            this.allMenuItems
+        async setMenuItemsResults(){
+            this.menuItems
                 .filter(item => item.text.toLowerCase().includes(this.search.toLowerCase()))
                 .map(item => this.results.push(item))
         },
-        setResults(){
+        async load(){
+            this.loading = true
 
-            if (!this.search) {
-                this.results = []
-                return
+            const promises = [
+                this.setMenuItemsResults()
+            ]
+
+            if (this.isAdmin && !this.$store.state.formResponse.items.length) {
+                promises.push(this.$store.dispatch('formResponse/load'))
             }
 
-            this.loading = true
-            
-            this.results = this.allMenuItems.filter(item => item.text.toLowerCase().includes(this.search.toLowerCase()))
+            await Promise.allSettled(promises)
 
             setTimeout(() => this.loading = false, 500)
         },
     },
     watch: {
-        search: 'setResults',
         selected(item){
+            if (item.to === this.$route.path) {
+                this.search = ''
+                return
+            }
+
             if(item){
-                this.menu = false
                 this.search = ''
                 this.$router.push(item.to)
             }

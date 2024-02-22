@@ -28,7 +28,7 @@
             </v-card-text>
         </v-card>
 
-        <dynamic-form ref="dynamicForm" v-model="data" :questions="questions" :answers="answers" />
+        <dynamic-form v-if="!pageLoading" ref="dynamicForm" v-model="data" :questions="questions" :answers="answers" />
 
         <dialog-or-bottom-sheet v-model="errorDialog" max-width="500">
             <v-card>
@@ -109,6 +109,10 @@ export default {
         data: {
             handler: 'setProgress',
             deep: true,
+            immediate: true
+        },
+        '$route.path': {
+            handler: 'load',
             immediate: true
         }
     },
@@ -220,9 +224,6 @@ export default {
             this.goToForm()
         }
     },
-    mounted() {
-        this.load()
-    }
 };
 </script>
 
