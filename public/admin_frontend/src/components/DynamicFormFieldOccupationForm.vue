@@ -148,17 +148,7 @@
                 outlined
                 hide-details
             />
-        </v-col>
-
-        <v-col cols="12">
-            <v-textarea
-                v-model="model.value.aboutTheProfessional"
-                :error="errors.length && !model.value.aboutTheProfessional"
-                label="Sobre o médico"
-                outlined
-                hide-details
-            />
-        </v-col>       
+        </v-col>     
     </v-row>
 </template>
 

@@ -99,7 +99,7 @@
                         }
                     },
                     {
-                        "id": "techinical_responsable",
+                        "id": "techinical_responsible",
                         "type": "text",
                         "name": "Responsável técnico pelo site?",
                         "description": "Precisamos do Nome completeo e do número de registro (CRM, RQE, etc...)",
