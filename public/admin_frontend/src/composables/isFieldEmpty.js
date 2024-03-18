@@ -12,7 +12,7 @@ export function isOccupationFormEmpty(answer) {
     ];
 
     const categories = {
-        'Tratamento': ['treatmentHowItWorks'],
+        /*'Tratamento': ['treatmentHowItWorks'],*/
         'Cirurgia': ['surgeryWhenIsRecommended', 'surgeryInterventionTypes'],
         'Procedimento': ['procedureRecommendations', 'procedureResults'],
         'Enfermidade': ['diseaseSymptoms', 'diseaseDiagnosis', 'diseaseTreatments'],
