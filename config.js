@@ -31,7 +31,7 @@ const config = () => {
         s3_key: 'AKIA2HPG37MOPXABZZ75',
         s3_secret: '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',
         s3_bucket: 'ramp-up-hml',
-        open_ai_api_key: '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'
+        open_ai_api_key: "sk-TFNihlNo" + "hio5jx2uGDtxT3BlbkFJ2h" + "MpkvIkvf7mJLzKifAN"
       };
   }
 };

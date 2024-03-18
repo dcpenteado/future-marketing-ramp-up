@@ -59,7 +59,7 @@
 
         <dialog-or-bottom-sheet
             v-model="dialog"
-            max-width="500"
+            max-width="800"
         >
             <v-form @submit.prevent="submit">
                 <v-card>

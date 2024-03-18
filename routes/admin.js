@@ -449,25 +449,34 @@ router.post("/create-or-update-ramp-up-element", auth, async (req, res) => {
 
 router.post("/teste", async (req, res) => {
   try {
-    let final_text = "";
+    let texts = [];
 
-    const { element_id, form_response_id } = req.body;
+    const { form_response_id } = req.body;
 
-    if (!element_id || !form_response_id) return res.send({ error: true, message: "Faltam itens." });
+    if (!form_response_id) return res.send({ error: true, message: "Faltam itens." });
 
     const form_response = await DBController.getFormResponseById(form_response_id);
-    const ramp_up_element = await DBController.getRampUpElementById(element_id);
+    const ramp_up_elements = await DBController.getRampUpElementsByFormId(form_response.form);
 
-    const renderedText = utils.rampUpElementToText(ramp_up_element.content.content[0].content, form_response.answers);
-    if (renderedText != "") {
-      final_text = await utils.processTextWithChatGPT(renderedText, ramp_up_element.temperature || 0.5, ramp_up_element.max_tokens || 1000);
+    for (let i in ramp_up_elements) {
+      const element = ramp_up_elements[i];
+
+      let renderedText = utils.rampUpElementToText(element.content.content, form_response.answers);
+
+      if (renderedText && element.type == 'prompt') {
+        renderedText = await utils.processTextWithChatGPT(renderedText, element.temperature || 0.5, element.max_tokens || 1000);
+      }
+
+      texts.push({ id: element.id, text: renderedText });
     }
 
-    return res.send({ error: false, message: final_text });
+    return res.send({ error: false, message: texts })
   } catch (err) {
+    console.log(err.message)
     return res.send({ error: true, message: err.message });
   }
 });
+
 
 
 module.exports = function () {

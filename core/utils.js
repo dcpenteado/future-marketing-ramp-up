@@ -4,7 +4,7 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
-    apiKey: "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",
+    apiKey: config.open_ai_api_key,
 });
 
 const uploadToS3 = async (image_buffer, path, filename, content_type = "image/jpeg") => {
@@ -49,11 +49,13 @@ const rampUpElementToText = (ramp_up_content, answers) => {
     let text = "";
 
     ramp_up_content.forEach(c => {
-        if (c.type == "text") text += c.text;
+        c.content?.forEach(c2 => {
+            if (c2.type == "text") text += c2.text;
 
-        if (c.type == "mention" && c.attrs?.id) {
-            text += getLastResponseValue(answers.find(a => a.question_id == c.attrs.id));
-        }
+            if (c2.type == "mention" && c2.attrs?.id) {
+                text += getLastResponseValue(answers.find(a => a.question_id == c2.attrs.id));
+            }
+        })
     })
 
     return text;
