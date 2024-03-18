@@ -155,7 +155,7 @@
                             type="submit"
                             :loading="saving"
                         >
-                            Salve
+                            Salvar
                         </v-btn>
                     </v-card-actions>
                 </v-card>

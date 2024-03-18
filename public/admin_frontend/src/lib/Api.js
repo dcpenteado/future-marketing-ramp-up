@@ -46,7 +46,7 @@ class Api {
       return user;
     }
     else {
-      this.logout();
+      return false;
     }
   };
 
