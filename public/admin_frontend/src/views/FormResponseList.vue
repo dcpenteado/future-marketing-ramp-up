@@ -11,7 +11,7 @@
                         <v-text-field v-model="search" label="Pesquisar" outlined hide-details dense />
                     </v-col>
                 </v-row>
-                
+
 
             </v-card-text>
         </v-card>
@@ -26,21 +26,25 @@
                 <template v-slot:[`item.created`]="{ item }">
                     {{ new Date(item.created).toLocaleString('pt-BR') }}
                 </template>
-                
+
                 <template v-slot:[`item.changed`]="{ item }">
                     {{ new Date(item.changed).toLocaleString('pt-BR') }}
                 </template>
 
+                <template v-slot:[`item.status`]="{ item }">
+                    {{ $store.state.form_response_statuses[item.status] }}
+                </template>
+
                 <template v-slot:[`item.actions`]="{ item }">
-                    <div class="d-flex">                        
+                    <div class="d-flex">
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
                                 <router-link class="d-block" :to="{
-                                    name: 'FormResponseSingle',
-                                    params: {
-                                        formResponseId: item._id
-                                    }
-                                }">
+                            name: 'FormResponseSingle',
+                            params: {
+                                formResponseId: item._id
+                            }
+                        }">
                                     <v-icon medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
                                         mdi-eye
                                     </v-icon>
@@ -130,16 +134,22 @@ export default {
                 value: 'user.email',
             },
             {
-                text: 'Progresso',
+                text: 'Progresso formulário',
                 value: 'progress',
+                sortable: false
+            },
+            {
+                text: 'Status',
+                value: 'status',
             },
             {
                 text: 'Data de criação',
                 value: 'created'
             },
             {
-                text: 'Ultima atualização',
-                value: 'changed'
+                text: 'Última atualização',
+                value: 'changed',
+                sortable: false
             },
             {
                 text: '',
@@ -166,7 +176,7 @@ export default {
         }
     }),
     computed: {
-        items(){
+        items() {
             return this.$store.state.formResponse.items
         },
         filteredItems() {
@@ -265,19 +275,19 @@ export default {
             this.archive.itemId = item._id
             this.archive.dialog = true
         },
-        async archiveItem(){
+        async archiveItem() {
             this.archive.loading = true
-            
+
             const item = this.items.find(i => i._id === this.archive.itemId)
-            
+
             if (!item) {
                 return
             }
-            
+
             item.filed = true
-            
+
             const response = await this.$api.createOrUpdateFormResponse(item)
-            
+
             if (response.error) {
                 this.archive.loading = false
                 return

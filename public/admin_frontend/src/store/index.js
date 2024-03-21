@@ -22,6 +22,17 @@ export default new Vuex.Store({
         currentUser: null,
         breadcrumbs: [],
         drawerMenuItems: [],
+        form_response_statuses: {
+            0: "Novo",
+            1: "Preenchendo formulário",
+            2: "Formulário pronto",
+            3: "Processando",
+            4: "Processado pela IA",
+            5: "Em revisão",
+            6: "Revisado",
+            7: "Aprovado para site",
+            8: "Finalizado"
+        },
         pageTitle: 'Future Marketing',
         pageSubtitle: '',
         pageLoading: false,
