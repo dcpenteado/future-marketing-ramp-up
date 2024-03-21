@@ -72,7 +72,7 @@ const routes = [
     path: "/form-responses",
     component: () => import("../views/FormResponseList.vue"),
     meta: {
-      title: "Respostas",
+      title: "Criação de sites",
       layout: "menu",
     },
   },

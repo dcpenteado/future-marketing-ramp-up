@@ -127,13 +127,13 @@ export default {
                             to: "/administrators",
                         },
                         {
-                            label: "Respostas",
-                            to: "/form-responses",
-                        },
-                        {
-                            label: "Prompts",
+                            label: "Elementos Ramp-Up",
                             to: "/forms",
                         },
+                        {
+                            label: "Criação de sites",
+                            to: "/form-responses",
+                        }
                     ]
                 },
             )

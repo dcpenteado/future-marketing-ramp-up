@@ -5,7 +5,7 @@
             <v-card-text class="d-flex">
                 <v-row dense>
                     <v-col cols="12" sm="4" lg="3">
-                        <v-btn block color="primary" @click="dialog = true">Associar Formulário</v-btn>
+                        <v-btn block color="primary" @click="dialog = true">Novo site</v-btn>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field v-model="search" label="Pesquisar" outlined hide-details dense />
@@ -20,7 +20,10 @@
             <v-data-table :headers="headers" :items="filteredItems">
 
                 <template #[`item.progress`]="{ item }">
-                    {{ getFormResponseProgress(item) }}%
+                    <div class="d-flex flex-column align-center">
+                        <v-progress-linear rounded height="8" :value="getFormResponseProgress(item)"></v-progress-linear>
+                        <span style="font-weight: 600; font-size: 12px">{{ getFormResponseProgress(item) }}%</span>
+                    </div>
                 </template>
 
                 <template v-slot:[`item.created`]="{ item }">
@@ -39,23 +42,29 @@
                     <div class="d-flex">
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <router-link class="d-block" :to="{
-                            name: 'FormResponseSingle',
-                            params: {
-                                formResponseId: item._id
-                            }
-                        }">
-                                    <v-icon medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
-                                        mdi-eye
+                                <router-link class="d-block" :to="{ name: 'FormResponseSingle', params: { formResponseId: item._id } }">
+                                    <v-icon size="30" class="mr-4" color="primary" v-bind="attrs" v-on="on">
+                                        mdi-clipboard-account-outline
                                     </v-icon>
                                 </router-link>
                             </template>
-                            <span>Ver</span>
+                            <span>Ver formulário</span>
                         </v-tooltip>
 
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <v-icon medium class="mr-4" color="error" v-bind="attrs" v-on="on" @click="askToArchiveItem(item)">
+                                <router-link class="d-block" :to="{ name: 'FormResponseSingle', params: { formResponseId: item._id } }">
+                                    <v-icon size="30" medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
+                                        mdi-text-box-outline
+                                    </v-icon>
+                                </router-link>
+                            </template>
+                            <span>Ver textos</span>
+                        </v-tooltip>
+
+                        <v-tooltip left>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-icon size="30" medium class="mr-4" color="error" v-bind="attrs" v-on="on" @click="askToArchiveItem(item)">
                                     mdi-archive
                                 </v-icon>
                             </template>
@@ -71,10 +80,10 @@
                 <v-form @submit.prevent="submit">
 
                     <v-card-title>
-                        Adicionar novo
+                        Criar novo site
                     </v-card-title>
                     <v-card-subtitle>
-                        Associe um formulário a um cliente
+                        Associe um formulário a um cliente para iniciar a criação do site
                     </v-card-subtitle>
                     <v-card-text>
                         <v-row>
@@ -83,7 +92,14 @@
                             </v-col>
 
                             <v-col cols="12">
-                                <v-autocomplete v-model="data.client" label="Cliente" outlined hide-details item-text="name" item-value="_id" :items="clients.items" :loading="clients.loading" />
+                                <v-autocomplete v-model="data.client" label="Cliente" :item-text="getCustomerField" outlined hide-details item-value="_id" :items="clients.items" :loading="clients.loading">
+                                    <template #item="{ item }">
+                                        <v-list-item-content>
+                                            <v-list-item-title v-html="item.name" />
+                                            <v-list-item-subtitle v-html="item.email" />
+                                        </v-list-item-content>
+                                    </template>
+                                </v-autocomplete>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -103,7 +119,7 @@
                     Arquivar
                 </v-card-title>
                 <v-card-text>
-                    Deseja realmente arquivar este formulário?
+                    Deseja realmente arquivar esse site?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -152,7 +168,7 @@ export default {
                 sortable: false
             },
             {
-                text: '',
+                text: 'Ações',
                 value: 'actions',
             },
         ],
@@ -274,6 +290,10 @@ export default {
         askToArchiveItem(item) {
             this.archive.itemId = item._id
             this.archive.dialog = true
+        },
+        getCustomerField(item) {
+            if(!item) return '';
+            return `${item.name} ${item.email}`;
         },
         async archiveItem() {
             this.archive.loading = true
