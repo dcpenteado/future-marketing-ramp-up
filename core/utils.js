@@ -58,7 +58,7 @@ const rampUpElementToText = (ramp_up_content, answers) => {
         })
     })
 
-    return text;
+    return (text || "").trim();
 }
 
 const processTextWithChatGPT = async (text, temperature, max_tokens) => {
