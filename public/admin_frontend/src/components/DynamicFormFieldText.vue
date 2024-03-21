@@ -1,6 +1,6 @@
 <template>
     <v-text-field
-        v-model="model.value"
+        v-model="text"
         outlined
         hide-details="auto"
         :placeholder="placeholder"
@@ -46,19 +46,27 @@ export default {
         },
         model: {
             get() {
-                if (this.mask) {
-                    return this.mask.masked(this.value || '')
-                }
-
                 return this.value;
             },
             set(value) {
+                this.$emit('input', value);
+            }
+        },
+        text: {
+            get() {
                 if (this.mask) {
-                    this.$emit('input', this.mask.unmasked(value))
+                    return this.mask.masked(this.model.value || '')
+                }
+
+                return this.model.value;
+            },
+            set(value) {
+                if (this.mask) {
+                    this.$set(this.model, 'value', this.mask.unmasked(value));
                     return
                 }
 
-                this.$emit('input', value);
+                this.$set(this.model, 'value', value);
             }
         },
         placeholder() {
