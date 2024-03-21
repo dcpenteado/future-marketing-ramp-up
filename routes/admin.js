@@ -296,6 +296,26 @@ router.post("/create-or-update-form-response", auth, async (req, res) => {
   }
 });
 
+router.post("/set-form-response-completed", auth, async (req, res) => {
+  try {
+    //CHECK PERMISSION
+    const req_user = req.req_user;
+
+    const { form_response_id } = req.body;
+
+    if (!form_response_id) return res.send({ error: true, message: "Campos insuficientes." });
+
+    let form_response = await DBController.getFormResponseById(form_response_id);
+    if (form_response.status < 2) form_response.status = 2;
+    await DBController.createOrUpdateFormResponse(form_response, req_user._id);
+
+    return res.send({ error: false, message: 'ok' });
+  } catch (err) {
+    return res.send({ error: true, message: err.message });
+  }
+});
+
+
 //USADO PARA INSERIR NOVAS RESPOSTAS
 router.post("/create-form-response-answers", auth, async (req, res) => {
   try {

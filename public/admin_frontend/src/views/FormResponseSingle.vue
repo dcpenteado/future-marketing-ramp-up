@@ -69,7 +69,8 @@ export default {
         form: null,
         categories: [],
         answers: [],
-        fullProgress: 0
+        fullProgress: 0,
+        status: 0
     }),
     computed: {
         pageLoading: {
@@ -91,8 +92,8 @@ export default {
         isAdmin() {
             return this.currentUser?.admin;
         },
-        
-       
+
+
     },
     methods: {
         setPageData() {
@@ -128,12 +129,17 @@ export default {
                 }
             })
         },
-        setFullProgress() {
+        async setFullProgress() {
             if (!this.form) return 0
 
             const questions = this.form.categories.reduce((acc, c) => acc.concat(c.questions) || [], [])
 
             this.fullProgress = getFormProgress(questions, this.answers)
+
+            if (this.fullProgress == 100 && this.status < 2) {
+                await Api.setFormResponseCompleted();
+                await this.load();
+            }
         },
         async load() {
             this.pageLoading = true;
@@ -146,10 +152,11 @@ export default {
                 return
             }
 
-            const { form, answers } = response.message;
+            const { form, answers, status } = response.message;
 
             this.form = form;
             this.answers = answers;
+            this.status = status;
 
             this.setPageData();
             this.setCategories();
