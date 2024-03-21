@@ -55,7 +55,9 @@ const FormResponseSchema = new Schema({
     required: true,
     index: true
   },
+  status: { type: Number, default: 0 }, //0: novo | 1: preenchendo formulário | 2: formulário pronto | 3: processando | 4: processado pela IA | 5: em revisão | 6: revisado | 7: aprovado para site | 8: finalizado
   answers: { type: Array, default: [] },
+  ramp_up_texts: { type: Array, default: [] },
   created: { type: Date, default: Date.now },
   changed: { type: Date, default: Date.now },
   changes: { type: Array, default: [] },
@@ -70,7 +72,7 @@ const RampUpElementSchema = new Schema({
   },
   content: { type: Object, required: true },
   type: {
-    type: String, 
+    type: String,
     required: true,
     enum: {
       values: ['text', 'prompt'],
