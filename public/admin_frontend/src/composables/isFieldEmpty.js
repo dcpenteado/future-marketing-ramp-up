@@ -7,8 +7,7 @@ export function isOccupationFormEmpty(answer) {
         'category',
         'name',
         'introduction',
-        'howTheAttendanceIsDone',
-        'aboutTheProfessional'
+        'howTheAttendanceIsDone'
     ];
 
     const categories = {
