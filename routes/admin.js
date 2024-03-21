@@ -296,17 +296,17 @@ router.post("/create-or-update-form-response", auth, async (req, res) => {
   }
 });
 
-router.post("/set-form-response-completed", auth, async (req, res) => {
+router.post("/set-form-response-status", auth, async (req, res) => {
   try {
     //CHECK PERMISSION
     const req_user = req.req_user;
 
-    const { form_response_id } = req.body;
+    const { form_response_id, status } = req.body;
 
     if (!form_response_id) return res.send({ error: true, message: "Campos insuficientes." });
 
     let form_response = await DBController.getFormResponseById(form_response_id);
-    if (form_response.status < 2) form_response.status = 2;
+    form_response.status = status;
     await DBController.createOrUpdateFormResponse(form_response, req_user._id);
 
     return res.send({ error: false, message: 'ok' });

@@ -120,8 +120,8 @@ class Api {
     return this.authPost("/create-or-update-form-response", { object: form_response }, {})
   }
 
-  setFormResponseCompleted = async (form_response_id) => {
-    return this.authPost("/set-form-response-completed", { form_response_id }, {});
+  setFormResponseStatus = async (form_response_id, status) => {
+    return this.authPost("/set-form-response-status", { form_response_id, status }, {});
   }
 
   checkErrorsWithStatusCode200 = (data) => {

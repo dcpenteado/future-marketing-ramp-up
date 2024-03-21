@@ -70,7 +70,8 @@ export default {
         categories: [],
         answers: [],
         fullProgress: 0,
-        status: 0
+        status: 0,
+        form_response_id: null
     }),
     computed: {
         pageLoading: {
@@ -136,8 +137,15 @@ export default {
 
             this.fullProgress = getFormProgress(questions, this.answers)
 
+            //STATUS NOVO, INICIOU O PREENCHIMENTO, MUDA STATUS PARA PREENCHENDO FORMULÁRIO (1) 
+            if (this.fullProgress > 0 && this.status < 1) {
+                await Api.setFormResponseStatus(this.form_response_id, 1);
+                await this.load();
+            }
+
+            //STATUS PREENCHENDO FORMULÁRIO, TERMINOU O PREENCHIMENTO, MUDA STATUS PARA FORMULÁRIO PRONTO (2) 
             if (this.fullProgress == 100 && this.status < 2) {
-                await Api.setFormResponseCompleted();
+                await Api.setFormResponseStatus(this.form_response_id, 2);
                 await this.load();
             }
         },
@@ -152,11 +160,12 @@ export default {
                 return
             }
 
-            const { form, answers, status } = response.message;
+            const { form, answers, status, _id } = response.message;
 
             this.form = form;
             this.answers = answers;
             this.status = status;
+            this.form_response_id = _id;
 
             this.setPageData();
             this.setCategories();
