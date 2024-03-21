@@ -73,26 +73,23 @@
                             disable-if-operations
                         >
 
-                            <template #header>
-                                <div class="pa-4">
-                                    <v-row dense align="center">
-                                        <v-col cols="12" sm="6">                                            
-                                            <v-card-title class="pa-0 ma-0">
-                                                {{ a.title }} - {{ a.origin }}
-                                            </v-card-title>
-                                            <v-card-subtitle class="pa-0 ma-0">
-                                                {{ a.date }}
-                                            </v-card-subtitle>                                            
-                                        </v-col>
-                                        
-                                        <v-col cols="12" sm="6">
-                                            <v-btn block color="primary" @click="restoreVersion(a.value)">
-                                                Restaurar
-                                            </v-btn>
-                                        </v-col>    
-                                    </v-row>
-                                </div>
-
+                            <template #header>                                
+                                <v-row dense align="center">
+                                    <v-col cols="12" sm="6">                                            
+                                        <v-card-title class="pa-0 ma-0">
+                                            {{ a.title }} - {{ a.origin }}
+                                        </v-card-title>
+                                        <v-card-subtitle class="pa-0 ma-0">
+                                            {{ a.date }}
+                                        </v-card-subtitle>                                            
+                                    </v-col>
+                                    
+                                    <v-col cols="12" sm="6">
+                                        <v-btn block color="primary" @click="restoreVersion(a.value)">
+                                            Restaurar
+                                        </v-btn>
+                                    </v-col>    
+                                </v-row>
                             </template>
                     
                         </DynamicFormField>

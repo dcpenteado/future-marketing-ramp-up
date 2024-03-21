@@ -1,12 +1,12 @@
 <template>
-    <v-card
+    <field-card
         v-show="show"
-        :style="{
-            'border-color': errors.length ? 'red' : undefined,            
-        }"
+        :disabled="!isEditable"
+        :error="errors.length"
     >
-    <slot name="header">
-        <div class="pa-4">
+
+    <template #header>
+        <slot name="header">
             <v-row align="start">
                 <v-col cols="9">
                     <v-card-title
@@ -29,122 +29,110 @@
                     
                 </v-col>
             </v-row>
-        </div>
-    </slot>
+        </slot>
 
-    <v-divider />
-        
-        <v-card-text
-            :style="{
-                'pointer-events': !isEditable ? 'none' : 'auto',
-                'opacity': !isEditable ? '0.5' : '1'
-            }"
-        >
+    </template>        
 
-            <DynamicFormFieldAutocomplete
-                v-if="question.type === 'autocomplete'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
+    <DynamicFormFieldAutocomplete
+        v-if="question.type === 'autocomplete'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
 
-            <DynamicFormFieldCheckbox
-                v-else-if="question.type === 'checkbox'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
+    <DynamicFormFieldCheckbox
+        v-else-if="question.type === 'checkbox'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
 
-            <DynamicFormFieldImagePicker
-                v-else-if="question.type === 'image_picker'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
+    <DynamicFormFieldImagePicker
+        v-else-if="question.type === 'image_picker'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+        :disabled="disabled"
+    /> 
+
+    <DynamicFormFieldImageSelect
+        v-else-if="question.type === 'image_select'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+        :disabled="disabled"
+    />
+
+    <DynamicFormFieldListItem
+        v-else-if="question.type === 'list_item'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+        :disabled="disabled"
+    />
+
+    <DynamicFormFieldOccupationForm
+        v-else-if="question.type === 'occupation_form'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+
+    <DynamicFormFieldRadio
+        v-else-if="question.type === 'radio'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+
+    <DynamicFormFieldSelect
+        v-else-if="question.type === 'select'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+
+    <DynamicFormFieldTestimonials
+        v-else-if="question.type === 'testimonials'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+        :disabled="disabled"
+    />
+
+    <DynamicFormFieldText
+        v-else-if="question.type === 'text'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+
+    <DynamicFormFieldTextarea
+        v-else-if="question.type === 'textarea'"
+        v-model="model"
+        :question="question"
+        :errors="errors"
+    />
+
+    <v-alert
+        v-else
+        outlined
+        type="error"
+    >
+        Tipo de campo inválido {{ question.type }}
+    </v-alert>
+
+        <template v-if="allowMarkAsEmpty" #footer>
+            <v-checkbox
+                v-model="model.markedAsEmpty"
+                label="Marcar como vazio"
                 :disabled="disabled"
-            /> 
-
-            <DynamicFormFieldImageSelect
-                v-else-if="question.type === 'image_select'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-                :disabled="disabled"
+                class="mt-0"
+                hide-details
             />
-
-            <DynamicFormFieldListItem
-                v-else-if="question.type === 'list_item'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-                :disabled="disabled"
-            />
-
-            <DynamicFormFieldOccupationForm
-                v-else-if="question.type === 'occupation_form'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldRadio
-                v-else-if="question.type === 'radio'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldSelect
-                v-else-if="question.type === 'select'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldTestimonials
-                v-else-if="question.type === 'testimonials'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-                :disabled="disabled"
-            />
-
-            <DynamicFormFieldText
-                v-else-if="question.type === 'text'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <DynamicFormFieldTextarea
-                v-else-if="question.type === 'textarea'"
-                v-model="model"
-                :question="question"
-                :errors="errors"
-            />
-
-            <v-alert
-                v-else
-                outlined
-                type="error"
-            >
-                Tipo de campo inválido {{ question.type }}
-            </v-alert>
-            
-
-        </v-card-text>
-
-        <template v-if="allowMarkAsEmpty">
-
-            <v-divider />
-
-            <v-card-actions >
-    
-                <v-checkbox v-model="model.markedAsEmpty" label="Marcar como vazio" :disabled="disabled" />
-    
-            </v-card-actions>
         </template>
 
-    </v-card>
+    </field-card>
 </template>
 
 <script>
@@ -238,7 +226,7 @@ export default {
     },
     methods: {
         validate(){
-            if (this.model.markedAsEmpty || !this.show) {
+            if (this.model.markedAsEmpty || !this.show || !this.isEditable) {
                 this.errors = [];
                 
                 return this.errors
