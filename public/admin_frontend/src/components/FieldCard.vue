@@ -1,16 +1,32 @@
 <template>
-    <v-card
-        v-show="show"
-        :style="{
-            'border-color': error ? 'red' : undefined,            
-        }"
-    >
-
-    <template v-if="$slots.header">
-        <div class="pa-4">
-            <slot name="header"></slot>            
-        </div>
-    </template>
+    <v-card>
+        
+            <div class="pa-4">
+                <slot name="header">
+                    <v-row align="start">
+                        <v-col cols="9">
+                            <v-card-title
+                                class="break-words pa-0 ma-0"
+                                :class="error ? 'error--text' : ''"
+                            >
+                                {{ title }}
+                            </v-card-title>
+                    
+                            <v-card-subtitle
+                                class="break-words pa-0 ma-0"
+                                :class="error ? 'error--text' : ''"
+                            >
+                                {{ description }}
+                            </v-card-subtitle>
+                        </v-col>
+        
+                        <v-col cols="3">
+                                <slot name="header-actions" />                
+                            
+                        </v-col>
+                </v-row>
+                </slot>            
+            </div>
 
     <v-divider />
         

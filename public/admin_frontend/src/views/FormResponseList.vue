@@ -53,7 +53,7 @@
 
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <router-link class="d-block" :to="{ name: 'FormResponseSingle', params: { formResponseId: item._id } }">
+                                <router-link class="d-block" :to="{ name: 'FormResponseTextList', params: { formResponseId: item._id } }">
                                     <v-icon size="30" medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
                                         mdi-text-box-outline
                                     </v-icon>

@@ -95,6 +95,15 @@ const routes = [
     },
   },
   {
+    path: "/form-responses/:formResponseId/texts",
+    name: "FormResponseTextList",
+    component: () => import("../views/FormResponseTextList.vue"),
+    meta: {
+      layout: "menu",
+      title: "Formulário",
+    },
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: () => import("../views/404.vue"),
