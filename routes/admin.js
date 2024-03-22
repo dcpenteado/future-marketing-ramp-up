@@ -467,6 +467,63 @@ router.post("/create-or-update-ramp-up-element", auth, async (req, res) => {
   }
 });
 
+// create new versions texts
+router.post("/create-form-response-texts", auth, async (req, res) => {
+  try {
+    const req_user = req.req_user;
+
+    const { object } = req.body;
+ 
+    if (!object) return res.send({ error: true, message: "Campos insuficientes." });
+ 
+    if (!object._id) {
+      return res.send({ error: true, message: "ID do formulário requerido." });
+    }
+
+    if (!object.ramp_up_texts || !object.ramp_up_texts.length) {
+      return res.send({ error: true, message: "É necessário enviar pelo menos um texto." });
+    }
+ 
+    const formResponse = await DBController.getFormResponseById(object._id);
+ 
+    if (!formResponse) {
+      return res.send({ error: true, message: "Formulário de respostas não encontrado." });
+    }
+ 
+     // only update if user is the same or if admin
+    if (!req_user.admin && formResponse.user._id.toString() != req_user._id.toString()) {
+      return res.send({ error: true, message: "Permissões insuficientes." });
+    }
+
+    if (formResponse.status < 3) {
+      return res.send({ error: true, message: "Status do formulário não permite a edição de textos." });
+    }
+
+    formResponse.ramp_up_texts.forEach((text, index) => {
+      const lastVersion = text.versions.at(-1)
+      const objectText = object.ramp_up_texts.find(t => t.id == text.id);
+
+      // if the value is not changed do not create a new version
+      if (!objectText || lastVersion.value == objectText.value) return;
+
+      // create a new version
+      text.versions.push({
+        value: objectText.value,
+        origin: req_user.admin ? 'editor' : 'user',
+        createdBy: req_user._id,
+        createdAt: new Date()
+      })
+    });
+
+    const resp = await DBController.createOrUpdateFormResponse(formResponse, req_user._id);
+
+    return res.send({ error: false, message: resp });
+  }
+  catch (err) {
+    return res.send({ error: true, message: err.message });  
+  }
+})
+
 router.post("/teste", async (req, res) => {
   try {
     let texts = [];

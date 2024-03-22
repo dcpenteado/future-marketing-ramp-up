@@ -179,15 +179,11 @@ export default {
                 }
             })
         },
-        async load() {
-            this.pageLoading = true;
-
+        async setFormResponse(){
             const response = await this.$api.getFormResponseById(this.$route.params.formResponseId);
 
             if (response.error) {
-                this.pageLoading = false;
-                this.$router.push('/404');
-                return
+                return response
             }
 
             this.formResponse = response.message;
@@ -196,6 +192,19 @@ export default {
 
             this.setTexts();
             this.setPageData();
+
+            return response;
+        },
+        async load() {
+            this.pageLoading = true;
+
+            const response = await this.setFormResponse();
+
+            if (response.error) {
+                this.pageLoading = false;
+                this.$router.push('/404');
+                return
+            }
 
             setTimeout(() => {
                 this.pageLoading = false;
@@ -222,7 +231,16 @@ export default {
         async save(){
             this.saving = true;
 
-            this.$toast('warning', 'Not implemented')
+            const response = await this.$api.createFormResponseTexts(this.formResponseId, this.texts);
+
+            if (response.error) {
+                this.saving = false;
+                return;
+            }
+
+            await this.setFormResponse();
+
+            this.$toast('success', 'Salvo com sucesso');
 
             setTimeout(() => {
                 this.saving = false;

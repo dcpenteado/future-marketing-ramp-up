@@ -142,6 +142,15 @@ class Api {
     }, {});
   }
 
+  createFormResponseTexts = async (form_response_id, texts) => {
+    return this.authPost("/create-form-response-texts", {
+      object: {
+        _id: form_response_id,
+        ramp_up_texts: texts
+      }
+    }, {});
+  }
+
   getRampUpElementsByFormId = async (form_id) => {
     return this.authPost("/get-ramp-up-elements-by-form-id", { form_id }, {});
   }
