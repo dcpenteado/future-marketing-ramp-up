@@ -2,7 +2,7 @@
     <field-card
         v-show="show"
         :disabled="!isEditable"
-        :error="errors.length"
+        :error="!!errors.length"
     >
 
     <template #header>

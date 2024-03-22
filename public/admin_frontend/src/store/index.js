@@ -85,4 +85,9 @@ export default new Vuex.Store({
             })
         }
     },
+    getters: {
+        isAdmin(state) {
+            return !!state.currentUser?.admin
+        }
+    }
 })
