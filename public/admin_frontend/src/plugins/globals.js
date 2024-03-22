@@ -9,7 +9,7 @@ Vue.prototype.$toast = emitToastr;
 Vue.prototype.$api = Api;
 
 Vue.prototype.$date = {
-    format: (date, pattern = "yyyy-MM-dd HH:mm") => {
+    format: (date, pattern = "dd/MM/yyyy HH:mm") => {
         return format(date, pattern);
     }
 }
