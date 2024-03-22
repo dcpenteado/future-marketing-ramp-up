@@ -86,7 +86,12 @@
                                     </v-col>
                                     
                                     <v-col cols="12" sm="6">
-                                        <v-btn block color="primary" @click="restoreVersion(a.value)">
+                                        <v-btn
+                                            block
+                                            color="primary"
+                                            :disabled="disabled"
+                                            @click="restoreVersion(a.value)"
+                                        >
                                             Restaurar
                                         </v-btn>
                                     </v-col>    
