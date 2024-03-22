@@ -55,7 +55,9 @@
   
                   <div class="mercury--text text-left text-none d-none d-lg-block">
                     <div class="font-ubuntu font-weight-bold text-subtitle-2" >{{ currentUser?.name }}</div>
-                    <div class="font-ubuntu text-body-2" >Cargo</div>
+                    <div class="font-ubuntu text-body-2" >
+                      {{ isAdmin ? 'Administrador' : 'Usuário' }}
+                    </div>
                   </div>
 
                 </div>
@@ -115,6 +117,9 @@ export default {
     },
     currentUser() {
       return this.$store.state.currentUser
+    },
+    isAdmin() {
+      return this.$store.getters.isAdmin
     },
   },
   methods: {
