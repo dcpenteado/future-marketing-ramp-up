@@ -64,7 +64,7 @@
 
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <v-icon size="30" medium class="mr-4" color="error" v-bind="attrs" v-on="on" @click="askToArchiveItem(item)">
+                                <v-icon size="30" medium class="mr-4" color="error" v-bind="attrs" v-on="on" @click="archiveItem(item)">
                                     mdi-archive
                                 </v-icon>
                             </template>
@@ -110,22 +110,6 @@
                         <v-btn color="primary" :loading="saving" type="submit">Associar</v-btn>
                     </v-card-actions>
                 </v-form>
-            </v-card>
-        </dialog-or-bottom-sheet>
-
-        <dialog-or-bottom-sheet v-model="archive.dialog" max-width="500">
-            <v-card>
-                <v-card-title>
-                    Arquivar
-                </v-card-title>
-                <v-card-text>
-                    Deseja realmente arquivar esse site?
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" :disabled="archive.loading" @click="archive.dialog = false">Cancelar</v-btn>
-                    <v-btn color="primary" :loading="archive.loading" @click="archiveItem(archive.itemId)">Arquivar</v-btn>
-                </v-card-actions>
             </v-card>
         </dialog-or-bottom-sheet>
 
@@ -184,11 +168,6 @@ export default {
         data: {
             form: null,
             client: null
-        },
-        archive: {
-            loading: false,
-            dialog: false,
-            itemId: null
         }
     }),
     computed: {
@@ -287,40 +266,31 @@ export default {
 
             return getFormProgress(questions, answers)
         },
-        askToArchiveItem(item) {
-            this.archive.itemId = item._id
-            this.archive.dialog = true
+        async archiveItem(item) {
+            const value = await this.$store.dispatch('confirmDialog', {
+                title: 'Arquivar',
+                message: 'Deseja realmente arquivar esse site?'
+            })
+
+            if (!value) return
+
+            const response = await this.$api.createOrUpdateFormResponse({
+                ...item,
+                filed: true
+            })
+
+            if (response.error) {
+                return
+            }
+
+            this.$toast('success', 'Formulário arquivado com sucesso')
+
+            await this.load()
         },
         getCustomerField(item) {
             if(!item) return '';
             return `${item.name} ${item.email}`;
         },
-        async archiveItem() {
-            this.archive.loading = true
-
-            const item = this.items.find(i => i._id === this.archive.itemId)
-
-            if (!item) {
-                return
-            }
-
-            item.filed = true
-
-            const response = await this.$api.createOrUpdateFormResponse(item)
-
-            if (response.error) {
-                this.archive.loading = false
-                return
-            }
-
-            this.$toast('success', 'Formulário arquivado com sucesso')
-            this.load()
-
-            setTimeout(() => {
-                this.archive.loading = false
-                this.archive.dialog = false
-            }, 500)
-        }
     },
     watch: {
         dialog(value) {
@@ -332,11 +302,6 @@ export default {
                 this.setForms()
             }
         },
-        'archive.dialog'(value) {
-            if (!value) {
-                this.archive.itemId = null
-            }
-        }
     },
     mounted() {
         this.load()
