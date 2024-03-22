@@ -2,6 +2,7 @@
     <field-card
         v-show="show"
         :disabled="!isEditable"
+        :type="question.type"
         :error="!!errors.length"
     >
 
@@ -104,6 +105,7 @@
         v-else-if="question.type === 'text'"
         v-model="model"
         :question="question"
+        :readonly="!isEditable"
         :errors="errors"
     />
 
@@ -111,6 +113,7 @@
         v-else-if="question.type === 'textarea'"
         v-model="model"
         :question="question"
+        :readonly="!isEditable"
         :errors="errors"
     />
 

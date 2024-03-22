@@ -22,7 +22,6 @@
         
                         <v-col cols="3">
                                 <slot name="header-actions" />                
-                            
                         </v-col>
                 </v-row>
                 </slot>            
@@ -32,8 +31,8 @@
         
         <v-card-text
             :style="{
-                'pointer-events': disabled ? 'none' : 'auto',
-                'opacity': disabled ? '0.5' : '1'
+                'pointer-events': disabled && type != 'text' && type != 'textarea' ? 'none' : 'auto',
+                'opacity': disabled ? '0.6' : '1'
             }"
         >
             <slot />            
@@ -71,6 +70,10 @@ export default {
         disabled: {
             type: Boolean,
             default: false
+        },
+        type: {
+            type: String,
+            default: ''
         },
     }
 }

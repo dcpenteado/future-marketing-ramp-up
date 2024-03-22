@@ -7,6 +7,7 @@
         :error="!!errors.length"
         :error-messages="errors"
         :title="question.name"
+        :readonly="readonly"
         :maxlength="maxlength"
         :prefix="question.config?.prefix"
         v-bind="question.config?.attrs"
@@ -29,6 +30,10 @@ export default {
         question: {
             type: Object,
             required: true
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         },
         errors: {
             type: Array,

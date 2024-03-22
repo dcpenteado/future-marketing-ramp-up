@@ -86,8 +86,9 @@
                     
                     <v-col cols="12" v-for="(v, i) in selectedVersion.versions" :key="i">
                         <field-card
-                            disabled
                             :title="`Versão ${i + 1} (${v.origin})`"
+                            disabled
+                            type="textarea"
                             :description="$date.format(v.createdAt)"
                         >
 
@@ -110,7 +111,7 @@
                                 </v-row>
                             </template>
 
-                            <v-textarea outlined :value="v.value" />                    
+                            <v-textarea readonly outlined :value="v.value" />                    
                         </field-card>
                     </v-col>
                 </v-row>

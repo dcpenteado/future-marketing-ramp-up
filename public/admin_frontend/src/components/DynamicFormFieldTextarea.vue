@@ -6,6 +6,7 @@
         :error="!!errors.length"
         :error-messages="errors"
         :placeholder="placeholder"
+        :readonly="readonly"
         :rows="rows"
     />
 </template>
@@ -23,6 +24,10 @@ export default {
         question: {
             type: Object,
             required: true
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         },
         errors: {
             type: Array,
