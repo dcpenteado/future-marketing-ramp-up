@@ -18,7 +18,7 @@
             </v-col>
 
             <v-col cols="12" v-for="(text, index) in texts" :key="index">
-                <field-card :title="text.description">
+                <field-card :title="`${text.id}: ${text.description}`">
                     <template #header-actions>
                         <div class="d-flex">
                             <v-spacer ></v-spacer>
