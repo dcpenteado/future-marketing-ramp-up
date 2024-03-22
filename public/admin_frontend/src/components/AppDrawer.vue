@@ -16,7 +16,7 @@
                         <v-list-item-title>{{ item.label }}</v-list-item-title>
                     </template>
 
-                    <v-list-item v-for="(child, ci) in item.children" :key="ci" :to="child.to" class="moon--text">
+                    <v-list-item v-for="(child, ci) in item.children" :key="ci" :to="child.to" class="moon--text" exact>
                         <v-list-item-icon>
                             <span class="mx-auto">
                                 -
@@ -29,7 +29,7 @@
                     </v-list-item>
                 </v-list-group>
 
-                <v-list-item v-else :key="i" :to="item.to">
+                <v-list-item v-else :key="i" :to="item.to" exact>
                     <v-list-item-icon>
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-item-icon>
@@ -86,10 +86,6 @@ export default {
                 icon: "mdi-monitor-dashboard",
                 children: [
                     {
-                        label: "Meus textos",
-                        to: "/#my-texts",
-                    },
-                    {
                         label: "Minhas aprovações",
                         to: "/#my-approvals",
                     },
@@ -99,15 +95,21 @@ export default {
             const response = await this.$api.getFormResponseByUserId(this.currentUser._id)
 
             if (!response.error) {
-                site.children.unshift({
-                    label: "Formulário",
-                    to: {
-                        name: 'FormResponseSingle',
-                        params: {
-                            formResponseId: response.message._id
-                        }
+                site.children.unshift(
+                    {
+                        label: "Meus textos",
+                        to: `/form-responses/${response.message._id}/texts`,
                     },
-                })
+                    {
+                        label: "Formulário",
+                        to: {
+                            name: 'FormResponseSingle',
+                            params: {
+                                formResponseId: response.message._id
+                            }
+                        },
+                    },
+                )
             }
 
             this.menuItems.push(site)

@@ -5,8 +5,13 @@
                 <v-card>
                     <v-card-text class="d-flex align-center">
                         
-                        <div>
-                            {{ form?.name }}
+                        <div v-if="formResponse">
+                            Status: {{ $store.state.form_response_statuses[formResponse.status] }}
+
+                            <div v-if="!canEdit" class="mt-2">
+                                <v-icon small class="mr-2">mdi-lock</v-icon>
+                                <span>Você não pode editar os textos no momento</span>
+                            </div>
                         </div>
 
                         <v-spacer></v-spacer>
@@ -18,7 +23,10 @@
             </v-col>
 
             <v-col cols="12" v-for="(text, index) in texts" :key="index">
-                <field-card :title="`${text.id}: ${text.description}`">
+                <field-card
+                    :title="`${text.id}: ${text.description}`"
+                    :disabled="!canEdit"
+                >
                     <template #header-actions>
                         <div class="d-flex">
                             <v-spacer ></v-spacer>
@@ -43,6 +51,7 @@
                     <v-textarea
                         outlined
                         v-model="text.value"
+                        :disabled="readonly"
                     />
             
                 </field-card>
@@ -150,6 +159,21 @@ export default {
         },
         isAdmin(){
             return this.$store.getters.isAdmin;
+        },
+        formResponseEnum(){
+            return this.$store.state.formResponseEnum
+        },
+        canEdit(){
+            if (!this.formResponse) {
+                return false;
+            }
+
+            const allowedStatus = [
+                this.formResponseEnum.AI_PROCESSED,
+                this.formResponseEnum.REVIEW,
+            ]
+
+            return allowedStatus.includes(this.formResponse.status);
         }
     },
     methods: {
@@ -176,7 +200,7 @@ export default {
                     id: t.id,
                     description: t.description,
                     value: lastVersion?.value,
-                    versions: t.versions,
+                    versions: t.versions.reverse(),
                 }
             })
         },
@@ -249,10 +273,14 @@ export default {
         }
     },
     watch: {
-        drawer(){
-            if (!this.drawer) {
-                this.selectedIndex = null;
+        drawer(value){
+            if (value) {
+                document.querySelector('html').style.overflow = 'hidden';
+                return
             }
+
+            this.selectedIndex = null;
+            document.querySelector('html').style.overflow = 'auto';
         },
         formResponseId: {
             handler: 'load',

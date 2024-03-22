@@ -208,6 +208,7 @@ export default {
             {
                 text: 'Ações',
                 value: 'actions',
+                sortable: false,
             },
         ],
         clients: {
