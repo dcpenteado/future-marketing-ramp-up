@@ -10,11 +10,11 @@
                     </v-col>
 
                     <v-col cols="12" sm="6" class="d-flex justify-sm-end">
-                        <v-btn color="error" class="mr-2" :disabled="saving" @click="goToForm">
+                        <v-btn color="error" class="mr-2" :disabled="saving || !canEdit" @click="goToForm">
                             Cancelar
                         </v-btn>
     
-                        <v-btn color="primary" type="submit" :loading="saving">
+                        <v-btn color="primary" type="submit" :loading="saving" :disabled="!canEdit">
                             Salvar
                         </v-btn>
                     </v-col>
@@ -28,7 +28,14 @@
             </v-card-text>
         </v-card>
 
-        <dynamic-form v-if="!pageLoading" ref="dynamicForm" v-model="data" :questions="questions" :answers="answers" />
+        <dynamic-form
+            v-if="!pageLoading"
+            ref="dynamicForm"
+            v-model="data"
+            :questions="questions"
+            :answers="answers"
+            :disabled="!canEdit"
+        />
 
         <dialog-or-bottom-sheet v-model="errorDialog" max-width="500">
             <v-card>
@@ -99,6 +106,11 @@ export default {
         form() {
             return this.formResponse?.form || null
         },
+        canEdit(){
+            if (!this.formResponse) return false;
+
+            return this.formResponse.status <= this.$store.state.formResponseEnum.FILLING_DONE
+        }
     },
     watch: {
         category(value) {

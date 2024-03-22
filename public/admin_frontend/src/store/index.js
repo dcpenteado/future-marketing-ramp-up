@@ -22,6 +22,17 @@ export default new Vuex.Store({
         currentUser: null,
         breadcrumbs: [],
         drawerMenuItems: [],
+        formResponseEnum: {
+            NEW: 0,
+            FILLING: 1,
+            FILLING_DONE: 2,
+            AI_PROCESSING: 3,
+            AI_PROCESSED: 4,
+            REVIEW: 5,
+            REVIEWED: 6,
+            APPROVED: 7,
+            FINISHED: 8
+        },
         form_response_statuses: {
             0: "Novo",
             1: "Preenchendo formulário",

@@ -27,49 +27,64 @@
                 </template>
 
                 <template v-slot:[`item.created`]="{ item }">
-                    {{ new Date(item.created).toLocaleString('pt-BR') }}
+                    {{ $date.format(item.created) }}
                 </template>
 
                 <template v-slot:[`item.changed`]="{ item }">
-                    {{ new Date(item.changed).toLocaleString('pt-BR') }}
+                    {{ $date.format(item.changed) }}
                 </template>
 
                 <template v-slot:[`item.status`]="{ item }">
-                    {{ $store.state.form_response_statuses[item.status] }}
+                    <app-form-status-chip :status="item.status" small />
                 </template>
 
                 <template v-slot:[`item.actions`]="{ item }">
                     <div class="d-flex">
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
-                                <router-link class="d-block" :to="{ name: 'FormResponseSingle', params: { formResponseId: item._id } }">
-                                    <v-icon size="30" class="mr-4" color="primary" v-bind="attrs" v-on="on">
-                                        mdi-clipboard-account-outline
+                                <v-btn icon color="primary" @click="setUpdateStatus(item)">
+                                    <v-icon v-bind="attrs" v-on="on">
+                                        mdi-file-edit-outline
                                     </v-icon>
-                                </router-link>
+                                </v-btn>
                             </template>
-                            <span>Ver formulário</span>
+                            <span>Editar status</span>
                         </v-tooltip>
 
-                        <v-tooltip left>
-                            <template v-slot:activator="{ on, attrs }">
-                                <router-link class="d-block" :to="{ name: 'FormResponseTextList', params: { formResponseId: item._id } }">
-                                    <v-icon size="30" medium class="mr-4" color="primary" v-bind="attrs" v-on="on">
-                                        mdi-text-box-outline
+                        <v-menu offset-y min-width="180">
+                            <template #activator="{ on, attrs }">
+                                <v-btn icon text v-bind="attrs" v-on="on" color="primary">
+                                    <v-icon>
+                                        mdi-dots-vertical
                                     </v-icon>
-                                </router-link>
+                                </v-btn>
                             </template>
-                            <span>Ver textos</span>
-                        </v-tooltip>
 
-                        <v-tooltip left>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-icon size="30" medium class="mr-4" color="error" v-bind="attrs" v-on="on" @click="archiveItem(item)">
-                                    mdi-archive
-                                </v-icon>
-                            </template>
-                            <span>Arquivar</span>
-                        </v-tooltip>
+                            <v-list dense class="py-0">
+                                <v-list-item :to="{ name: 'FormResponseSingle', params: { formResponseId: item._id } }">
+                                    <v-list-item-icon>
+                                        <v-icon>mdi-clipboard-account-outline</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-title>Ver formulário</v-list-item-title>
+                                </v-list-item>
+
+                                <v-list-item :to="{ name: 'FormResponseTextList', params: { formResponseId: item._id } }">
+                                    <v-list-item-icon>
+                                        <v-icon>mdi-text-box-outline</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-title>Ver textos</v-list-item-title>
+                                </v-list-item>
+
+                                <v-list-item @click="archiveItem(item)" dark class="error">
+                                    <v-list-item-icon>
+                                        <v-icon>mdi-archive</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-title>Arquivar</v-list-item-title>
+                                </v-list-item>
+
+                            </v-list>
+
+                        </v-menu>
                     </div>
                 </template>
             </v-data-table>
@@ -112,6 +127,46 @@
                 </v-form>
             </v-card>
         </dialog-or-bottom-sheet>
+        
+        <dialog-or-bottom-sheet v-model="statusUpdate.dialog" max-width="500">
+            <v-card>
+                <v-form @submit.prevent="updateStatus">
+
+                    <v-card-title>
+                        Atualizar status
+                    </v-card-title>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-select
+                                    v-model="statusUpdate.status"
+                                    label="Status"
+                                    outlined
+                                    hide-details
+                                    :items="statusOptions"
+                                >
+
+                                    <template #selection="{ item }">
+                                        <app-form-status-chip :status="item" small />
+                                    </template>
+                                    
+                                    <template #item="{ item }">
+                                        <app-form-status-chip :status="item" small />
+                                    </template>
+                            
+                                </v-select>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="error" :disabled="statusUpdate.saving" @click="statusUpdate.dialog = false">Cancelar</v-btn>
+                        <v-btn color="primary" :loading="statusUpdate.saving" type="submit">Salvar</v-btn>
+                    </v-card-actions>
+                </v-form>
+            </v-card>
+        </dialog-or-bottom-sheet>
 
     </div>
 </template>
@@ -123,7 +178,6 @@ export default {
     data: () => ({
         dialog: false,
         search: '',
-        // items: [],
         headers: [
             {
                 text: 'Cliente',
@@ -136,7 +190,7 @@ export default {
             {
                 text: 'Progresso formulário',
                 value: 'progress',
-                sortable: false
+                sortable: false,
             },
             {
                 text: 'Status',
@@ -144,12 +198,12 @@ export default {
             },
             {
                 text: 'Data de criação',
-                value: 'created'
+                value: 'created',
             },
             {
                 text: 'Última atualização',
                 value: 'changed',
-                sortable: false
+                sortable: false,
             },
             {
                 text: 'Ações',
@@ -168,6 +222,11 @@ export default {
         data: {
             form: null,
             client: null
+        },
+        statusUpdate: {
+            _id: null,
+            status: null,
+            dialog: false,
         }
     }),
     computed: {
@@ -186,6 +245,19 @@ export default {
 
                 return client.includes(search) || email.includes(search)
             })
+        },
+        formResponseEnum(){
+            return this.$store.state.formResponseEnum
+        },
+        statusOptions(){
+            return [
+                this.formResponseEnum.FILLING,
+                this.formResponseEnum.FILLING_DONE,
+                this.formResponseEnum.REVIEW,
+                this.formResponseEnum.REVIEWED,
+                this.formResponseEnum.APPROVED,
+                this.formResponseEnum.FINISHED
+            ]
         }
     },
     methods: {
@@ -291,6 +363,30 @@ export default {
             if(!item) return '';
             return `${item.name} ${item.email}`;
         },
+        setUpdateStatus(formResponse){
+            this.statusUpdate._id = formResponse._id
+            this.statusUpdate.status = formResponse.status
+            this.statusUpdate.dialog = true
+        },
+        async updateStatus() {
+            this.statusUpdate.saving = true
+
+            const response = await this.$api.setFormResponseStatus(this.statusUpdate._id, this.statusUpdate.status)
+
+            if (response.error) {
+                this.statusUpdate.saving = false
+                return
+            }
+
+            
+            setTimeout(() => {
+                this.statusUpdate.saving = false
+                this.statusUpdate.dialog = false
+                this.$toast('success', 'Status atualizado com sucesso')
+            }, 500)
+
+            await this.load()
+        }
     },
     watch: {
         dialog(value) {
@@ -302,6 +398,12 @@ export default {
                 this.setForms()
             }
         },
+        'statusUpdate.dialog'(value) {
+            if (!value) {
+                this.statusUpdate._id = null
+                this.statusUpdate.status = null
+            }
+        }
     },
     mounted() {
         this.load()

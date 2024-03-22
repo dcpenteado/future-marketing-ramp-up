@@ -5,6 +5,7 @@
                 :value="answer"
                 :question="questions.find(q => q.id === answer.question_id)"
                 :currentAnswers="currentAnswers"
+                :disabled="disabled"
                 @input="model[i] = $event"
             >
                 <template #header-actions>
@@ -124,6 +125,10 @@ export default {
             type: Array,
             required: true
         },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
     },
     data: () => ({
         fieldValidationsFunctions: [],
