@@ -87,7 +87,7 @@
                     <v-col cols="12" v-for="(v, i) in selectedVersion.versions" :key="i">
                         <field-card
                             disabled
-                            :title="`Version ${i + 1} (${v.origin})`"
+                            :title="`Versão ${i + 1} (${v.origin})`"
                             :description="$date.format(v.createdAt)"
                         >
 
@@ -95,10 +95,10 @@
                                 <v-row dense align="center">
                                     <v-col cols="12" sm="6">                                            
                                         <v-card-title class="pa-0 ma-0">
-                                            Version {{ i + 1 }} - {{ v.origin }}
+                                            Versão {{ i + 1 }} - {{ v.origin }}
                                         </v-card-title>
                                         <v-card-subtitle class="pa-0 ma-0">
-                                            {{ v.createdAt }}
+                                            {{ $date.format(v.createdAt) }}
                                         </v-card-subtitle>                                            
                                     </v-col>
                                     
