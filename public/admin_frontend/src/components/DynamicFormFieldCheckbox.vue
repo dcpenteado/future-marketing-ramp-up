@@ -5,6 +5,7 @@
         :label="question.name"
         :error="!!errors.length"
         :error-messages="errors"
+        :readonly="readonly"
         class="mt-0"
     >
 
@@ -28,6 +29,10 @@ export default {
         errors: {
             type: Array,
             default: () => []
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {

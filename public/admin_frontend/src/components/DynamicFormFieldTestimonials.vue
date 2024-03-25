@@ -13,6 +13,7 @@
                                 label="Nome"
                                 outlined
                                 hide-details
+                                :readonly="readonly"
                             />
                         </v-col>
         
@@ -23,18 +24,19 @@
                                 outlined
                                 rows="1"
                                 hide-details
+                                :readonly="readonly"
                             />
                         </v-col>
         
                         <v-col cols="12">
-                            <v-rating v-model="model.value[index].stars" hide-details/>
+                            <v-rating v-model="model.value[index].stars" hide-details :readonly="readonly"/>
                         </v-col>
                     </v-row>
                 </v-card-text>
 
                 <v-card-actions>
                     <v-btn
-                        v-if="!disabled"
+                        v-if="!readonly"
                         @click="removeItem(index)"
                         color="error"
                         tabindex="-1"
@@ -45,7 +47,7 @@
             </v-card>
         </v-col>
 
-        <v-col v-if="!disabled" cols="12" :class="!items.length ? 'text-center' : ''">
+        <v-col v-if="!readonly" cols="12" :class="!items.length ? 'text-center' : ''">
             <v-btn color="primary" @click="addItem">
                 Adicionar depoimento
             </v-btn>
@@ -68,7 +70,7 @@ export default {
             type: Array,
             default: () => []
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
         }

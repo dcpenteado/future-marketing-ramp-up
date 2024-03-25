@@ -29,12 +29,7 @@
 
     <v-divider />
         
-        <v-card-text
-            :style="{
-                'pointer-events': disabled && type != 'text' && type != 'textarea' ? 'none' : 'auto',
-                'opacity': disabled ? '0.6' : '1'
-            }"
-        >
+        <v-card-text :style="{ 'opacity': readonly ? '0.6' : '1' }">
             <slot />            
         </v-card-text>
 
@@ -67,13 +62,9 @@ export default {
             type: Boolean,
             default: false
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
-        },
-        type: {
-            type: String,
-            default: ''
         },
     }
 }

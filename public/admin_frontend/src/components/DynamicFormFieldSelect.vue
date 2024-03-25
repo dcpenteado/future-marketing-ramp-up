@@ -11,6 +11,7 @@
         :items="question.config.items"
         :error="!!errors.length"
         :error-messages="errors"
+        :readonly="readonly"
     />
 </template>
 
@@ -31,6 +32,10 @@ export default {
         errors: {
             type: Array,
             default: () => []
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {

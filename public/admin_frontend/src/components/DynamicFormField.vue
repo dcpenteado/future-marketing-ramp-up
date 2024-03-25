@@ -1,9 +1,9 @@
 <template>
     <field-card
         v-show="show"
-        :disabled="!isEditable"
         :type="question.type"
         :error="!!errors.length"
+        :readonly="!isEditable"        
     >
 
     <template #header>
@@ -32,13 +32,14 @@
             </v-row>
         </slot>
 
-    </template>        
+    </template>
 
     <DynamicFormFieldAutocomplete
         v-if="question.type === 'autocomplete'"
         v-model="model"
         :question="question"
         :errors="errors"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldCheckbox
@@ -46,6 +47,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldImagePicker
@@ -53,7 +55,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
-        :disabled="disabled"
+        :readonly="!isEditable"
     /> 
 
     <DynamicFormFieldImageSelect
@@ -61,7 +63,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
-        :disabled="disabled"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldListItem
@@ -69,7 +71,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
-        :disabled="disabled"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldOccupationForm
@@ -77,6 +79,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldRadio
@@ -84,6 +87,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldSelect
@@ -91,6 +95,7 @@
         v-model="model"
         :question="question"
         :errors="errors"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldTestimonials
@@ -98,15 +103,15 @@
         v-model="model"
         :question="question"
         :errors="errors"
-        :disabled="disabled"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldText
         v-else-if="question.type === 'text'"
         v-model="model"
         :question="question"
-        :readonly="!isEditable"
         :errors="errors"
+        :readonly="!isEditable"
     />
 
     <DynamicFormFieldTextarea
@@ -129,7 +134,7 @@
             <v-checkbox
                 v-model="model.markedAsEmpty"
                 label="Marcar como vazio"
-                :disabled="disabled"
+                :readonly="!isEditable"
                 class="mt-0"
                 hide-details
             />
@@ -175,7 +180,7 @@ export default {
                 config: {}
             })
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
         },
@@ -211,7 +216,7 @@ export default {
             return this.question.config?.allowMarkAsEmpty
         },
         isEditable(){
-            return !this.disabled && !this.model.markedAsEmpty
+            return !this.readonly && !this.model.markedAsEmpty
         }
     },
     watch: {

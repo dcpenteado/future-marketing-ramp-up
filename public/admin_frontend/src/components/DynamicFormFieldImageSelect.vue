@@ -1,5 +1,9 @@
 <template>
-    <v-item-group v-model="model.value">
+    <v-item-group v-model="model.value"
+        :style="{
+            'pointer-events': readonly ? 'none' : 'auto',
+        }"
+    >
         <v-row>
             <v-col v-for="(item, index) in items" :key="index" v-bind="colAttrs">
                 
@@ -76,7 +80,7 @@ export default {
             type: Array,
             default: () => []
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
         }
@@ -103,7 +107,7 @@ export default {
             return this.question.config?.checkboxOutside || false;
         },
         colAttrs(){
-            if (this.question.config?.row || this.disabled){
+            if (this.question.config?.row || this.readonly){
                 return {
                     cols: 12
                 }

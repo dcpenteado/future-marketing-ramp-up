@@ -7,6 +7,7 @@
         class="mt-0"
         :row="question.config?.row"
         :column="question.config?.column"
+        :readonly="readonly"
     >
 
         <v-radio
@@ -36,6 +37,10 @@ export default {
         errors: {
             type: Array,
             default: () => []
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {

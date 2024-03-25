@@ -11,7 +11,7 @@
         :error="!!errors.length"
         :error-messages="errors"
         :loading="loading"
-        :disabled="!canFill"
+        :readonly="!canFill || readonly"
         :placeholder="placeholder"
     />
 </template>
@@ -36,6 +36,10 @@ export default {
         errors: {
             type: Array,
             default: () => []
+        },
+        readonly: {
+            type: Boolean,
+            default: false
         }
     },
     inject: ['currentAnswers'],

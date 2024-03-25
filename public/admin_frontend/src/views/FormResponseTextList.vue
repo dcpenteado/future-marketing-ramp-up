@@ -25,7 +25,7 @@
             <v-col cols="12" v-for="(text, index) in texts" :key="index">
                 <field-card
                     :title="`${text.id}: ${text.description}`"
-                    :disabled="!canEdit"
+                    :readonly="!canEdit"
                 >
                     <template #header-actions>
                         <div class="d-flex">
@@ -51,7 +51,7 @@
                     <v-textarea
                         outlined
                         v-model="text.value"
-                        :disabled="readonly"
+                        :readonly="!canEdit"
                     />
             
                 </field-card>
@@ -96,8 +96,7 @@
                     <v-col cols="12" v-for="(v, i) in selectedVersion.versions" :key="i">
                         <field-card
                             :title="`Versão ${i + 1} (${v.origin})`"
-                            disabled
-                            type="textarea"
+                            readonly
                             :description="$date.format(v.createdAt)"
                         >
 

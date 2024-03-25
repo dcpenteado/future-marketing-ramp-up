@@ -34,7 +34,7 @@
             v-model="data"
             :questions="questions"
             :answers="answers"
-            :disabled="!canEdit"
+            :readonly="!canEdit"
         />
 
         <dialog-or-bottom-sheet v-model="errorDialog" max-width="500">

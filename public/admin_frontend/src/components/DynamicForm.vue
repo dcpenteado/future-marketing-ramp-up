@@ -5,7 +5,7 @@
                 :value="answer"
                 :question="questions.find(q => q.id === answer.question_id)"
                 :currentAnswers="currentAnswers"
-                :disabled="disabled"
+                :readonly="readonly"
                 @input="model[i] = $event"
             >
                 <template #header-actions>
@@ -70,7 +70,7 @@
                         <DynamicFormField
                             :value="a"
                             :question="selectedQuestion"
-                            disabled
+                            readonly
                             disable-if-operations
                         >
 
@@ -89,7 +89,7 @@
                                         <v-btn
                                             block
                                             color="primary"
-                                            :disabled="disabled"
+                                            :readonly="readonly"
                                             @click="restoreVersion(a.value)"
                                         >
                                             Restaurar
@@ -130,7 +130,7 @@ export default {
             type: Array,
             required: true
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
         }

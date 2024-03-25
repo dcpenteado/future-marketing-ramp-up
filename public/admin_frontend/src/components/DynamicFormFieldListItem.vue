@@ -12,16 +12,17 @@
         >
             <v-text-field
                 v-model="model.value[i.id]" outlined hide-details="auto"
+                :readonly="readonly"
                 @blur="model = model"
             />
 
-            <v-btn v-if="!disabled" @click="removeItem(i.id)" class="mx-2" height="56" text color="error" tabindex="-1">
+            <v-btn v-if="!readonly" @click="removeItem(i.id)" class="mx-2" height="56" text color="error" tabindex="-1">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
         </v-col>
 
         <v-col
-            v-if="!disabled"
+            v-if="!readonly"
             cols="12"
             :class="!items.length ? 'text-center' : ''"
         >
@@ -50,7 +51,7 @@ export default {
             type: Array,
             default: () => []
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
         }

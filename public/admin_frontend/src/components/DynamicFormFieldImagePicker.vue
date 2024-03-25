@@ -3,10 +3,10 @@
         <v-row>
             <v-col
                 cols="12"
-                :sm="disabled ? 12 : 4"
-                :md="disabled ? 12 : 3"
+                :sm="readonly ? 12 : 4"
+                :md="readonly ? 12 : 3"
             >
-                <v-card height="260" :loading="uploading">
+                <v-card height="260" :loading="uploading" max-width="320">
                     <v-img v-if="model.value" :src="model.value" height="260" />
                     <div v-else class="w-full h-full primary d-flex justify-center">
                         <v-icon color="white" style="font-size:100px" >mdi-image</v-icon>
@@ -14,7 +14,7 @@
                 </v-card>
             </v-col>
 
-            <v-col v-if="!disabled" cols="12" sm="auto" class="d-flex align-center text-center text-sm-left">
+            <v-col v-if="!readonly" cols="12" sm="auto" class="d-flex align-center text-center text-sm-left">
                 <div>
                     <v-btn
                         color="primary"
@@ -57,7 +57,7 @@ export default {
             type: Array,
             default: () => []
         },
-        disabled: {
+        readonly: {
             type: Boolean,
             default: false
         }
