@@ -156,6 +156,17 @@ const getFormResponses = async () => {
   }
 };
 
+const getFormResponseToProcess = async () => {
+  try {
+    if (mongoose.connection.readyState != 1) await connectDatabase();
+
+    const resp = await FormResponses.findOne({ filed: { $ne: true }, status: 2 }).select(["filed", "status"]);
+    return resp;
+  } catch (err) {
+    return { error: true, type: "general_error" };
+  }
+};
+
 const getFormResponseById = async (id) => {
   try {
     if (mongoose.connection.readyState != 1) await connectDatabase();
@@ -257,6 +268,7 @@ module.exports = {
   createOrUpdateForm,
 
   getFormResponses,
+  getFormResponseToProcess,
   getFormResponseById,
   getFormResponseByUserId,
   createOrUpdateFormResponse,

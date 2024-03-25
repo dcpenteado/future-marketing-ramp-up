@@ -2,6 +2,8 @@
 const config = require("../config");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { OpenAI } = require("openai");
+const DBController = require("../database/dbController");
+const schedule = require("node-schedule");
 
 const openai = new OpenAI({
     apiKey: config.open_ai_api_key,
@@ -71,6 +73,71 @@ const processTextWithChatGPT = async (text, temperature, max_tokens) => {
 
     return resp?.choices[0]?.message?.content;
 }
+
+
+const processAllFormTexts = async (form_response_id) => {
+    try {
+
+        let texts = [];
+        let calls = [];
+
+        let form_response = await DBController.getFormResponseById(form_response_id);
+        form_response.status = 3;
+        await DBController.createOrUpdateFormResponse(form_response, "ChatGPT");
+        const ramp_up_elements = await DBController.getRampUpElementsByFormId(form_response.form);
+
+        for (const i in ramp_up_elements) {
+            const element = ramp_up_elements[i];
+
+            let renderedText = rampUpElementToText(element.content.content, form_response.answers);
+
+            if (renderedText && element.type == 'prompt') {
+                calls.push(processTextWithChatGPT(renderedText, element.temperature || 0.5, element.max_tokens || 1000));
+                texts.push({ id: element.id, description: element.description, text: "", replace: true, replaceIndex: calls.length - 1 });
+            }
+            else {
+                texts.push({ id: element.id, description: element.description, text: renderedText });
+            }
+        }
+
+        const call_responses = await Promise.all(calls);
+
+        for (const i in texts) {
+            if (texts[i].replace) {
+                texts[i].text = call_responses[texts[i].replaceIndex];
+            }
+
+            texts[i].versions = [
+                {
+                    value: texts[i].text,
+                    origin: "ChatGPT",
+                    createdBy: null,
+                    createdAt: new Date()
+                }
+            ]
+
+            delete texts[i].replace;
+            delete texts[i].replaceIndex;
+            delete texts[i].text;
+        }
+
+        form_response.status = 4;
+        form_response.ramp_up_texts = texts;
+        await DBController.createOrUpdateFormResponse(form_response, "ChatGPT");
+
+        return { error: false, message: texts };
+    }
+    catch (err) {
+        return { error: true, message: err.message };
+    }
+}
+
+
+//A CADA 1 MINUTO
+schedule.scheduleJob('*/1 * * * *', async function () {
+    const form_response = await DBController.getFormResponseToProcess();
+    if (form_response && form_response._id) await processAllFormTexts(form_response._id);
+});
 
 module.exports = {
     uploadToS3,

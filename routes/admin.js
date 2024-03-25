@@ -526,65 +526,12 @@ router.post("/create-form-response-texts", auth, async (req, res) => {
 
 router.post("/teste", async (req, res) => {
   try {
-    let texts = [];
-    let calls = [];
-
-    const { form_response_id } = req.body;
-
-    if (!form_response_id) return res.send({ error: true, message: "Faltam itens." });
-
-    let form_response = await DBController.getFormResponseById(form_response_id);
-    form_response.status = 3;
-    await DBController.createOrUpdateFormResponse(form_response, "ChatGPT");
-    const ramp_up_elements = await DBController.getRampUpElementsByFormId(form_response.form);
-
-    for (const i in ramp_up_elements) {
-      const element = ramp_up_elements[i];
-
-      let renderedText = utils.rampUpElementToText(element.content.content, form_response.answers);
-
-      if (renderedText && element.type == 'prompt') {
-        calls.push(utils.processTextWithChatGPT(renderedText, element.temperature || 0.5, element.max_tokens || 1000));
-        texts.push({ id: element.id, description: element.description, text: "", replace: true, replaceIndex: calls.length - 1 });
-      }
-      else {
-        texts.push({ id: element.id, description: element.description, text: renderedText });
-      }
-    }
-
-    const call_responses = await Promise.all(calls);
-
-    for (const i in texts) {
-      if (texts[i].replace) {
-        texts[i].text = call_responses[texts[i].replaceIndex];
-      }
-
-      texts[i].versions = [
-        {
-          value: texts[i].text,
-          origin: "ChatGPT",
-          createdBy: null,
-          createdAt: new Date()
-        }
-      ]
-
-      delete texts[i].replace;
-      delete texts[i].replaceIndex;
-      delete texts[i].text;
-    }
-
-    form_response.status = 4;
-    form_response.ramp_up_texts = texts;
-    await DBController.createOrUpdateFormResponse(form_response, "ChatGPT");
-
-    return res.send({ error: false, message: texts })
+    
   } catch (err) {
     console.log(err.message)
     return res.send({ error: true, message: err.message });
   }
 });
-
-
 
 module.exports = function () {
   return router;
