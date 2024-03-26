@@ -28,7 +28,7 @@
                         <div class="d-flex">
                             <v-spacer></v-spacer>
 
-                            <v-tooltip bottom>
+                            <v-tooltip bottom v-if="isAdmin">
                                 <template v-slot:activator="{ on }">
                                     <v-btn tabindex="-1" icon v-on="on" @click="showVersions(index)">
                                         <v-icon>mdi-history</v-icon>
