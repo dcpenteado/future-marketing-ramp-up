@@ -16,22 +16,20 @@
 
                         <v-spacer></v-spacer>
 
-                        <template v-if="canEdit">
-                            <template v-if="!isChanged && formResponse.status === formResponseEnum.CUSTOMER_REVIEW">
-                                <v-btn color="success" :loading="approving" @click="approve">
-                                    Aprovar
-                                </v-btn>
-                            </template>
+                        <template v-if="!isAdmin && !isChanged && formResponse.status === formResponseEnum.CUSTOMER_REVIEW">
+                            <v-btn color="success" :loading="approving" @click="approve">
+                                Aprovar
+                            </v-btn>
+                        </template>
+
+                        <template v-else>
+                            <v-btn color="primary" :disabled="saving || !isChanged" @click="setTexts" class="mr-2">
+                                Cancelar
+                            </v-btn>
     
-                            <template v-else>
-                                <v-btn color="primary" :disabled="saving || !isChanged" @click="setTexts" class="mr-2">
-                                    Cancelar
-                                </v-btn>
-        
-                                <v-btn color="primary" :loading="saving" @click="save" :disabled="!canEdit" >
-                                    Salvar
-                                </v-btn>
-                            </template>
+                            <v-btn color="primary" :loading="saving" @click="save" :disabled="!canEdit" >
+                                Salvar
+                            </v-btn>
                         </template>
 
 
