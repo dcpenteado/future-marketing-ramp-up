@@ -4,7 +4,7 @@
             <v-col cols="12" class="sticky">
                 <v-card>
                     <v-card-text class="d-flex align-center">
-                        
+
                         <div v-if="formResponse">
                             Status: {{ $store.state.form_response_statuses[formResponse.status] }}
 
@@ -23,62 +23,40 @@
             </v-col>
 
             <v-col cols="12" v-for="(text, index) in texts" :key="index">
-                <field-card
-                    :title="`${text.id}: ${text.description}`"
-                    :readonly="!canEdit"
-                >
+                <field-card :title="`${text.id}: ${text.description}`" :readonly="!canEdit">
                     <template #header-actions>
                         <div class="d-flex">
-                            <v-spacer ></v-spacer>
-        
+                            <v-spacer></v-spacer>
+
                             <v-tooltip bottom>
                                 <template v-slot:activator="{ on }">
-                                    <v-btn
-                                        tabindex="-1"
-                                        icon
-                                        v-on="on"
-                                        @click="showVersions(index)"
-                                    >
+                                    <v-btn tabindex="-1" icon v-on="on" @click="showVersions(index)">
                                         <v-icon>mdi-history</v-icon>
                                     </v-btn>
                                 </template>
                                 <span>Ver versões</span>
-        
+
                             </v-tooltip>
                         </div>
                     </template>
-        
-                    <v-textarea
-                        outlined
-                        v-model="text.value"
-                        :readonly="!canEdit"
-                    />
-            
+
+                    <v-textarea outlined v-model="text.value" :readonly="!canEdit" />
+
                 </field-card>
             </v-col>
         </v-row>
 
-        <v-navigation-drawer
-            v-model="drawer"
-            right
-            app
-            width="500"
-            temporary
-        >
+        <v-navigation-drawer v-model="drawer" right app width="500" temporary>
 
             <template v-slot:prepend>
                 <div class="d-flex pa-4 align-center">
                     <v-toolbar-title>
                         Versões
                     </v-toolbar-title>
-    
+
                     <v-spacer></v-spacer>
-    
-                    <v-btn
-                        icon
-                        @click="drawer = false"
-    
-                    >
+
+                    <v-btn icon @click="drawer = false">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </div>
@@ -92,39 +70,35 @@
                             Nenhuma versão encontrada
                         </v-card-title>
                     </v-col>
-                    
-                    <v-col cols="12" v-for="(v, i) in selectedVersion.versions" :key="i">
-                        <field-card
-                            :title="`Versão ${i + 1} (${v.origin})`"
-                            readonly
-                            :description="$date.format(v.createdAt)"
-                        >
 
-                            <template #header>                                
+                    <v-col cols="12" v-for="(v, i) in selectedVersion.versions" :key="i">
+                        <field-card :title="`Versão ${i + 1} (${v.origin})`" readonly :description="$date.format(v.createdAt)">
+
+                            <template #header>
                                 <v-row dense align="center">
-                                    <v-col cols="12" sm="6">                                            
+                                    <v-col cols="12" sm="6">
                                         <v-card-title class="pa-0 ma-0">
                                             Versão {{ i + 1 }} - {{ v.origin }}
                                         </v-card-title>
                                         <v-card-subtitle class="pa-0 ma-0">
                                             {{ $date.format(v.createdAt) }}
-                                        </v-card-subtitle>                                            
+                                        </v-card-subtitle>
                                     </v-col>
-                                    
+
                                     <v-col cols="12" sm="6">
                                         <v-btn block color="primary" @click="restoreVersion(v.value)">
                                             Restaurar
                                         </v-btn>
-                                    </v-col>    
+                                    </v-col>
                                 </v-row>
                             </template>
 
-                            <v-textarea readonly outlined :value="v.value" />                    
+                            <v-textarea readonly outlined :value="v.value" />
                         </field-card>
                     </v-col>
                 </v-row>
             </v-card-text>
-        
+
         </v-navigation-drawer>
     </div>
 </template>
@@ -156,21 +130,32 @@ export default {
         selectedVersion() {
             return this.texts[this.selectedIndex];
         },
-        isAdmin(){
+        isAdmin() {
             return this.$store.getters.isAdmin;
         },
-        formResponseEnum(){
+        formResponseEnum() {
             return this.$store.state.formResponseEnum
         },
-        canEdit(){
+        canEdit() {
             if (!this.formResponse) {
                 return false;
             }
 
-            const allowedStatus = [
-                this.formResponseEnum.AI_PROCESSED,
-                this.formResponseEnum.REVIEW,
-            ]
+            let allowedStatus;
+
+            if (this.isAdmin) {
+                allowedStatus = [
+                    this.formResponseEnum.AI_PROCESSED,
+                    this.formResponseEnum.INTERNAL_REVIEW,
+                    this.formResponseEnum.CUSTOMER_REVIEW,
+                    this.formResponseEnum.FINAL_REVIEW
+                ]
+            }
+            else {
+                allowedStatus = [
+                    this.formResponseEnum.CUSTOMER_REVIEW
+                ]
+            }
 
             return allowedStatus.includes(this.formResponse.status);
         }
@@ -191,7 +176,7 @@ export default {
 
             this.$store.commit('setBreadcrumbs', items)
         },
-        setTexts(){
+        setTexts() {
             this.texts = this.formResponse.ramp_up_texts.map(t => {
                 const lastVersion = t.versions.at(-1);
 
@@ -203,7 +188,7 @@ export default {
                 }
             })
         },
-        async setFormResponse(){
+        async setFormResponse() {
             const response = await this.$api.getFormResponseById(this.$route.params.formResponseId);
 
             if (response.error) {
@@ -252,7 +237,7 @@ export default {
 
             this.drawer = false;
         },
-        async save(){
+        async save() {
             this.saving = true;
 
             const response = await this.$api.createFormResponseTexts(this.formResponseId, this.texts);
@@ -272,7 +257,7 @@ export default {
         }
     },
     watch: {
-        drawer(value){
+        drawer(value) {
             if (value) {
                 document.querySelector('html').style.overflow = 'hidden';
                 return

@@ -28,10 +28,11 @@ export default new Vuex.Store({
             FILLING_DONE: 2,
             AI_PROCESSING: 3,
             AI_PROCESSED: 4,
-            REVIEW: 5,
-            REVIEWED: 6,
-            APPROVED: 7,
-            FINISHED: 8
+            INTERNAL_REVIEW: 5,
+            CUSTOMER_REVIEW: 6,
+            FINAL_REVIEW: 7,
+            APPROVED: 8,
+            FINISHED: 9
         },
         form_response_statuses: {
             0: "Novo",
@@ -39,10 +40,11 @@ export default new Vuex.Store({
             2: "Formulário pronto",
             3: "Processando",
             4: "Processado pela IA",
-            5: "Em revisão",
-            6: "Revisado",
-            7: "Aprovado para site",
-            8: "Finalizado"
+            5: "Revisão interna",
+            6: "Revisão do cliente",
+            7: "Revisão final",
+            8: "Aprovado para site",
+            9: "Finalizado"
         },
         pageTitle: 'Future Marketing',
         pageSubtitle: '',

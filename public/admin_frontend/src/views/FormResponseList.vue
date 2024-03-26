@@ -254,8 +254,9 @@ export default {
             return [
                 this.formResponseEnum.FILLING,
                 this.formResponseEnum.FILLING_DONE,
-                this.formResponseEnum.REVIEW,
-                this.formResponseEnum.REVIEWED,
+                this.formResponseEnum.INTERNAL_REVIEW,
+                this.formResponseEnum.CUSTOMER_REVIEW,
+                this.formResponseEnum.FINAL_REVIEW,
                 this.formResponseEnum.APPROVED,
                 this.formResponseEnum.FINISHED
             ]

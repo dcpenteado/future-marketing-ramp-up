@@ -30,7 +30,7 @@ export default {
                 return 'purple'
             }
             
-            if (this.status <= this.$store.state.formResponseEnum.REVIEWED) {
+            if (this.status <= this.$store.state.formResponseEnum.FINAL_REVIEW) {
                 return 'warning'
             }
             
