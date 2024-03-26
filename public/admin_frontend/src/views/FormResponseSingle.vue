@@ -3,14 +3,16 @@
         <v-card class="mb-4">
             <v-card-title>
                 Progresso geral ({{ fullProgress }}%)
+
             </v-card-title>
 
             <v-card-text>
-                <v-progress-linear :value="fullProgress" height="40" rounded>
+                <v-progress-linear :value="fullProgress" v-if="!(fullProgress == 100 && status < 2)" height="40" rounded>
                     <template v-slot:default="{ value }">
                         <div class="text-caption-total">{{ Math.ceil(value) }}%</div>
                     </template>
                 </v-progress-linear>
+                <v-btn class="success mt-2" large v-if="fullProgress == 100 && status < 2" @click.native="completeForm">Enviar respostas</v-btn>
             </v-card-text>
         </v-card>
 
@@ -143,12 +145,17 @@ export default {
                 await this.load();
             }
 
+
+        },
+
+        async completeForm() {
             //STATUS PREENCHENDO FORMULÁRIO, TERMINOU O PREENCHIMENTO, MUDA STATUS PARA FORMULÁRIO PRONTO (2) 
             if (this.fullProgress == 100 && this.status < 2) {
                 await Api.setFormResponseStatus(this.form_response_id, 2);
                 await this.load();
             }
         },
+
         async load() {
             this.pageLoading = true;
 
