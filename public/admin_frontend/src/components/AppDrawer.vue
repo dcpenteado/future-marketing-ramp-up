@@ -85,10 +85,7 @@ export default {
                 label: "Meu site",
                 icon: "mdi-monitor-dashboard",
                 children: [
-                    {
-                        label: "Minhas aprovações",
-                        to: "/#my-approvals",
-                    },
+                    
                 ],
             }
 
@@ -112,7 +109,8 @@ export default {
                 )
             }
 
-            this.menuItems.push(site)
+            const exists = this.menuItems.find(m => m.label === "Meu site");
+            if (!exists) this.menuItems.push(site)
         },
         async addAdminMenuItems() {
             this.menuItems.push(
@@ -141,7 +139,6 @@ export default {
             )
         },
         async setMenuItems() {
-
             if (!this.currentUser) {
                 return;
             }
