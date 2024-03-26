@@ -15,9 +15,27 @@
                         </div>
 
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" :loading="saving" @click="save">
-                            Salvar
-                        </v-btn>
+
+                        <template v-if="canEdit">
+                            <template v-if="!isChanged && formResponse.status === formResponseEnum.CUSTOMER_REVIEW">
+                                <v-btn color="success" :loading="approving" @click="approve">
+                                    Aprovar
+                                </v-btn>
+                            </template>
+    
+                            <template v-else>
+                                <v-btn color="primary" :disabled="saving || !isChanged" @click="setTexts" class="mr-2">
+                                    Cancelar
+                                </v-btn>
+        
+                                <v-btn color="primary" :loading="saving" @click="save" :disabled="!canEdit" >
+                                    Salvar
+                                </v-btn>
+                            </template>
+                        </template>
+
+
+                        
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -109,9 +127,11 @@ export default {
     data: () => ({
         drawer: false,
         saving: false,
+        approving: false,
         formResponse: null,
         form: null,
         user: null,
+        originalTexts: [],
         texts: [],
         selectedIndex: null,
     }),
@@ -132,6 +152,9 @@ export default {
         },
         isAdmin() {
             return this.$store.getters.isAdmin;
+        },
+        isChanged() {
+            return JSON.stringify(this.texts) !== JSON.stringify(this.originalTexts);
         },
         formResponseEnum() {
             return this.$store.state.formResponseEnum
@@ -177,7 +200,8 @@ export default {
             this.$store.commit('setBreadcrumbs', items)
         },
         setTexts() {
-            this.texts = this.formResponse.ramp_up_texts.map(t => {
+
+            const formattedTexts = this.formResponse.ramp_up_texts.map(t => {
                 const lastVersion = t.versions.at(-1);
 
                 return {
@@ -187,6 +211,9 @@ export default {
                     versions: t.versions.reverse(),
                 }
             })
+
+            this.texts = formattedTexts;
+            this.originalTexts = JSON.parse(JSON.stringify(formattedTexts));
         },
         async setFormResponse() {
             const response = await this.$api.getFormResponseById(this.$route.params.formResponseId);
@@ -254,6 +281,33 @@ export default {
             setTimeout(() => {
                 this.saving = false;
             }, 2000);
+        },
+        async approve(){
+            const value = await this.$store.dispatch('confirmDialog',{
+                title: "Aprovar",
+                message: "Confirmar aprovação  dos textos?",
+            });
+
+            if (!value) {
+                return;
+            }
+
+            this.approving = true;
+
+            const response = await this.$api.setFormResponseStatus(this.formResponseId, this.formResponseEnum.FINAL_REVIEW)
+
+            if (response.error) {
+                this.approving = false;
+                return
+            }
+
+            this.$toast('success', 'Aprovado com sucesso');
+
+            await this.setFormResponse();
+
+            setTimeout(() => {
+                this.approving = false;
+            }, 800);
         }
     },
     watch: {
